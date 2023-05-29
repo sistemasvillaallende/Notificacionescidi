@@ -35,7 +35,7 @@ function Main() {
   const submenuNoti = userOffices.map((office: string) => {
     const Officeicon =
       officesIds[office.toUpperCase() as keyof typeof officesIds].icon;
-    const icon = icons.hasOwnProperty(Officeicon) ? Officeicon : "Bell";
+    const icon = Officeicon ?? "Bell";
     return {
       icon: icon,
       pathname: `/${office.split(' ').join('%20').toLowerCase()}/notificaciones/`,
