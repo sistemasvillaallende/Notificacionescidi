@@ -13,6 +13,7 @@ interface CardProps {
 
 const OfficeCards = ({ title, office, type }:CardProps) => {
 const Officeicon = officesIds[office.toUpperCase() as keyof typeof officesIds]?.icon
+console.log(Officeicon)
 const icon = icons.hasOwnProperty(Officeicon)? Officeicon.toString() : 'Bell'
 const colorCard = type === 'notificaciones'?'text-info':'text-secondary'
 
