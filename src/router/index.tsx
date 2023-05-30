@@ -23,7 +23,7 @@ const Router = () => {
         <>
           <Header />
           <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/" element={<Navigate to="/login/" />} />
             {hasSingleOffice ? (
               <Route
                 path="/seleccionar-oficina/"

@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (location.hash.includes('login')) {
         if(user.oficina && user.oficina.length > 1) {
-        navigate("/seleccionar-oficina");
+        navigate("/seleccionar-oficina/");
       } else if (user.oficina && user.oficina.length === 1) {
         navigate(`/${user.oficina[0]}/notificaciones`);
       } else {
