@@ -18,10 +18,11 @@ const Login = () => {
     if (error) {
       console.log("error login:", error);
     }
-    // if(localStorage.getItem('isLoggedIn')){
-    //   location.reload()
-    // }
-  }, []);
+    if(localStorage.getItem('isLoggedIn')){
+      location.reload()
+    }
+  }, [user]);
+
 
   return (
     <>

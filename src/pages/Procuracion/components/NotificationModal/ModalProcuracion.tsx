@@ -24,7 +24,7 @@ const schema = yup.object({
     .required("Este campo es obligatorio"),
 });
 
-function NotificationModal() {
+function ModalProcuracion() {
   const office = window?.localStorage?.getItem("selectedOffice") ?? "";
   const {
     register,
@@ -245,4 +245,4 @@ function NotificationModal() {
   );
 }
 
-export default NotificationModal;
+export default ModalProcuracion;

@@ -50,8 +50,6 @@ function Main() {
       title: 'Oficina Automotor',
     }
   ]
-
- console.log(submenuNoti)
   const updatedMenu: any = [
     {
       icon: "Bell",
@@ -77,7 +75,6 @@ function Main() {
   useEffect(() => {
     setFormattedMenu(sideMenu());
   }, [sideMenuStore, location.pathname]);
- console.log('formattedMenu',formattedMenu)
   return (
     <div className="py-5 md:py-0 bg-white box-border">
       {/* <DarkModeSwitcher /> */}

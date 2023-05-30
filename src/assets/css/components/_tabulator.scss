@@ -25,7 +25,7 @@
           background-color: theme("colors.slate.100");
         }
         .tabulator-col-content {
-          padding: theme("spacing.3") theme("spacing.5");
+          padding: theme("spacing.2") theme("spacing.2");
           .tabulator-col-title {
             padding-right: 0;
           }
@@ -58,7 +58,7 @@
     .tabulator-cell {
       height: 40px!important;
       border-right: 0;
-      padding: theme("spacing.3") theme("spacing.5");
+      padding: theme("spacing.2") theme("spacing.2");
       &.tabulator-row-handle {
         padding-left: 0;
         padding-right: 0;

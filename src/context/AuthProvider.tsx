@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     localStorage.removeItem("isLoggedIn");
     setUser(null);
-    navigate("/");
+    navigate("/#/login");
   };
 
   useEffect(() => {
@@ -96,9 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (location.hash.includes('login')) {
         if(user.oficina && user.oficina.length > 1) {
-        navigate("/seleccionar-oficina/");
+        navigate("/seleccionar-oficina/",{replace:true});
       } else if (user.oficina && user.oficina.length === 1) {
-        navigate(`/${user.oficina[0]}/notificaciones`);
+        navigate(`/#/${user.oficina[0]}/notificaciones`);
       } else {
         console.error("No se pudo determinar la oficina del usuario");
       }

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 
 const NotFound = () => {
-  console.log('soy not found')
   return (
     <div className="flex flex-col items-center">
             <div className="text-indigo-500 font-bold text-7xl">

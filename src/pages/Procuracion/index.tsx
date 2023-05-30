@@ -35,7 +35,6 @@ function Procuracion() {
       navigate("/404");
     }
   }, []);
-  console.log(officeExist);
   // if (!officeExist) {
   //   return <h2>No tienes permiso para acceder a este contenido</h2>;
   // }
