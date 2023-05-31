@@ -355,14 +355,6 @@ const ProcuracionDetailTable = ({
   useEffect(() => {
     nroEmision && initTabulator();
     reInitOnResizeWindow();
-    setTimeout(() => {
-      const data = tabulator.current?.getData() as {}[];
-      const dataState = data.map((row: any) => row.estado_Actualizado);
-      const dataFilter: string[] = dataState?.filter(
-        (item, index) => dataState.indexOf(item) === index
-      );
-      setSelect(dataFilter);
-    }, 1000);
 
     baseWebApi(
       `/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}`
@@ -391,71 +383,79 @@ const ProcuracionDetailTable = ({
     number && setNroEmision(`${number + 1}`);
   };
 
-  const handleFilter = () => {};
-
+const statesValidated = statesEmision?.filter((state:any)=>state.emite_notif_cidi==1)?.map((el:{descripcion_estado:string})=> capitalizeFirstLetter(el.descripcion_estado.trim()))
   return (
     <>
-      <section className="flex justify-between">
-        <div
-          className="text-secondary font-bold text-lg text-right hover:underline cursor-pointer"
-          onClick={handleBack}
-        >
-          Volver
-        </div>
+      <section className="flex flex-col">
+        <div className="flex justify-between">
+          <div
+            className="flex items-center mr-2 text-secondary font-bold text-base text-right hover:underline cursor-pointer"
+            onClick={handleBack}
+          >
+            Volver
+          </div>
 
-        <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0">
-          {tabulator?.current && (
-            <FormSelect
-              id="tabulator-html-filter-field"
-              value={filter.estado}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFilter({ ...filter, estado: e.target.value });
-                if (value != "nofilter") {
-                  tabulator.current?.setFilter(
-                    "estado_Actualizado",
-                    "=",
-                    value
-                  );
-                } else {
-                  tabulator.current?.clearFilter(true);
-                }
-              }}
-              className="w-full 2xl:w-full sm:w-auto"
-            >
-              <option value="nofilter">Filtrar por estado</option>
-              {statesEmision?.map((state: any) => (
-                <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
-                  {capitalizeFirstLetter(state.descripcion_estado.trim())}
-                </option>
-              ))}
-            </FormSelect>
-          )}
-        </div>
+          <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0">
+            {tabulator?.current && (
+              <FormSelect
+                id="tabulator-html-filter-field"
+                value={filter.estado}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFilter({ ...filter, estado: e.target.value });
+                  if (value != "nofilter") {
+                    tabulator.current?.setFilter(
+                      "estado_Actualizado",
+                      "=",
+                      value
+                    );
+                  } else {
+                    tabulator.current?.clearFilter(true);
+                  }
+                }}
+                className="w-full 2xl:w-full sm:w-auto"
+              >
+                <option value="nofilter">Filtrar por estado</option>
+                {statesEmision?.map((state: any) => (
+                  <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
+                    {capitalizeFirstLetter(state.descripcion_estado.trim())}
+                  </option>
+                ))}
+              </FormSelect>
+            )}
+          </div>
 
-        <div className="flex items-center">
-          <h4 className="mr-2 font-bold">Nro. de emisión</h4>
-          <button onClick={(e: any) => handleMinus(e)}>
-            <Lucide icon="ChevronLeft" className="w-4 h-4 mx-2" />
-          </button>
-          <FormInput
-            type="text"
-            value={nroEmision ?? ""}
-            className="w-[4rem] text-center"
-            onChange={handleChange}
-          />
-          <button onClick={(e: any) => handlePlus(e)}>
-            <Lucide icon="ChevronRight" className="w-4 h-4 mx-2" />
-          </button>
-        </div>
+         {/* Input nro de emisión */}
 
-        <div>
-          <ModalProcuracion
-            table={tabulator.current}
-            dataSelected={selectedData}
-            nroEmision={nroEmision}
-            statesEmision={statesEmision}
-          />
+          <div className="flex items-center">
+            <h4 className="mr-2 font-bold">Nro. de emisión</h4>
+            <button onClick={(e: any) => handleMinus(e)}>
+              <Lucide icon="ChevronLeft" className="w-4 h-4 mx-2" />
+            </button>
+            <FormInput
+              type="text"
+              value={nroEmision ?? ""}
+              className="w-[4rem] text-center"
+              onChange={handleChange}
+            />
+            <button onClick={(e: any) => handlePlus(e)}>
+              <Lucide icon="ChevronRight" className="w-4 h-4 mx-2" />
+            </button>
+          </div>
+
+         {/* Boton y modal */}
+
+          <div>
+            <ModalProcuracion
+              table={tabulator.current}
+              dataSelected={selectedData}
+              nroEmision={nroEmision}
+              statesEmision={statesEmision}
+            />
+          </div>
+        </div>
+        <div className="mt-5">
+          {statesValidated && <p> <span className="font-bold">Estados validos para notificar: </span>{statesValidated.join(', ')}</p>}
         </div>
       </section>
       <div className="overflow-x-scroll scrollbar-hidden">

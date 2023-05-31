@@ -138,7 +138,7 @@ function ModalProcuracion({
             event.preventDefault();
             setSuperlargeModalSizePreview(true);
           }}
-          className={errorMessage? "mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-light cursor-wait" :"mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-secondary"}
+          className={errorMessage? "mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-light cursor-not-allowed" :"mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-secondary"}
         >
           Notificación Masiva
         </Button>
