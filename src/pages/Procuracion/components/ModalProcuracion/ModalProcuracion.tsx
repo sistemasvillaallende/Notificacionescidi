@@ -57,7 +57,7 @@ function ModalProcuracion({ table, dataSelected }: any) {
     try {
       const response = await baseWebApi("/Estados_procuracion/ListarEstados");
       const statesWithNotification = response?.data?.filter(
-        (state: { emite_notif_cidi: number }) => state?.emite_notif_cidi == 0
+        (state: { emite_notif_cidi: number }) => state?.emite_notif_cidi == 1
       );
       if (statesWithNotification) {
         setErrorMessage("");
