@@ -84,14 +84,10 @@ function ModalProcuracion({ table, dataSelected }: any) {
   };
 
   useEffect(() => {
-    // getStates().then((response)=>setValidSelectedStates(response));
-    getStates().then(()=>{
-      setValidSelectedStates(['Paralizado'])
-      setValidatedData(dataSelected?.filter(
-        (row: any) => row?.cuit?.length > 1 && row.notificado_cidi == 0 && validSelectedStates?.includes(row.estado_Actualizado as string)
-      ))
-    }
-      );
+    getStates().then((response)=>setValidSelectedStates(response));
+    setValidatedData(dataSelected?.filter(
+      (row: any) => row?.cuit?.length > 1 && row.notificado_cidi == 0 && validSelectedStates?.includes(row.estado_Actualizado as string)
+    ))
   }, [dataSelected]);
 
 
