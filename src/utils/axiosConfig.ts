@@ -2,6 +2,23 @@ import axios from "axios";
 
 export const baseUrl = "https://vecino.villaallende.gov.ar"
 
+export const baseWebApi = axios.create({
+  baseURL: `${baseUrl}/WebApiShared`,
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+});
+
+baseWebApi.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    throw { response: error?.response?.data };
+  }
+);
+
 export const comunicacionesCidi = axios.create({
   baseURL: `${baseUrl}/WebApiShared/ComunicacionesCIDI`,
   headers: {

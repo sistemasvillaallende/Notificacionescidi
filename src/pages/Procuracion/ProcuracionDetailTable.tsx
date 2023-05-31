@@ -13,17 +13,18 @@ import { TabulatorFull as Tabulator } from "tabulator-tables";
 import { capitalizeFirstLetter } from "../../utils/helper";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Lucide from "../../base-components/Lucide";
-import NotificationModal from "../../components/NotificationModal";
+import ModalProcuracion from "./components/ModalProcuracion/ModalProcuracion";
 
-interface Response {
+export interface Response {
   nro_Emision?: number;
   nro_Procuracion?: number;
   dominio?: string;
   nro_Badec?: number;
   nombre?: string;
+  cuit?:string;
   estado_Actual?: string;
   estado_Actualizado?: string;
-  notificado_cidi?: string;
+  notificado_cidi?: number;
   vencimiento?: string;
   monto_original?: number;
   interes?: number;
@@ -53,6 +54,7 @@ const ProcuracionDetailTable = ({
     estado:""
   });
   const [selectStates, setSelect] = useState<string[]>([])
+  const [selectedData, setSelectedData] = useState<{}[]>()
 
   const initTabulator = () => {
     if (tableRef.current) {
@@ -201,11 +203,11 @@ const ProcuracionDetailTable = ({
               const response: Response = cell.getData();
               const estado = response?.notificado_cidi;
               return `<div class="flex items-center lg:justify-start ${
-                response.notificado_cidi == "1"
+                response.notificado_cidi == 1
                   ? "text-success"
                   : "text-warning"
               }">
-                <span>${estado == "1" ? "Notificado" : "No notificado"}</span>
+                <span>${estado == 1 ? "Notificado" : "No notificado"}</span>
               </div>`;
             },
           },
@@ -346,7 +348,6 @@ const ProcuracionDetailTable = ({
 
   useEffect(() => {
     setEmision(nroEmision as string);
-    
   }, []);
 
   useEffect(() => {
@@ -437,7 +438,7 @@ const ProcuracionDetailTable = ({
         </div>
 
         <div>
-          <NotificationModal />
+          <ModalProcuracion table= {tabulator.current} dataSelected={tabulator?.current?.getSelectedData()} />
         </div>
       </section>
       <div className="overflow-x-scroll scrollbar-hidden">
