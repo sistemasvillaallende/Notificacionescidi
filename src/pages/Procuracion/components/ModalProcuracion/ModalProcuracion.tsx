@@ -2,19 +2,14 @@ import { Preview } from "../../../../base-components/PreviewComponent";
 import { Dialog } from "../../../../base-components/Headless";
 import Button from "../../../../base-components/Button";
 import React, { useState, useEffect } from "react";
-import {
-  FormInput,
-  FormLabel,
-  FormTextarea,
-} from "../../../../base-components/Form";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { validateCuil } from "../../../../utils/cuilValidator";
-import { ClassicEditor } from "../../../../base-components/Ckeditor";
-import { baseWebApi, comunicacionesCidi } from "../../../../utils/axiosConfig";
+import { baseWebApi } from "../../../../utils/axiosConfig";
 import { Response } from "../../ProcuracionDetailTable";
 import { capitalizeFirstLetter } from "../../../../utils/helper";
+import { marked } from "marked";
 
 const schema = yup.object({
   cuil: yup
@@ -30,11 +25,16 @@ const schema = yup.object({
     .required("Este campo es obligatorio"),
 });
 
-function ModalProcuracion({ table, dataSelected }: any) {
-  const [validSelectedStates, setValidSelectedStates] = useState<string[]>([])
-  const [validatedData, setValidatedData] = useState<any>()
+function ModalProcuracion({
+  table,
+  dataSelected,
+  nroEmision,
+  statesEmision,
+}: any) {
+  const [validSelectedStates, setValidSelectedStates] = useState<string[]>([]);
+  const [validatedData, setValidatedData] = useState<{}[]>();
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [body, setBody] = useState("");
   const data = table?.getData();
   const statesArray = dataSelected?.map((row: Response) =>
     capitalizeFirstLetter(row?.estado_Actualizado as string)
@@ -54,9 +54,9 @@ function ModalProcuracion({ table, dataSelected }: any) {
   });
 
   const getStates = async () => {
+    setErrorMessage("");
     try {
-      const response = await baseWebApi("/Estados_procuracion/ListarEstados");
-      const statesWithNotification = response?.data?.filter(
+      const statesWithNotification = statesEmision?.filter(
         (state: { emite_notif_cidi: number }) => state?.emite_notif_cidi == 1
       );
       if (statesWithNotification) {
@@ -68,28 +68,60 @@ function ModalProcuracion({ table, dataSelected }: any) {
             )
         );
         if (validateStates.length > 0) {
-          setErrorMessage("");
-          return validateStates.map((state: { descripcion_estado: string })=>capitalizeFirstLetter(state.descripcion_estado));
+          return validateStates.map((state: { descripcion_estado: string }) =>
+            capitalizeFirstLetter(state.descripcion_estado?.trim())
+          );
         } else
           setErrorMessage(
-            "Los estados seleccionados no son válidos para notificar"
+            "No hay procuraciones seleccionadas válidas para notificar"
           );
-          return null
+        return null;
       } else
         setErrorMessage("No has seleccionado un estado válido para notificar");
-        return null
+      return null;
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    getStates().then((response)=>setValidSelectedStates(response));
-    setValidatedData(dataSelected?.filter(
-      (row: any) => row?.cuit?.length > 1 && row.notificado_cidi == 0 && validSelectedStates?.includes(row.estado_Actualizado as string)
-    ))
-  }, [dataSelected]);
+    setValidatedData([]);
+    setValidSelectedStates([]);
+    setErrorMessage("");
+    setBody("");
+  }, [nroEmision]);
 
+  useEffect(() => {
+    getStates()
+      .then((response) => {
+        setValidSelectedStates(response);
+        return response;
+      })
+      .then((response) => {
+        const data = dataSelected?.filter(
+          (row: any) =>
+            row?.cuit?.length > 1 &&
+            row.notificado_cidi == 0 &&
+            response?.includes(
+              capitalizeFirstLetter(row.estado_Actualizado.trim())
+            )
+        );
+        setValidatedData(data);
+        console.log("validatedData", validatedData);
+      })
+      .then(() => {
+        baseWebApi("/Template_notificacion/ObtenerTextoReporte?idTemplate=18")
+          .then((response) => {
+            const data = response?.data[0]?.reporte;
+            const html = marked(data);
+            const body = html.replace(/<\/?(?:pre|code)[^>]*>/g, "");
+            setBody(body);
+            console.log("body", html);
+          })
+          .catch((err) => console.error(err));
+      })
+      .catch((err) => console.error(err));
+  }, [dataSelected]);
 
   const [superlargeModalSizePreview, setSuperlargeModalSizePreview] =
     useState(false);
@@ -106,7 +138,7 @@ function ModalProcuracion({ table, dataSelected }: any) {
             event.preventDefault();
             setSuperlargeModalSizePreview(true);
           }}
-          className="mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-secondary"
+          className={errorMessage? "mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-light cursor-wait" :"mr-2 ml-5 mt-5 sm:mt-0 shadow-md bg-secondary"}
         >
           Notificación Masiva
         </Button>
@@ -145,6 +177,10 @@ function ModalProcuracion({ table, dataSelected }: any) {
                   <p>
                     <span className="font-bold">Estados Seleccionados: </span>
                     {validSelectedStates?.join(", ")}{" "}
+                  </p>
+                  <p>
+                    <span className="font-bold">Notificación: </span>
+                    <div dangerouslySetInnerHTML={{ __html: body }}></div>
                   </p>
                 </article>
 

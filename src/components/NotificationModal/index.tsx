@@ -1,7 +1,7 @@
 import { Preview } from "../../base-components/PreviewComponent";
 import { Dialog } from "../../base-components/Headless";
 import Button from "../../base-components/Button";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FormInput, FormLabel, FormTextarea } from "../../base-components/Form";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

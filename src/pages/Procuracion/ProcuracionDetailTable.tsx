@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { baseUrl } from "../../utils/axiosConfig";
+import { baseUrl, baseWebApi } from "../../utils/axiosConfig";
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 import { capitalizeFirstLetter } from "../../utils/helper";
 import { FormInput, FormSelect } from "../../base-components/Form";
@@ -21,7 +21,7 @@ export interface Response {
   dominio?: string;
   nro_Badec?: number;
   nombre?: string;
-  cuit?:string;
+  cuit?: string;
   estado_Actual?: string;
   estado_Actualizado?: string;
   notificado_cidi?: number;
@@ -47,19 +47,19 @@ const ProcuracionDetailTable = ({
 }: Props) => {
   const tableRef = createRef<HTMLDivElement>();
   const tabulator = useRef<Tabulator>();
-  const [emision, setEmision] = useState<null | string>(null);
   const [filter, setFilter] = useState({
     field: "",
     type: "=",
-    estado:""
+    estado: "",
   });
-  const [selectStates, setSelect] = useState<string[]>([])
-  const [selectedData, setSelectedData] = useState<{}[]>()
+  const [selectStates, setSelect] = useState<string[]>([]);
+  const [selectedData, setSelectedData] = useState<any>();
+  const [statesEmision, setStateEmision] = useState<any>();
 
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${baseUrl}${url}${emision}`,
+        ajaxURL: `${baseUrl}${url}${nroEmision}`,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,
@@ -82,10 +82,10 @@ const ProcuracionDetailTable = ({
               rowRange: "active",
             },
             formatter: "rowSelection",
-            cellClick:function(e, cell){
+            cellClick: function (e, cell) {
               cell.getRow().toggleSelect();
+            },
           },
-        },
           {
             title: "",
             formatter: "responsiveCollapse",
@@ -203,33 +203,31 @@ const ProcuracionDetailTable = ({
               const response: Response = cell.getData();
               const estado = response?.notificado_cidi;
               return `<div class="flex items-center lg:justify-start ${
-                response.notificado_cidi == 1
-                  ? "text-success"
-                  : "text-warning"
+                response.notificado_cidi == 1 ? "text-success" : "text-warning"
               }">
                 <span>${estado == 1 ? "Notificado" : "No notificado"}</span>
               </div>`;
             },
           },
-          // {
-          //   title: "Vencimiento",
-          //   minWidth: 120,
-          //   width: 120,
-          //   field: "vencimiento",
-          //   // responsive: 1,
-          //   hozAlign: "center",
-          //   headerHozAlign: "center",
-          //   vertAlign: "middle",
-          //   headerSort: false,
-          //   formatter(cell) {
-          //     const response: Response = cell.getData();
-          //     return `<div class="h-4 flex items-center">
-          //       <div class="font-normal whitespace-nowrap">${new Date(
-          //         response?.vencimiento as string
-          //       ).toLocaleDateString()}</div>
-          //     </div>`;
-          //   },
-          // },
+          {
+            title: "Vencimiento",
+            minWidth: 120,
+            width: 120,
+            field: "vencimiento",
+            // responsive: 1,
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            headerSort: false,
+            formatter(cell) {
+              const response: Response = cell.getData();
+              return `<div class="h-4 flex items-center">
+                <div class="font-normal whitespace-nowrap">${new Date(
+                  response?.vencimiento as string
+                ).toLocaleDateString()}</div>
+              </div>`;
+            },
+          },
           {
             title: "Importe a pagar",
             minWidth: 100,
@@ -283,6 +281,10 @@ const ProcuracionDetailTable = ({
       },
       nameAttr: "data-lucide",
     });
+  });
+
+  tabulator.current?.on("rowSelectionChanged", () => {
+    setSelectedData(tabulator?.current?.getSelectedData());
   });
 
   // Redraw table onresize
@@ -346,21 +348,26 @@ const ProcuracionDetailTable = ({
   //   // onFilter();
   // };
 
-  useEffect(() => {
-    setEmision(nroEmision as string);
-  }, []);
+  // useEffect(() => {
+  //   setNroEmision(nroEmision as string);
+  // }, []);
 
   useEffect(() => {
-    emision && initTabulator();
+    nroEmision && initTabulator();
     reInitOnResizeWindow();
-    setTimeout(()=> {
-      const data = tabulator.current?.getData() as {}[]
-      const dataState = data.map((row:any)=>row.estado_Actualizado)
-      const dataFilter:string[] = dataState?.filter((item, index)=> dataState.indexOf(item) === index)
-      setSelect(dataFilter)}
-      ,1000)
+    setTimeout(() => {
+      const data = tabulator.current?.getData() as {}[];
+      const dataState = data.map((row: any) => row.estado_Actualizado);
+      const dataFilter: string[] = dataState?.filter(
+        (item, index) => dataState.indexOf(item) === index
+      );
+      setSelect(dataFilter);
+    }, 1000);
 
-  }, [emision]);
+    baseWebApi(
+      `/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}`
+    ).then((response: any) => setStateEmision(response.data));
+  }, [nroEmision]);
 
   const handleBack = () => {
     setNroEmision("");
@@ -369,24 +376,22 @@ const ProcuracionDetailTable = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = e.target.value;
-    value && setEmision(value);
+    value && setNroEmision(value);
   };
 
   const handleMinus = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const number = emision && parseInt(emision);
-    number && setEmision(`${number - 1}`);
+    const number = nroEmision && parseInt(nroEmision);
+    number && setNroEmision(`${number - 1}`);
   };
 
   const handlePlus = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const number = emision && parseInt(emision);
-    number && setEmision(`${number + 1}`);
+    const number = nroEmision && parseInt(nroEmision);
+    number && setNroEmision(`${number + 1}`);
   };
 
-  const handleFilter = () => {
-
-  }
+  const handleFilter = () => {};
 
   return (
     <>
@@ -399,27 +404,34 @@ const ProcuracionDetailTable = ({
         </div>
 
         <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0">
-              {tabulator?.current && <FormSelect
-                id="tabulator-html-filter-field"
-                value={filter.estado}
-                onChange={(e) => {
-                  const value = e.target.value
-                  setFilter({...filter, estado:e.target.value})
-                  if(value != 'nofilter'){
-                    tabulator.current?.setFilter("estado_Actualizado", "=", value)
-                  }else{
-                    tabulator.current?.clearFilter(true)
-                  }
-                  
-                }}
-                className="w-full 2xl:w-full sm:w-auto"
-              >
-                <option value="nofilter">Filtrar por estado</option>
-                { selectStates?.map((state:string)=>(
-                   <option key= {state} value={state}>{state}</option>
-                )) }
-              </FormSelect>}
-            </div>
+          {tabulator?.current && (
+            <FormSelect
+              id="tabulator-html-filter-field"
+              value={filter.estado}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilter({ ...filter, estado: e.target.value });
+                if (value != "nofilter") {
+                  tabulator.current?.setFilter(
+                    "estado_Actualizado",
+                    "=",
+                    value
+                  );
+                } else {
+                  tabulator.current?.clearFilter(true);
+                }
+              }}
+              className="w-full 2xl:w-full sm:w-auto"
+            >
+              <option value="nofilter">Filtrar por estado</option>
+              {statesEmision?.map((state: any) => (
+                <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
+                  {capitalizeFirstLetter(state.descripcion_estado.trim())}
+                </option>
+              ))}
+            </FormSelect>
+          )}
+        </div>
 
         <div className="flex items-center">
           <h4 className="mr-2 font-bold">Nro. de emisión</h4>
@@ -428,7 +440,7 @@ const ProcuracionDetailTable = ({
           </button>
           <FormInput
             type="text"
-            value={emision ?? ""}
+            value={nroEmision ?? ""}
             className="w-[4rem] text-center"
             onChange={handleChange}
           />
@@ -438,7 +450,12 @@ const ProcuracionDetailTable = ({
         </div>
 
         <div>
-          <ModalProcuracion table= {tabulator.current} dataSelected={tabulator?.current?.getSelectedData()} />
+          <ModalProcuracion
+            table={tabulator.current}
+            dataSelected={selectedData}
+            nroEmision={nroEmision}
+            statesEmision={statesEmision}
+          />
         </div>
       </section>
       <div className="overflow-x-scroll scrollbar-hidden">
