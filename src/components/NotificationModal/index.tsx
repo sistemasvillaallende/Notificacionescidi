@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { validateCuil } from "../../utils/cuilValidator";
 import { ClassicEditor } from "../../base-components/Ckeditor";
 import { comunicacionesCidi } from "../../utils/axiosConfig";
+import { useAuthContext } from "../../context/AuthProvider";
 
 const schema = yup.object({
   cuil: yup
@@ -46,6 +47,7 @@ function NotificationModal() {
     error: false,
     message: "",
   });
+  const { user } = useAuthContext();
 
   const handleBlurEditor = (data: any) => {
     setBodyValue(data.current);
@@ -79,6 +81,9 @@ function NotificationModal() {
 
       const body = {
         cuit: cuil,
+        oficina: user?.nombre_oficina || '',
+        user: user?.userName || '',
+        nombre: user?.nombre + ' ' + user?.apellido || '',
         subject: subject,
         body: bodyValue,
       };

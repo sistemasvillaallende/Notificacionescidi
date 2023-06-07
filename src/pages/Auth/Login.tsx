@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import logo from "../../assets/images/logo.svg";
 import logoCIDI from "../../assets/images/cidi.png";
 import clsx from "clsx";
 import { useAuthContext } from "../../context/AuthProvider";
-import { useParams } from "react-router-dom";
 import LoadingIcon from "../../base-components/LoadingIcon";
 import LoginForm from "./LoginForm";
 
@@ -11,7 +10,7 @@ const Login = () => {
   const { user, error, loading } = useAuthContext();
 
   useEffect(() => {
-    window.document.title = `${import.meta.env.VITE_APLICATION_NAME}`;
+    window.document.title = `Notificaciones`;
     if (error) {
       console.log("error login:", error);
     }

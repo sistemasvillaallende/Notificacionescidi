@@ -55,7 +55,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const userData = response.data;
           const offices:string[] = []
           officesResponse.map((e:any)=>offices.push(capitalizeFirstLetter(e.oficina)))
-          console.log(offices)
           setUser({
             nombre: capitalizeFirstLetter(userData.nombre_completo.split(' ')[0]),
             apellido: capitalizeFirstLetter(userData.nombre_completo.split(' ')[1]),
@@ -92,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (location.hash.includes('login')) {
         if(user.administrador == true) {
         navigate("/seleccionar-oficina/",{replace:true});
-      } else if (user.nombre_oficina) {
+      } else if (user?.nombre_oficina) {
         navigate(`/${user.nombre_oficina}/notificaciones`);
       } else {
         console.error("No se pudo determinar la oficina del usuario");

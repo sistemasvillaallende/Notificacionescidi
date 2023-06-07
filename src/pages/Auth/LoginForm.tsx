@@ -1,10 +1,11 @@
 import React from "react"
-import { FormCheck, FormInput, FormLabel } from "../../base-components/Form"
-import Button from "../../base-components/Button"
 import * as yup from "yup"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useAuthContext } from "../../context/AuthProvider"
+
+import { FormInput, FormLabel } from "../../base-components/Form"
+import Button from "../../base-components/Button"
 
 const schema = yup.object({
   user: yup
@@ -51,17 +52,12 @@ const LoginForm = () => {
         <FormLabel htmlFor="vertical-form-2">Contraseña</FormLabel>
         <FormInput
           id="vertical-form-2"
-          type="text"
+          type="password"
           placeholder="Contraseña"
           {...register("password")}
         />
         {errors.password?.message as string}
       </div>
-
-      <FormCheck className="mt-5">
-        <FormCheck.Input id="vertical-form-3" type="checkbox" value="" />
-        <FormCheck.Label htmlFor="vertical-form-3">Recuerdame</FormCheck.Label>
-      </FormCheck>
 
       <Button variant="secondary" className="mt-5">
         Login

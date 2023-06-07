@@ -1,14 +1,15 @@
-import Button from "../../base-components/Button"
-import { FormInput, FormSelect } from "../../base-components/Form"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useRef, createRef, useState } from "react"
 import { createIcons, icons } from "lucide"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
+
+import { officesIds } from "../../utils/officesIds.js"
+import { baseUrl, baseWebApi } from "../../utils/axiosConfig"
+import Button from "../../base-components/Button"
+import { FormInput, FormSelect } from "../../base-components/Form"
 import NotificationModal from "../../components/NotificationModal"
 import { capitalizeAll, capitalizeFirstLetter } from "../../utils/helper"
 import { validateCuil } from "../../utils/cuilValidator"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import { officesIds } from "../../utils/officesIds.js"
-import { baseUrl, baseWebApi } from "../../utils/axiosConfig"
 
 interface Response {
   id_notificacion?: number
@@ -399,7 +400,7 @@ function Main() {
     <>
       {errorMessage ? (
         <>
-          <h2>{errorMessage}</h2>
+          <h2 className="font-bold text-center text-lg text-primary">{errorMessage}</h2>
           <Link to="/seleccionar-oficina/">Volver</Link>
         </>
       ) : (
@@ -477,41 +478,6 @@ function Main() {
                 </div>
               </form>
               <div className="flex flex-col sm:flex-row sm:items-end xl:items-start">
-                {/* <Button
-              id="tabulator-print"
-              variant="outline-secondary"
-              className="w-1/2 mr-2 sm:w-auto"
-              onClick={onPrint}
-            >
-              <Lucide icon="Printer" className="w-4 h-4 mr-2" /> Imprimir
-            </Button>
-            <Menu className="w-1/2 sm:w-auto">
-              <Menu.Button
-                as={Button}
-                variant="outline-secondary"
-                className="w-full sm:w-auto"
-              >
-                <Lucide icon="FileText" className="w-4 h-4 mr-2" /> Exportar
-                <Lucide icon="ChevronDown" className="w-4 h-4 ml-auto sm:ml-2" />
-              </Menu.Button>
-              <Menu.Items className="w-40">
-                <Menu.Item onClick={onExportCsv}>
-                  <Lucide icon="FileText" className="w-4 h-4 mr-2" /> Exportar CSV
-                </Menu.Item>
-                <Menu.Item onClick={onExportJson}>
-                  <Lucide icon="FileText" className="w-4 h-4 mr-2" /> Exportar
-                  JSON
-                </Menu.Item>
-                <Menu.Item onClick={onExportXlsx}>
-                  <Lucide icon="FileText" className="w-4 h-4 mr-2" /> Exportar
-                  XLSX
-                </Menu.Item>
-                <Menu.Item onClick={onExportHtml}>
-                  <Lucide icon="FileText" className="w-4 h-4 mr-2" /> Exportar
-                  HTML
-                </Menu.Item>
-              </Menu.Items>
-            </Menu> */}
 
                 <NotificationModal />
               </div>
