@@ -5,20 +5,17 @@ import clsx from "clsx";
 import { useAuthContext } from "../../context/AuthProvider";
 import { useParams } from "react-router-dom";
 import LoadingIcon from "../../base-components/LoadingIcon";
+import LoginForm from "./LoginForm";
 
 const Login = () => {
-  const { handleLogin, user, error, loading } = useAuthContext();
-  const { cidi } = useParams();
+  const { user, error, loading } = useAuthContext();
 
   useEffect(() => {
     window.document.title = `${import.meta.env.VITE_APLICATION_NAME}`;
-    if (cidi) {
-      handleLogin(cidi);
-    }
     if (error) {
       console.log("error login:", error);
     }
-    if(localStorage.getItem('isLoggedIn')){
+    if(user){
       location.reload()
     }
   }, [user]);
@@ -58,9 +55,7 @@ const Login = () => {
                   <h2 className="text-1xl intro-x xl:text-2xl xl:text-left">
                     {!user && (
                       <>
-                        <a href={import.meta.env.VITE_URL_CIDI_LOGIN}>
-                          <img src={logoCIDI} alt="CIDI" />
-                        </a>
+                        <LoginForm />
                         {loading && (
                           <div className="h-5 my-8">
                             <LoadingIcon icon="three-dots" color="#0F99FF" />

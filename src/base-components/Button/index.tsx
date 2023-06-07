@@ -82,7 +82,7 @@ const Button: ButtonComponent = forwardRef(
       "bg-primary border-primary text-white dark:border-primary", // Default
     ];
     const secondary = [
-      "bg-secondary/70 border-secondary/70 text-slate-500", // Default
+      "bg-secondary/70 border-secondary/70 text-slate-900 text-base", // Default
       "dark:border-darkmode-400 dark:bg-darkmode-400 dark:text-slate-300", // Dark mode
       "[&:hover:not(:disabled)]:bg-slate-100 [&:hover:not(:disabled)]:border-slate-100", // On hover and not disabled
       "[&:hover:not(:disabled)]:dark:border-darkmode-300/80 [&:hover:not(:disabled)]:dark:bg-darkmode-300/80", // On hover and not disabled in dark mode

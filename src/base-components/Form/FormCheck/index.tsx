@@ -18,7 +18,7 @@ FormCheck.Label = (props: LabelProps) => {
   return (
     <label
       {...props}
-      className={twMerge(["cursor-pointer ml-2", props.className])}
+      className={twMerge(["cursor-pointer ml-2 text-base", props.className])}
     >
       {props.children}
     </label>

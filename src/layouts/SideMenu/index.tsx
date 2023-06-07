@@ -30,38 +30,25 @@ function Main() {
   const userInfo = user
     ? user
     : JSON.parse(localStorage.getItem("isLoggedIn") as string);
-  const userOffices = userInfo?.oficina;
+  const userOffice = userInfo?.nombre_oficina;
 
-  const submenuNoti = userOffices.map((office: string) => {
-    const Officeicon =
-      officesIds[office.toUpperCase() as keyof typeof officesIds].icon;
-    const icon = Officeicon ?? "Bell";
-    return {
-      icon: icon,
-      pathname: `/${office.split(' ').join('%20').toLowerCase()}/notificaciones/`,
-      title: capitalizeFirstLetter(office),
-    };
-  });
-
-  const submenuProcu = [
+  const Officeicon =
+      officesIds[userOffice.toUpperCase() as keyof typeof officesIds]?.icon;
+  const icon = Officeicon ?? "Bell";
+  const submenuNoti = [
     {
-      icon: 'Car',
-      pathname: `/oficina%20automotor/procuracion/`,
-      title: 'Oficina Automotor',
+      icon: icon,
+      pathname: `/${userOffice.split(' ').join('%20').toLowerCase()}/notificaciones/`,
+      title: capitalizeFirstLetter(userOffice),
     }
   ]
+  
   const updatedMenu: any = [
     {
       icon: "Bell",
       title: "Notificaciones",
       activeDropdown:true,
       subMenu: submenuNoti,
-    },
-    {
-      icon: "FileWarning",
-      title: "Procuración Administrativa",
-      activeDropdown:true,
-      subMenu: submenuProcu,
     },
   ];
 

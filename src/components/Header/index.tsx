@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Popover } from "../../base-components/Headless";
-import fakerData from "../../utils/faker";
 import _ from "lodash";
 import clsx from "clsx";
 import logo from "../../assets/images/logo.svg";
@@ -94,37 +93,6 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
             </Popover.Button>
             <Popover.Panel className="w-[280px] sm:w-[350px] p-5 mt-2">
               <div className="mb-5 font-medium">Notificaciones</div>
-              {_.take(fakerData, 5).map((faker, fakerKey) => (
-                <div
-                  key={fakerKey}
-                  className={clsx([
-                    "cursor-pointer relative flex items-center",
-                    { "mt-5": fakerKey },
-                  ])}
-                >
-                  <div className="relative flex-none w-12 h-12 mr-1 image-fit">
-                    <img
-                      alt="Imagen de perfil"
-                      className="rounded-full"
-                      src={faker.images[0]}
-                    />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full bg-success dark:border-darkmode-600"></div>
-                  </div>
-                  <div className="ml-2 overflow-hidden">
-                    <div className="flex items-center">
-                      <a href="" className="mr-5 font-medium truncate text-ligth">
-                      {user ? `${user.nombre} ${user.apellido}` : `cargando...`}
-                      </a>
-                      <div className="ml-auto text-xs text-slate-400 whitespace-nowrap">
-                        {faker.times[0]}
-                      </div>
-                    </div>
-                    <div className="w-full truncate text-slate-500 mt-0.5">
-                      {faker.news[0].shortContent}
-                    </div>
-                  </div>
-                </div>
-              ))}
             </Popover.Panel>
           </Popover>
           {/* END: Notifications */}

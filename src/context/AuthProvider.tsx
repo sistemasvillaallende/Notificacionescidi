@@ -8,19 +8,17 @@ interface User {
   apellido: string;
   email: string;
   userName: string;
-  cuit: string;
-  tipo: string;
-  codigo: string;
-  rol: string;
-  hash: string;
-  img: string;
-  oficina:string[]
+  cuit: string | null;
+  nombre_oficina: string;
+  cod_oficina: number;
+  cod_usuario: string;
+  administrador: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  handleLogin: (hash: string) => void;
+  handleLogin: (user: string, password:string) => void;
   handleLogout: () => void;
   error: any;
   loading: boolean;
@@ -44,35 +42,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (hash: string) => {
+  const handleLogin = async (user: string, password:string) => {
     setLoading(true);
     try {
-      const response = await userAuth.get("/UsuarioCIDI/ObtenerUsuarioCIDI2", {
-        params: {
-          Hash: hash,
-        },
-      });
-      const responseOffice: {data:any} = await userOffices.get(`/GetOficinas?cod_usuario=109`)
+      const response = await userAuth.get(`/Login/ValidaUsuarioConOficina?user=${user}&password=${password}`);
+      const responseOffice: {data:any} = await userOffices.get(`/GetOficinas?cod_usuario=${response?.data?.cod_usuario}`)
       const officesResponse:[] = responseOffice?.data
       if (response && officesResponse) {
         setLoading(false);
 
-        if (response.data.respuesta.resultado === "OK") {
+        if (response?.statusText === "OK") {
           const userData = response.data;
           const offices:string[] = []
           officesResponse.map((e:any)=>offices.push(capitalizeFirstLetter(e.oficina)))
+          console.log(offices)
           setUser({
-            nombre: userData.nombre.split(' ')[0],
-            apellido: userData.apellido.split(' ')[0],
+            nombre: capitalizeFirstLetter(userData.nombre_completo.split(' ')[0]),
+            apellido: capitalizeFirstLetter(userData.nombre_completo.split(' ')[1]),
             email: userData.Email,
-            userName: userData.nroDocumento,
-            cuit: userData.cuil,
-            tipo: "admin",
-            codigo: "109",
-            rol: "Empleado",
-            hash: hash,
-            img: userData.foto,
-            oficina:offices
+            userName: userData.nombre,
+            cuit: userData.cuit,
+            administrador: false,
+            cod_oficina: userData.cod_oficina,
+            cod_usuario: userData.cod_usuario,
+            nombre_oficina:userData.nombre_oficina
+
           });
         } else {
           console.error("Inicio de sesión fallido");
@@ -87,7 +81,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     localStorage.removeItem("isLoggedIn");
     setUser(null);
-    navigate("/#/login");
+    navigate("/login");
+    location.reload()
   };
 
   useEffect(() => {
@@ -95,10 +90,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("isLoggedIn", JSON.stringify(user));
 
       if (location.hash.includes('login')) {
-        if(user.oficina && user.oficina.length > 1) {
+        if(user.administrador == true) {
         navigate("/seleccionar-oficina/",{replace:true});
-      } else if (user.oficina && user.oficina.length === 1) {
-        navigate(`/#/${user.oficina[0]}/notificaciones`);
+      } else if (user.nombre_oficina) {
+        navigate(`/${user.nombre_oficina}/notificaciones`);
       } else {
         console.error("No se pudo determinar la oficina del usuario");
       }
