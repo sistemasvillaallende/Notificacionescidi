@@ -1,71 +1,96 @@
-import { Transition } from "react-transition-group";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { selectSideMenu } from "../../stores/sideMenuSlice";
-import { useAppSelector } from "../../stores/hooks";
-import { FormattedMenu, linkTo, nestedMenu, enter, leave } from "./side-menu";
-import Lucide from "../../base-components/Lucide";
-import clsx from "clsx";
-import MobileMenu from "../../components/MobileMenu";
-import SideMenuTooltip from "../../components/SideMenuTooltip";
-import { updateSideMenu } from "../../stores/sideMenuSlice";
-import { useDispatch } from "react-redux";
-import { officesIds } from "../../utils/officesIds";
-import { icons } from "lucide";
-import { useAuthContext } from "../../context/AuthProvider";
-import { capitalizeFirstLetter } from "../../utils/helper";
-import NotFound from "../../pages/NotFound";
+import { Transition } from "react-transition-group"
+import { useState, useEffect, Dispatch, SetStateAction } from "react"
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
+import { selectSideMenu } from "../../stores/sideMenuSlice"
+import { useAppSelector } from "../../stores/hooks"
+import { FormattedMenu, linkTo, nestedMenu, enter, leave } from "./side-menu"
+import Lucide from "../../base-components/Lucide"
+import clsx from "clsx"
+import MobileMenu from "../../components/MobileMenu"
+import SideMenuTooltip from "../../components/SideMenuTooltip"
+import { updateSideMenu } from "../../stores/sideMenuSlice"
+import { useDispatch } from "react-redux"
+import { officesIds } from "../../utils/officesIds"
+import { icons } from "lucide"
+import { useAuthContext } from "../../context/AuthProvider"
+import { capitalizeFirstLetter } from "../../utils/helper"
+import NotFound from "../../pages/NotFound"
 
 function Main() {
-  const location = useLocation();
+  const location = useLocation()
   const [formattedMenu, setFormattedMenu] = useState<
     Array<FormattedMenu | "divider">
-  >([]);
-  const [errorPage, setErrorPage] = useState(false);
-  const sideMenuStore = useAppSelector(selectSideMenu);
-  const sideMenu = () => nestedMenu(sideMenuStore, location);
-  const dispatch = useDispatch();
-  const { office } = useParams();
-  const { user } = useAuthContext();
+  >([])
+  const [errorPage, setErrorPage] = useState(false)
+  const sideMenuStore = useAppSelector(selectSideMenu)
+  const sideMenu = () => nestedMenu(sideMenuStore, location)
+  const dispatch = useDispatch()
+  const { office } = useParams()
+  const { user } = useAuthContext()
   const userInfo = user
     ? user
-    : JSON.parse(localStorage.getItem("isLoggedIn") as string);
-  const userOffice = userInfo?.nombre_oficina;
+    : JSON.parse(localStorage.getItem("isLoggedIn") as string)
+  const userOffice = userInfo?.nombre_oficina
+
 
   const Officeicon =
-      officesIds[userOffice.toUpperCase() as keyof typeof officesIds]?.icon;
-  const icon = Officeicon ?? "Bell";
+  officesIds[userOffice.toUpperCase() as keyof typeof officesIds].icon
+  
+const icon = Officeicon ?? "Bell"
   const submenuNoti = [
     {
       icon: icon,
-      pathname: `/${userOffice.split(' ').join('%20').toLowerCase()}/notificaciones/`,
+      pathname: `/${userOffice
+        .split(" ")
+        .join("%20")
+        .toLowerCase()}/notificaciones/`,
       title: capitalizeFirstLetter(userOffice),
-    }
+    }]
+
+  const submenuProcu = [
+    {
+      icon: "Car",
+      pathname: `/oficina%20automotor/procuracion/`,
+      title: "Oficina Automotor",
+    },
+    {
+      icon: "Factory",
+      pathname: `/comercio%20e%20industria/procuracion/`,
+      title: "Comercio e industria",
+    },
+    {
+      icon: "Building",
+      pathname: `/inmuebles/procuracion/`,
+      title: "Inmuebles",
+    },
   ]
-  
   const updatedMenu: any = [
     {
       icon: "Bell",
       title: "Notificaciones",
-      activeDropdown:true,
+      activeDropdown: true,
       subMenu: submenuNoti,
     },
-  ];
+    {
+      icon: "FileWarning",
+      title: "Procuración Administrativa",
+      activeDropdown: true,
+      subMenu: submenuProcu,
+    },
+  ]
 
   useEffect(() => {
-    dispatch(updateSideMenu(updatedMenu));
+    dispatch(updateSideMenu(updatedMenu))
     if (!officesIds[office?.toUpperCase() as keyof typeof officesIds]) {
-      setErrorPage(true);
-    } else setErrorPage(false);
-  }, [office]);
+      setErrorPage(true)
+    } else setErrorPage(false)
+  }, [office])
 
   useEffect(() => {
-    setFormattedMenu(sideMenu());
-  }, [sideMenuStore, location.pathname]);
+    setFormattedMenu(sideMenu())
+  }, [sideMenuStore, location.pathname])
   return (
     <div className="py-5 md:py-0 bg-white box-border">
-      {/* <DarkModeSwitcher /> */}
-      {/* <MainColorSwitcher /> */}
       <MobileMenu />
       <div className="flex overflow-hidden px-2 sm:px-5 mt-[120px] md:mt-5 bg-white">
         {/* BEGIN: Side Menu */}
@@ -120,9 +145,8 @@ function Main() {
                             <Menu
                               className={clsx({
                                 // Animation
-                                [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                                  10
-                                }`]: !subMenu.active,
+                                [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${10}`]:
+                                  !subMenu.active,
                               })}
                               menu={subMenu}
                               formattedMenuState={[
@@ -196,20 +220,20 @@ function Main() {
         {/* END: Content */}
       </div>
     </div>
-  );
+  )
 }
 
 function Menu(props: {
-  className?: string;
-  menu: FormattedMenu;
+  className?: string
+  menu: FormattedMenu
   formattedMenuState: [
     (FormattedMenu | "divider")[],
     Dispatch<SetStateAction<(FormattedMenu | "divider")[]>>
-  ];
-  level: "first" | "second" | "third";
+  ]
+  level: "first" | "second" | "third"
 }) {
-  const navigate = useNavigate();
-  const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
+  const navigate = useNavigate()
+  const [formattedMenu, setFormattedMenu] = props.formattedMenuState
 
   return (
     <SideMenuTooltip
@@ -239,9 +263,9 @@ function Menu(props: {
         props.className,
       ])}
       onClick={(event: React.MouseEvent) => {
-        event.preventDefault();
-        linkTo(props.menu, navigate);
-        setFormattedMenu([...formattedMenu]);
+        event.preventDefault()
+        linkTo(props.menu, navigate)
+        setFormattedMenu([...formattedMenu])
       }}
     >
       <div
@@ -280,14 +304,14 @@ function Menu(props: {
         )}
       </div>
     </SideMenuTooltip>
-  );
+  )
 }
 
 function Divider<C extends React.ElementType>(
   props: { as?: C } & React.ComponentPropsWithoutRef<C>
 ) {
-  const { className, ...computedProps } = props;
-  const Component = props.as || "div";
+  const { className, ...computedProps } = props
+  const Component = props.as || "div"
 
   return (
     <Component
@@ -297,7 +321,7 @@ function Divider<C extends React.ElementType>(
         "w-full h-px bg-black/[0.06] z-10 relative dark:bg-white/[0.07]",
       ])}
     ></Component>
-  );
+  )
 }
 
-export default Main;
+export default Main

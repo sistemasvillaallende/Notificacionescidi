@@ -5,6 +5,8 @@ import SelectOffice from "../pages/SelectOffice";
 import Login from "../pages/Auth/Login";
 import Header from "../components/Header";
 import NotFound from "../pages/NotFound"
+import Procuracion from "../pages/Procuracion";
+import ProcuracionComercio from "../pages/ProcuracionComercio";
 const Router = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") || false;
   const user = isLoggedIn ? JSON.parse(isLoggedIn as string) : null;
@@ -36,6 +38,7 @@ const Router = () => {
                 path="/:office/notificaciones"
                 element={<Notifications />}
               />
+               <Route path="/:office/procuracion" element={<Procuracion />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

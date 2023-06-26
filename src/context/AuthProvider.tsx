@@ -13,6 +13,7 @@ interface User {
   cod_oficina: number;
   cod_usuario: string;
   administrador: boolean;
+  img?:string
 }
 
 interface AuthContextType {
@@ -65,7 +66,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             cod_oficina: userData.cod_oficina,
             cod_usuario: userData.cod_usuario,
             nombre_oficina:userData.nombre_oficina
-
           });
         } else {
           console.error("Inicio de sesión fallido");

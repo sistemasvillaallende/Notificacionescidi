@@ -19,16 +19,15 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   const hideSearchDropdown = () => {
     setSearchDropdown(false);
   };
-  const path:string = location.hash && location.hash.split('/').at(-1) as string
+  let path:string = location.hash && location.hash.split('/').at(2) as string
+  if(path==='') path='inicio'
   const {  handleLogout, user, setUser  } = useAuthContext();
   const navigate = useNavigate()
 
-  const headerTitle ={
-    '':'Inicio',
-    notificaciones:'Notificaciones',
-    resoluciones: 'Resoluciones',
-    multas:'Multas',
-    autos:'Autos',
+  const headerTitle:any ={
+    inicio:{title:'Inicio',icon:'Home'},
+    notificaciones:{title:'Notificaciones',icon:'Bell'},
+    procuracion: {title:'Procuración', icon:'FileWarning'}
   }
 
   useEffect(() => {
@@ -70,31 +69,15 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
           {/* END: Logo */}
           {/* BEGIN: Title */}
           <div className="absolute right-0 flex items-center gap-16">
-            <h1 className="text-primary lg:text-5xl md:text-3xl font-semibold drop-shadow-[1px_1px_2px_#00000025]">
-              {headerTitle[path as keyof typeof headerTitle]}
-            </h1>
+            <div className="flex items-center text-primary lg:text-5xl md:text-3xl font-semibold drop-shadow-[1px_1px_2px_#00000025]">
+              {`${headerTitle[path as keyof typeof headerTitle]?.title}`}
+              <Lucide icon={headerTitle[path as keyof typeof headerTitle]?.icon} className="w-12 h-12 ml-5 text-secondary" />
+            </div>
           {/* END: Title */}
 
           {/* BEGIN: Notifications */}
           <div className="flex justify-around items-center md:w-[290px] md:h-[69px] lg:w-[352px] lg:h-[80px] bg-primary rounded-l-[20px]">
       
-          <Popover className="mx-5 h-[41px] intro-x sm:mr-6 flex items-center">
-            <Popover.Button
-              className="
-              relative text-white/70 outline-none block
-              before:content-[''] before:w-[8px] before:h-[8px] before:rounded-full before:absolute before:top-[-2px] before:right-0 before:bg-danger
-            "
-            >
-              <img
-              alt="Notificaciones"
-              className="w-100 md:h-[26px] lg:h-[33px]"
-              src={mail}
-            />
-            </Popover.Button>
-            <Popover.Panel className="w-[280px] sm:w-[350px] p-5 mt-2">
-              <div className="mb-5 font-medium">Notificaciones</div>
-            </Popover.Panel>
-          </Popover>
           {/* END: Notifications */}
 
           {/* BEGIN: Account Menu */}
@@ -112,10 +95,10 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
               <Menu.Header className="font-normal">
                 <div className="font-medium">{user && `${user.nombre} ${user.apellido}`}</div>
                 <div className="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-                  {user && capitalizeFirstLetter(user.rol)}
+                  {user && capitalizeFirstLetter(user.userName)}
                 </div>
               </Menu.Header>
-              { user && user.oficina?.length > 0 && 
+              { user && user.nombre_oficina?.length > 0 && 
               <Menu.Item 
                 className="hover:bg-white/5"
                 onClick={()=>navigate('/seleccionar-oficina/')}
