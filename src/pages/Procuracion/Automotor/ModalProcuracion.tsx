@@ -8,11 +8,14 @@ import { useAuthContext } from "../../../context/AuthProvider"
 import { validateCuil } from "../../../utils/cuilValidator"
 import ModalVerification from "../components/ModalVerification"
 import { baseWebApi } from "../../../utils/axiosConfig"
+import { officesIds } from "../../../utils/officesIds"
 
 function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body }: any) {
   const [validSelectedStates, setValidSelectedStates] = useState<string[]>([])
   const [validatedData, setValidatedData] = useState<{}[]>()
   const [errorMessage, setErrorMessage] = useState("")
+  const [isSend, setIsSend] = useState(false)
+  const [notificationsSended, setNotificationsSended] = useState<any>({})
   const data = table?.getData()
   const statesArray = dataSelected?.map((row: Response) =>
     capitalizeFirstLetter(row?.estado_Actualizado as string)
@@ -22,7 +25,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
   )
   const office = window?.localStorage?.getItem("selectedOffice") ?? ""
   const { user } = useAuthContext()
-
+  const officeId = officesIds[office.toUpperCase() as keyof typeof officesIds]?.id ?? 0
   const getStates = async () => {
     setErrorMessage("")
     try {
@@ -71,7 +74,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
         const data = dataSelected?.filter(
           (row: any) =>
             row?.cuit?.length > 1 &&
-            row.notificado_cidi == 0 &&
+            // row.notificado_cidi == 0 &&
             validateCuil(row?.cuit.trim()) &&
             response?.includes(capitalizeFirstLetter(row.estado_Actualizado.trim()))
         )
@@ -81,28 +84,58 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
   }, [dataSelected])
 
   const sendNotifications = async () => {
+    let successfulCount = 0
+    let failedCount = 0
+    const successfulNotifications: any = []
+    const failedNotifications: any = []
+
     const notifications = validatedData?.map((procuracion: any) => {
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          console.log({
-            cuit: procuracion.cuit,
-            subject: "",
-            body: body[procuracion.estado_Actualizado],
-            Nro_Emision: procuracion.nro_Emision,
-            Nro_Notificacion: procuracion.nro_Notificacion,
-            nro_procuracion: procuracion.nro_Procuracion,
-            id_oficina: office,
-            id_usuario: user?.cod_usuario,
-            tipo_proc: procuracion.tipo_proc,
+        const headers = {
+          "Content-Type": "application/json",
+        }
+        const bodyObject = {
+          cuit: procuracion.cuit,
+          subject: body[procuracion.estado_Actualizado]?.title,
+          body: body[procuracion.estado_Actualizado]?.body,
+          Nro_Emision: procuracion.nro_Emision,
+          Nro_Notificacion: procuracion.nro_Notificacion,
+          nro_procuracion: procuracion.nro_Procuracion,
+          id_oficina: parseInt(officeId),
+          id_usuario: user?.cod_usuario,
+          tipo_proc: 4,
+        }
+        baseWebApi
+          .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
+            headers: headers,
           })
-          resolve(procuracion) // Resuelve la promesa después de realizar la solicitud
-        }, 1000)
+          .then((response) => {
+            console.log("Notificación enviada correctamente:", response)
+            successfulCount++
+            successfulNotifications.push(response)
+            resolve(procuracion)
+          })
+          .catch((error) => {
+            console.error("Error al enviar notificación:", error)
+            failedCount++
+            failedNotifications.push(procuracion)
+            reject(error)
+          })
       })
     })
 
     console.log("Cargando...")
 
     if (notifications) {
+      setNotificationsSended({
+        successfulNotifications: successfulNotifications,
+        failedNotifications: failedNotifications,
+      })
+      setIsSend(true)
+      setTimeout(() => {
+        setValidatedData([])
+        setIsSend(false)
+      }, 8000)
       try {
         return await Promise.all(notifications) // Espera a que se cumplan todas las promesas
       } catch (error) {
@@ -128,84 +161,90 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
   const [superlargeModalSizePreview, setSuperlargeModalSizePreview] = useState(false)
 
   return (
-    <Preview>
-      <div className="flex items-center text-center">
-        {/* BEGIN: Super Large Modal Toggle */}
-        <Button
-          as="a"
-          href="#"
-          variant="primary"
-          onClick={(event: React.MouseEvent) => {
-            event.preventDefault()
-            setSuperlargeModalSizePreview(true)
-          }}
-          className={
-            errorMessage
-              ? "mr-2 sm:ml-5 mt-5 md:mt-0 shadow-md bg-light cursor-not-allowed"
-              : "mr-2 sm:ml-5 mt-5 md:mt-0 shadow-md bg-secondary"
-          }
-        >
-          Notificar
-        </Button>
-        {/* END: Super Large Modal Toggle */}
-      </div>
+    <>
+      <Preview>
+        <div className="flex items-center text-center">
+          {/* BEGIN: Super Large Modal Toggle */}
+          <Button
+            as="a"
+            href="#"
+            variant="primary"
+            onClick={(event: React.MouseEvent) => {
+              event.preventDefault()
+              setSuperlargeModalSizePreview(true)
+            }}
+            className={
+              errorMessage
+                ? "mr-2 sm:ml-5 mt-5 md:mt-0 shadow-md bg-light cursor-not-allowed"
+                : "mr-2 sm:ml-5 mt-5 md:mt-0 shadow-md bg-secondary"
+            }
+          >
+            Notificar
+          </Button>
+          {/* END: Super Large Modal Toggle */}
+        </div>
 
-      {/* BEGIN: Super Large Modal Content */}
-      <Dialog
-        size="xl"
-        open={superlargeModalSizePreview}
-        onClose={() => {
-          setSuperlargeModalSizePreview(false)
-          // reset();
-        }}
-      >
-        <Dialog.Panel className="p-10 text-center max-h-[95vh] overflow-y-auto">
-          {errorMessage?.length > 0 ? (
-            <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
-          ) : (
-            <>
-              <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
-              <main className="my-6">
-                <article className="text-left my-5 text-base">
-                  <p>
-                    <span className="">Procuraciones válidas para notificar: </span>
-                    {validatedData?.length}
-                  </p>
-                  <div>
-                    <span className="">Estados Seleccionados: </span>
-                    <ul>
-                      {validSelectedStates?.map((estado) => {
-                        const itemsForStates = validatedData?.filter((e: any) =>
-                          e.estado_Actualizado.toLowerCase().includes(estado.toLowerCase())
-                        )?.length
-                        if (itemsForStates && itemsForStates > 0) {
-                          return (
-                            <li key={estado} className="mt-6">
-                              <span className="font-bold text-lg">{`- ${estado}`}</span>
-                              <p>
-                                Procuraciones Seleccionadas:
-                                {` ${itemsForStates}`}
-                              </p>
-                              <span>
-                                <p>Asunto: {body[estado?.toUpperCase()]?.title}</p>
-                                <p className="">Notificación: </p>
-                                <p>{body[estado?.toUpperCase()]?.body}</p>
-                              </span>
-                            </li>
-                          )
-                        }
-                      })}
-                    </ul>
-                  </div>
-                </article>
-                <ModalVerification onClick={handleSubmit} />
-              </main>
-            </>
-          )}
-        </Dialog.Panel>
-      </Dialog>
-      {/* END: Super Large Modal Content */}
-    </Preview>
+        {/* BEGIN: Super Large Modal Content */}
+        <Dialog
+          size="xl"
+          open={superlargeModalSizePreview}
+          onClose={() => {
+            setSuperlargeModalSizePreview(false)
+          }}
+        >
+          <Dialog.Panel className="p-10 text-center max-h-[95vh] overflow-y-auto">
+            {errorMessage?.length > 0 ? (
+              <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
+            ) : isSend ? (
+              <h2 className="text-success">
+                {notificationsSended?.successfulNotifications?.length} Notificaciones Enviadas con
+                Éxito
+              </h2>
+            ) : (
+              <>
+                <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
+                <main className="my-6">
+                  <article className="text-left my-5 text-base">
+                    <p>
+                      <span className="">Procuraciones válidas para notificar: </span>
+                      {validatedData?.length}
+                    </p>
+                    <div>
+                      <span className="">Estados Seleccionados: </span>
+                      <ul>
+                        {validSelectedStates?.map((estado) => {
+                          const itemsForStates = validatedData?.filter((e: any) =>
+                            e.estado_Actualizado.toLowerCase().includes(estado.toLowerCase())
+                          )?.length
+                          if (itemsForStates && itemsForStates > 0) {
+                            return (
+                              <li key={estado} className="mt-6">
+                                <span className="font-bold text-lg">{`- ${estado}`}</span>
+                                <p>
+                                  Procuraciones Seleccionadas:
+                                  {` ${itemsForStates}`}
+                                </p>
+                                <span>
+                                  <p>Asunto: {body[estado?.toUpperCase()]?.title}</p>
+                                  <p className="">Notificación: </p>
+                                  <p>{body[estado?.toUpperCase()]?.body}</p>
+                                </span>
+                              </li>
+                            )
+                          }
+                        })}
+                      </ul>
+                    </div>
+                  </article>
+                  <ModalVerification onClick={handleSubmit} />
+                </main>
+              </>
+            )}
+          </Dialog.Panel>
+        </Dialog>
+        {/* END: Super Large Modal Content */}
+      </Preview>
+    </>
   )
 }
 
