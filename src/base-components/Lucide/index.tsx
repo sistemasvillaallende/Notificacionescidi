@@ -1,28 +1,27 @@
-import * as lucideIcons from "lucide-react";
-import clsx from "clsx";
+import * as lucideIcons from "lucide-react"
+import clsx from "clsx"
 
-export const { createReactComponent, ...icons } = lucideIcons;
+export const { createReactComponent, ...icons } = lucideIcons
 
-export type Icon = keyof typeof icons;
+export type Icon = keyof typeof icons
 
 interface LucideProps extends React.ComponentPropsWithoutRef<"svg"> {
-  icon: Icon;
-  title?: string;
+  icon: Icon
+  title?: string
 }
 
 function Lucide(props: LucideProps) {
-  const { icon, className, ...computedProps } = props;
-  const Component = lucideIcons[props?.icon];
+  const { icon, className, ...computedProps } = props
+  const Component = lucideIcons[props?.icon]
 
-  if(!Component) return null
+  if (!Component) return null
   return (
-    {Component && (
-      <Component
-        {...computedProps}
-        className={clsx(["stroke-1.5", props.className])}
-      />
-    )}
-  );
+    <>
+      {Component && (
+        <Component {...computedProps} className={clsx(["stroke-1.5", props.className])} />
+      )}
+    </>
+  )
 }
 
-export default Lucide;
+export default Lucide

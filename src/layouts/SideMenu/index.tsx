@@ -254,7 +254,7 @@ function Menu(props: {
           "dark:text-slate-400": !props.menu.active,
         })}
       >
-        <Lucide icon={props.menu.icon} />
+        <Lucide icon={props?.menu?.icon} />
       </div>
       <div
         className={clsx([
