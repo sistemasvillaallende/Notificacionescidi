@@ -47,9 +47,7 @@ function Main() {
   const [errorMessage, setErrorMessage] = useState("")
   const [isLoading, setIsloading] = useState(true)
   const navigate = useNavigate()
-  const officeId = office
-    ? officesIds[office?.toUpperCase() as keyof typeof officesIds]?.id
-    : ""
+  const officeId = office ? officesIds[office?.toUpperCase() as keyof typeof officesIds]?.id : ""
   const isLoggedIn = localStorage.getItem("isLoggedIn") as string
   const user = isLoggedIn ? JSON.parse(isLoggedIn) : null
   const [userWithAccess, setUserWithAccess] = useState(false)
@@ -59,7 +57,7 @@ function Main() {
       `/Login/ValidaPermisoConOficina?user=${user?.userName}&proceso=ND_NOTIF_GRAL`
     )
     setUserWithAccess(response?.data)
-    if(!response.data) setErrorMessage("No tienes permiso para acceder a este contenido")
+    if (!response.data) setErrorMessage("No tienes permiso para acceder a este contenido")
     else setErrorMessage("")
   }
 
@@ -69,8 +67,7 @@ function Main() {
 
   useEffect(() => {
     office && localStorage?.setItem("selectedOffice", office)
-    const officeExist =
-      office?.toLowerCase().trim() == user?.nombre_oficina?.toLowerCase().trim()
+    const officeExist = office?.toLowerCase().trim() == user?.nombre_oficina?.toLowerCase().trim()
     if (!officeExist) {
       setErrorMessage("No tienes permiso para acceder a este contenido")
     }
@@ -80,7 +77,7 @@ function Main() {
       reInitOnResizeWindow()
       setIsloading(false)
     }
-  }, [office,userWithAccess])
+  }, [office, userWithAccess])
 
   const initTabulator = () => {
     if (tableRef.current) {
@@ -168,9 +165,7 @@ function Main() {
               const nombre = response?.nombre && capitalizeAll(response.nombre)
 
               return `<div class="h-4 flex items-center">
-              <div class="font-normal whitespace-nowrap h-4">${
-                nombre && nombre
-              }</div>
+              <div class="font-normal whitespace-nowrap h-4">${nombre && nombre}</div>
             </div>`
             },
           },
@@ -210,13 +205,9 @@ function Main() {
               const response: Response = cell.getData()
               const estado = response?.estado?.toLocaleLowerCase()
               return `<div class="flex items-center lg:justify-start ${
-                response.estado == "NOTIFICADO"
-                  ? "text-success"
-                  : "text-warning"
+                response.estado == "NOTIFICADO" ? "text-success" : "text-warning"
               }">
-                <span>${
-                  estado ? estado.charAt(0).toUpperCase() + estado.slice(1) : ""
-                }</span>
+                <span>${estado ? estado.charAt(0)?.toUpperCase() + estado.slice(1) : ""}</span>
               </div>`
             },
           },
@@ -421,8 +412,7 @@ function Main() {
                       id="tabulator-html-filter-value"
                       value={filter.cuil}
                       onChange={(e) => {
-                        if (e.target.value === "")
-                          setCuilInput({ ...cuilInput, reset: false })
+                        if (e.target.value === "") setCuilInput({ ...cuilInput, reset: false })
                         setFilter({
                           ...filter,
                           field: "cuil",
@@ -478,7 +468,6 @@ function Main() {
                 </div>
               </form>
               <div className="flex flex-col sm:flex-row sm:items-end xl:items-start">
-
                 <NotificationModal />
               </div>
             </div>

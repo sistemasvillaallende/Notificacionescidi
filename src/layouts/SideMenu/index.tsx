@@ -17,31 +17,23 @@ import NotFound from "../../pages/NotFound"
 
 function Main() {
   const location = useLocation()
-  const [formattedMenu, setFormattedMenu] = useState<
-    Array<FormattedMenu | "divider">
-  >([])
+  const [formattedMenu, setFormattedMenu] = useState<Array<FormattedMenu | "divider">>([])
   const [errorPage, setErrorPage] = useState(false)
   const sideMenuStore = useAppSelector(selectSideMenu)
   const sideMenu = () => nestedMenu(sideMenuStore, location)
   const dispatch = useDispatch()
   const { office } = useParams()
   const { user } = useAuthContext()
-  const userInfo = user
-    ? user
-    : JSON.parse(localStorage.getItem("isLoggedIn") as string)
+  const userInfo = user ? user : JSON.parse(localStorage.getItem("isLoggedIn") as string)
   const userOffice = userInfo?.nombre_oficina
 
-  const Officeicon =
-    officesIds[userOffice.toUpperCase() as keyof typeof officesIds].icon
+  const Officeicon = officesIds[userOffice?.toUpperCase() as keyof typeof officesIds].icon
 
   const icon = Officeicon ?? "Bell"
   const submenuNoti = [
     {
       icon: icon,
-      pathname: `/${userOffice
-        .split(" ")
-        .join("%20")
-        .toLowerCase()}/notificaciones/`,
+      pathname: `/${userOffice.split(" ").join("%20").toLowerCase()}/notificaciones/`,
       title: capitalizeFirstLetter(userOffice),
     },
   ]
@@ -148,10 +140,7 @@ function Main() {
                                   !subMenu.active,
                               })}
                               menu={subMenu}
-                              formattedMenuState={[
-                                formattedMenu,
-                                setFormattedMenu,
-                              ]}
+                              formattedMenuState={[formattedMenu, setFormattedMenu]}
                               level="second"
                             ></Menu>
                             {/* BEGIN: Third Child */}
@@ -170,26 +159,21 @@ function Main() {
                                     { hidden: !subMenu.activeDropdown },
                                   ])}
                                 >
-                                  {subMenu.subMenu.map(
-                                    (lastSubMenu, lastSubMenuKey) => (
-                                      <li key={lastSubMenuKey}>
-                                        <Menu
-                                          className={clsx({
-                                            // Animation
-                                            [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                                              (lastSubMenuKey + 1) * 10
-                                            }`]: !lastSubMenu.active,
-                                          })}
-                                          menu={lastSubMenu}
-                                          formattedMenuState={[
-                                            formattedMenu,
-                                            setFormattedMenu,
-                                          ]}
-                                          level="third"
-                                        ></Menu>
-                                      </li>
-                                    )
-                                  )}
+                                  {subMenu.subMenu.map((lastSubMenu, lastSubMenuKey) => (
+                                    <li key={lastSubMenuKey}>
+                                      <Menu
+                                        className={clsx({
+                                          // Animation
+                                          [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
+                                            (lastSubMenuKey + 1) * 10
+                                          }`]: !lastSubMenu.active,
+                                        })}
+                                        menu={lastSubMenu}
+                                        formattedMenuState={[formattedMenu, setFormattedMenu]}
+                                        level="third"
+                                      ></Menu>
+                                    </li>
+                                  ))}
                                 </ul>
                               </Transition>
                             )}
@@ -242,18 +226,14 @@ function Menu(props: {
       className={clsx([
         "h-[50px] flex items-center pl-5 text-slate-600 mb-1 relative rounded-xl dark:text-slate-300",
         {
-          "text-slate-600 dark:text-slate-400":
-            !props.menu.active && props.level != "first",
-          "bg-slate-100 dark:bg-transparent":
-            props.menu.active && props.level == "first",
+          "text-slate-600 dark:text-slate-400": !props.menu.active && props.level != "first",
+          "bg-slate-100 dark:bg-transparent": props.menu.active && props.level == "first",
           "before:content-[''] before:block before:inset-0 before:rounded-xl before:absolute before:border-b-[3px] before:border-solid before:border-black/[0.08] before:dark:border-black/[0.08] before:dark:bg-darkmode-700":
             props.menu.active && props.level == "first",
           "after:content-[''] after:w-[20px] after:h-[80px] after:mr-[-27px] after:bg-menu-active after:bg-no-repeat after:bg-cover after:absolute after:top-0 after:bottom-0 after:right-0 after:my-auto after:dark:bg-menu-active-dark":
             props.menu.active && props.level == "first",
           "hover:bg-slate-100 hover:dark:bg-transparent hover:before:content-[''] hover:before:block hover:before:inset-0 hover:before:rounded-xl hover:before:absolute hover:before:z-[-1] hover:before:border-b-[3px] hover:before:border-solid hover:before:border-black/[0.08] hover:before:dark:bg-darkmode-700":
-            !props.menu.active &&
-            !props.menu.activeDropdown &&
-            props.level == "first",
+            !props.menu.active && !props.menu.activeDropdown && props.level == "first",
 
           // Animation
           "after:-mr-[47px] after:opacity-0 after:animate-[0.4s_ease-in-out_0.1s_active-side-menu-chevron] after:animate-fill-mode-forwards":
@@ -269,10 +249,8 @@ function Menu(props: {
     >
       <div
         className={clsx({
-          "text-primary z-10 dark:text-slate-300":
-            props.menu.active && props.level == "first",
-          "text-slate-700 dark:text-slate-300":
-            props.menu.active && props.level != "first",
+          "text-primary z-10 dark:text-slate-300": props.menu.active && props.level == "first",
+          "text-slate-700 dark:text-slate-300": props.menu.active && props.level != "first",
           "dark:text-slate-400": !props.menu.active,
         })}
       >

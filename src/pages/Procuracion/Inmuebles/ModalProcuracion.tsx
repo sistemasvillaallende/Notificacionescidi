@@ -8,13 +8,7 @@ import { useAuthContext } from "../../../context/AuthProvider"
 import { validateCuil } from "../../../utils/cuilValidator"
 import ModalVerification from "../components/ModalVerification"
 
-function ModalProcuracion({
-  table,
-  dataSelected,
-  nroEmision,
-  statesEmision,
-  body,
-}: any) {
+function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body }: any) {
   const [validSelectedStates, setValidSelectedStates] = useState<string[]>([])
   const [validatedData, setValidatedData] = useState<{}[]>()
   const [errorMessage, setErrorMessage] = useState("")
@@ -37,9 +31,7 @@ function ModalProcuracion({
         if (statesSelected.length > 0) {
           const validateStates = statesWithNotification?.filter(
             (el: { descripcion_estado: string }) =>
-              statesSelected?.includes(
-                capitalizeFirstLetter(el.descripcion_estado.trim())
-              )
+              statesSelected?.includes(capitalizeFirstLetter(el.descripcion_estado.trim()))
           )
           if (validateStates.length > 0) {
             if (validatedData && validatedData?.length > 0) {
@@ -48,12 +40,8 @@ function ModalProcuracion({
             return validateStates.map((state: { descripcion_estado: string }) =>
               capitalizeFirstLetter(state.descripcion_estado?.trim())
             )
-          } else
-            setErrorMessage(
-              "No hay procuraciones seleccionadas válidas para notificar"
-            )
-        } else
-          setErrorMessage("No hay estados seleccionados válidos para notificar")
+          } else setErrorMessage("No hay procuraciones seleccionadas válidas para notificar")
+        } else setErrorMessage("No hay estados seleccionados válidos para notificar")
         return null
       } else setErrorMessage("No hay estados válidos para notificar")
       return null
@@ -82,9 +70,7 @@ function ModalProcuracion({
             row?.cuit?.length > 1 &&
             row.notificado_cidi == 0 &&
             validateCuil(row?.cuit.trim()) &&
-            response?.includes(
-              capitalizeFirstLetter(row.estado_Actualizado.trim())
-            )
+            response?.includes(capitalizeFirstLetter(row.estado_Actualizado.trim()))
         )
         setValidatedData(data)
         return data
@@ -124,8 +110,7 @@ function ModalProcuracion({
     }
   }
 
-  const [superlargeModalSizePreview, setSuperlargeModalSizePreview] =
-    useState(false)
+  const [superlargeModalSizePreview, setSuperlargeModalSizePreview] = useState(false)
 
   return (
     <Preview>
@@ -164,15 +149,11 @@ function ModalProcuracion({
             <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
           ) : (
             <>
-              <h2 className="font-bold  text-2xl">
-                Crea una nueva notificación
-              </h2>
+              <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
               <main className="my-6">
                 <article className="text-left my-5 text-base">
                   <p>
-                    <span className="">
-                      Procuraciones válidas para notificar:{" "}
-                    </span>
+                    <span className="">Procuraciones válidas para notificar: </span>
                     {validatedData?.length}
                   </p>
                   <div>
@@ -180,9 +161,7 @@ function ModalProcuracion({
                     <ul>
                       {validSelectedStates?.map((estado) => {
                         const itemsForStates = validatedData?.filter((e: any) =>
-                          e.estado_Actualizado
-                            .toLowerCase()
-                            .includes(estado.toLowerCase())
+                          e.estado_Actualizado.toLowerCase().includes(estado.toLowerCase())
                         )?.length
                         if (itemsForStates && itemsForStates > 0) {
                           return (
@@ -193,11 +172,9 @@ function ModalProcuracion({
                                 {` ${itemsForStates}`}
                               </p>
                               <span>
-                                <p>
-                                  Asunto: {body[estado.toUpperCase()]?.title}
-                                </p>
+                                <p>Asunto: {body[estado.toUpperCase()]?.title}</p>
                                 <p className="">Notificación: </p>
-                                <p>{body[estado.toUpperCase()]?.body}</p>
+                                <p>{body[estado?.toUpperCase()]?.body}</p>
                               </span>
                             </li>
                           )
