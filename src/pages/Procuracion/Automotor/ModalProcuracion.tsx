@@ -7,6 +7,7 @@ import { capitalizeFirstLetter } from "../../../utils/helper"
 import { useAuthContext } from "../../../context/AuthProvider"
 import { validateCuil } from "../../../utils/cuilValidator"
 import ModalVerification from "../components/ModalVerification"
+import { baseWebApi } from "../../../utils/axiosConfig"
 
 function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body }: any) {
   const [validSelectedStates, setValidSelectedStates] = useState<string[]>([])
@@ -79,9 +80,9 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
       })
   }, [dataSelected])
 
-  const sendNotifications = () => {
+  const sendNotifications = async () => {
     const notifications = validatedData?.map((procuracion: any) => {
-      new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         setTimeout(() => {
           console.log({
             cuit: procuracion.cuit,
@@ -94,12 +95,24 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
             id_usuario: user?.cod_usuario,
             tipo_proc: procuracion.tipo_proc,
           })
+          resolve(procuracion) // Resuelve la promesa después de realizar la solicitud
         }, 1000)
       })
-      console.log("Cargando...")
-      return procuracion
     })
-    return Promise.all<any>(notifications)
+
+    console.log("Cargando...")
+
+    if (notifications) {
+      try {
+        return await Promise.all(notifications) // Espera a que se cumplan todas las promesas
+      } catch (error) {
+        // Manejar errores si es necesario
+        console.error(error)
+        throw error
+      }
+    } else {
+      return [] // Devuelve una matriz vacía si notifications es undefined
+    }
   }
 
   const handleSubmit = async () => {
