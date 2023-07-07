@@ -47,12 +47,7 @@ interface Props {
   setNroEmision: Function
 }
 
-const ProcuracionDetailTable = ({
-  url,
-  detail = false,
-  nroEmision,
-  setNroEmision,
-}: Props) => {
+const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -95,17 +90,13 @@ const ProcuracionDetailTable = ({
               console.log(
                 statesValidated &&
                   statesValidated.includes(
-                    capitalizeFirstLetter(
-                      data?.estado_Actualizado?.trim() as string
-                    )
+                    capitalizeFirstLetter(data?.estado_Actualizado?.trim() as string)
                   )
               )
               if (
                 statesValidated &&
                 statesValidated.includes(
-                  capitalizeFirstLetter(
-                    data?.estado_Actualizado?.trim() as string
-                  )
+                  capitalizeFirstLetter(data?.estado_Actualizado?.trim() as string)
                 )
               )
                 cell.getRow().toggleSelect()
@@ -351,9 +342,7 @@ const ProcuracionDetailTable = ({
     reInitOnResizeWindow()
     setBody({})
 
-    baseWebApi(
-      `/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=1`
-    )
+    baseWebApi(`/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=1`)
       .then((response: any) => {
         setStateEmision(response.data)
         return response.data
@@ -362,8 +351,7 @@ const ProcuracionDetailTable = ({
         response.map((estado: any) => {
           if (estado.emite_notif_cidi == 1) {
             baseWebApi(
-              "/Template_notificacion/ObtenerTextoReporte?idTemplate=" +
-                estado.tipo_reporte
+              "/Template_notificacion/ObtenerTextoReporte?idTemplate=" + estado.codigo_estado
             )
               .then((response) => {
                 const title = response?.data[0]?.tituloReporte
@@ -424,11 +412,7 @@ const ProcuracionDetailTable = ({
                   const value = e.target.value
                   setFilter({ ...filter, estado: e.target.value })
                   if (value != "nofilter") {
-                    tabulator.current?.setFilter(
-                      "estado_Actualizado",
-                      "=",
-                      value
-                    )
+                    tabulator.current?.setFilter("estado_Actualizado", "=", value)
                   } else {
                     tabulator.current?.clearFilter(true)
                   }
@@ -437,10 +421,7 @@ const ProcuracionDetailTable = ({
               >
                 <option value="nofilter">Filtrar por estado</option>
                 {statesEmision?.map((state: any) => (
-                  <option
-                    key={state.codigo_estado}
-                    value={state.descripcion_estado.trim()}
-                  >
+                  <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
                     {capitalizeFirstLetter(state.descripcion_estado.trim())}
                   </option>
                 ))}
@@ -482,9 +463,7 @@ const ProcuracionDetailTable = ({
           {statesValidated && (
             <p>
               {" "}
-              <span className="font-bold">
-                Estados validos para notificar:{" "}
-              </span>
+              <span className="font-bold">Estados validos para notificar: </span>
               {statesValidated.join(", ")}
             </p>
           )}
