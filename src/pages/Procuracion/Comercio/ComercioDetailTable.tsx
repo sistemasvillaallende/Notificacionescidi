@@ -383,10 +383,10 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
               "/Template_notificacion/ObtenerTextoReporte?idTemplate=" + estado.codigo_estado
             )
               .then((response) => {
-                const title = response?.data[0]?.tituloReporte
-                const data = response?.data[0]?.reporte ?? ""
+                const title = response?.data[0]?.tituloReporte?.trim()
+                const data = response?.data[0]?.reporte?.trim() ?? ""
                 const stateName = estado?.descripcion_estado
-                setBody({ ...body, [stateName]: { title: title, body: data } })
+                setBody({ ...body, [stateName.trim()]: { title: title, body: data } })
               })
               .catch((err) => console.error(err))
           }
