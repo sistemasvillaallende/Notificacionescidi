@@ -11,7 +11,6 @@ import SideMenuTooltip from "../../components/SideMenuTooltip"
 import { updateSideMenu } from "../../stores/sideMenuSlice"
 import { useDispatch } from "react-redux"
 import { officesIds } from "../../utils/officesIds"
-import { icons } from "lucide"
 import { useAuthContext } from "../../context/AuthProvider"
 import { capitalizeFirstLetter } from "../../utils/helper"
 import NotFound from "../../pages/NotFound"
@@ -32,11 +31,10 @@ function Main() {
     : JSON.parse(localStorage.getItem("isLoggedIn") as string)
   const userOffice = userInfo?.nombre_oficina
 
-
   const Officeicon =
-  officesIds[userOffice.toUpperCase() as keyof typeof officesIds].icon
-  
-const icon = Officeicon ?? "Bell"
+    officesIds[userOffice.toUpperCase() as keyof typeof officesIds].icon
+
+  const icon = Officeicon ?? "Bell"
   const submenuNoti = [
     {
       icon: icon,
@@ -45,7 +43,8 @@ const icon = Officeicon ?? "Bell"
         .join("%20")
         .toLowerCase()}/notificaciones/`,
       title: capitalizeFirstLetter(userOffice),
-    }]
+    },
+  ]
 
   const submenuProcu = [
     {
