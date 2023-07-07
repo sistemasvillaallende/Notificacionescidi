@@ -12,14 +12,16 @@ interface LucideProps extends React.ComponentPropsWithoutRef<"svg"> {
 
 function Lucide(props: LucideProps) {
   const { icon, className, ...computedProps } = props;
-  const Component = lucideIcons[props.icon];
+  const Component = lucideIcons[props?.icon];
 
   if(!Component) return null
   return (
-    <Component
-      {...computedProps}
-      className={clsx(["stroke-1.5", props.className])}
-    />
+    {Component && (
+      <Component
+        {...computedProps}
+        className={clsx(["stroke-1.5", props.className])}
+      />
+    )}
   );
 }
 

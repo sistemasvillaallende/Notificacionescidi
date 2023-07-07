@@ -11,7 +11,7 @@ interface CardProps {
   type: "notificaciones" | "procuracion"
 }
 const OfficeCards = ({ title, office, type }: CardProps) => {
-  const Officeicon = officesIds[office?.toUpperCase() as keyof typeof officesIds]?.icon
+  const Officeicon = officesIds[office?.toUpperCase() as keyof typeof officesIds]?.icon ?? false
   const icon = Officeicon ?? "Bell"
   const colorCard = type === "notificaciones" ? "text-info" : "text-secondary"
 
