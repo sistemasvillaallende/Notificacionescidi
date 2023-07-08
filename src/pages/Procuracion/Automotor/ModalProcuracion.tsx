@@ -74,7 +74,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
         const data = dataSelected?.filter(
           (row: any) =>
             row?.cuit?.length > 1 &&
-            // row.notificado_cidi == 0 &&
+            row.notificado_cidi == 0 &&
             validateCuil(row?.cuit.trim()) &&
             response?.includes(capitalizeFirstLetter(row.estado_Actualizado.trim()))
         )
