@@ -12,17 +12,12 @@ function Procuracion() {
   const { office } = useParams()
   const [nroEmision, setNumeroEmision] = useState("")
   const navigate = useNavigate()
-  const officeId = office
-    ? officesIds[office?.toUpperCase() as keyof typeof officesIds]?.id
-    : ""
+  const officeId = office ? officesIds[office?.toUpperCase() as keyof typeof officesIds]?.id : ""
   const isLoggedIn = localStorage.getItem("isLoggedIn") as string
   const user = isLoggedIn ? JSON.parse(isLoggedIn) : null
 
   const officeExist =
-    office &&
-    user?.oficina?.filter(
-      (e: string) => e.toLowerCase() === office.toLowerCase()
-    )[0]
+    office && user?.oficina?.filter((e: string) => e.toLowerCase() === office.toLowerCase())[0]
 
   useEffect(() => {
     office && localStorage?.setItem("selectedOffice", office)
@@ -39,18 +34,14 @@ function Procuracion() {
       <>
         {nroEmision ? (
           <ProcuracionDetailTable
-            url={
-              "/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="
-            }
+            url={"/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
             detail={true}
             nroEmision={nroEmision}
             setNroEmision={setNumeroEmision}
           />
         ) : (
           <ProcuracionTable
-            url={
-              "/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"
-            }
+            url={"/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"}
             detail={true}
             nroEmision={nroEmision}
             setNroEmision={setNumeroEmision}
@@ -63,18 +54,14 @@ function Procuracion() {
       <>
         {nroEmision ? (
           <ComercioDetailTable
-            url={
-              "/WebApiShared/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="
-            }
+            url={"/WebApiShared/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
             detail={true}
             nroEmision={nroEmision}
             setNroEmision={setNumeroEmision}
           />
         ) : (
           <ComercioTable
-            url={
-              "/WebApiShared/Notificacion_estado_proc_iyc/listNotifProcIyc"
-            }
+            url={"/WebApiShared/Notificacion_estado_proc_iyc/listNotifProcIyc"}
             detail={true}
             nroEmision={nroEmision}
             setNroEmision={setNumeroEmision}
@@ -83,29 +70,25 @@ function Procuracion() {
       </>
     )
   else if (office == "inmuebles")
-  return (
-    <>
-      {nroEmision ? (
-        <InmueblesDetailTable
-          url={
-            "/WebApiShared/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="
-          }
-          detail={true}
-          nroEmision={nroEmision}
-          setNroEmision={setNumeroEmision}
-        />
-      ) : (
-        <InmueblesTable
-          url={
-            "/WebApiShared/Notificacion_estado_proc_inm/listNotifProcInm"
-          }
-          detail={true}
-          nroEmision={nroEmision}
-          setNroEmision={setNumeroEmision}
-        />
-      )}
-    </>
-  )
+    return (
+      <>
+        {nroEmision ? (
+          <InmueblesDetailTable
+            url={"/WebApiShared/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
+            detail={true}
+            nroEmision={nroEmision}
+            setNroEmision={setNumeroEmision}
+          />
+        ) : (
+          <InmueblesTable
+            url={"/WebApiShared/Notificacion_estado_proc_inm/listNotifProcInm"}
+            detail={true}
+            nroEmision={nroEmision}
+            setNroEmision={setNumeroEmision}
+          />
+        )}
+      </>
+    )
 }
 
 export default Procuracion

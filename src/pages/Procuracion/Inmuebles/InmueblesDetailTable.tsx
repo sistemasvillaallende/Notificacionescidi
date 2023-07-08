@@ -47,7 +47,7 @@ interface Props {
   setNroEmision: Function
 }
 
-const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -476,4 +476,4 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   )
 }
 
-export default ProcuracionDetailTable
+export default InmueblesDetailTable
