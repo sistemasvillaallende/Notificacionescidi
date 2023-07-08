@@ -93,6 +93,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
       return new Promise((resolve, reject) => {
         const headers = {
           "Content-Type": "application/json",
+          Accept: "application/json",
         }
         const bodyObject = {
           cuit: procuracion.cuit,
@@ -128,7 +129,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
 
     if (notifications) {
       setNotificationsSended({
-        successfulNotifications: successfulNotifications,
+        successfulNotifications: notifications.length,
         failedNotifications: failedNotifications,
       })
       setIsSend(true)
@@ -195,11 +196,8 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
           <Dialog.Panel className="p-10 text-center max-h-[95vh] overflow-y-auto">
             {errorMessage?.length > 0 ? (
               <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
-            ) : isSend ? (
-              <h2 className="text-success">
-                {notificationsSended?.successfulNotifications?.length} Notificaciones Enviadas con
-                Éxito
-              </h2>
+            ) : !isSend ? (
+              <h2 className="text-success text-xl font-bold">Notificaciones Enviadas con Exito</h2>
             ) : (
               <>
                 <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
