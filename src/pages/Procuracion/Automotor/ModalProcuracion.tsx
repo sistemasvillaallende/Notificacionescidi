@@ -196,7 +196,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
           <Dialog.Panel className="p-10 text-center max-h-[95vh] overflow-y-auto">
             {errorMessage?.length > 0 ? (
               <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
-            ) : !isSend ? (
+            ) : isSend ? (
               <h2 className="text-success text-xl font-bold">Notificaciones Enviadas con Exito</h2>
             ) : (
               <>
