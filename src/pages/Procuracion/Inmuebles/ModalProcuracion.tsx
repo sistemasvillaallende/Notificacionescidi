@@ -91,6 +91,10 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
 
     const notifications = validatedData?.map((procuracion: any) => {
       return new Promise((resolve, reject) => {
+        const headers = {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }
         const bodyObject = {
           cuit: procuracion.cuit,
           subject: body[procuracion.estado_Actualizado]?.title,
@@ -103,7 +107,9 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
           tipo_proc: 1,
         }
         baseWebApi
-          .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject)
+          .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
+            headers: headers,
+          })
           .then((response) => {
             console.log("Notificación enviada correctamente:", response)
             successfulCount++
@@ -123,7 +129,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
 
     if (notifications) {
       setNotificationsSended({
-        successfulNotifications: successfulNotifications,
+        successfulNotifications: notifications.length,
         failedNotifications: failedNotifications,
       })
       setIsSend(true)
