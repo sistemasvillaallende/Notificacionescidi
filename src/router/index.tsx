@@ -16,8 +16,8 @@ const Router = () => {
   const userOffice = user?.nombre_oficina
   const hasPermission = (requiredRole: number[]) => {
     // Verifica si el usuario está autenticado y si tiene el rol requerido
-    console.log(user?.permisos.some((permiso: any) => requiredRole.includes(permiso.cod_proceso)))
-    return user?.permisos.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
+    console.log(user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso)))
+    return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
   }
 
   return (
