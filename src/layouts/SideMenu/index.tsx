@@ -27,13 +27,13 @@ function Main() {
   const userInfo = user ? user : JSON.parse(localStorage.getItem("isLoggedIn") as string)
   const userOffice = userInfo?.nombre_oficina
 
-  const Officeicon = officesIds[userOffice?.toUpperCase() as keyof typeof officesIds].icon
+  const Officeicon = officesIds[userOffice?.toUpperCase() as keyof typeof officesIds]?.icon
 
   const icon = Officeicon ?? "Bell"
   const submenuNoti = [
     {
       icon: icon,
-      pathname: `/${userOffice.split(" ").join("%20").toLowerCase()}/notificaciones/`,
+      pathname: `/${userOffice?.split(" ").join("%20").toLowerCase()}/notificaciones/`,
       title: capitalizeFirstLetter(userOffice),
     },
   ]

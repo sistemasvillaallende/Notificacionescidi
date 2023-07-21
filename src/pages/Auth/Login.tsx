@@ -1,24 +1,22 @@
-import React, { useEffect } from "react";
-import logo from "../../assets/images/logo.svg";
-import logoCIDI from "../../assets/images/cidi.png";
-import clsx from "clsx";
-import { useAuthContext } from "../../context/AuthProvider";
-import LoadingIcon from "../../base-components/LoadingIcon";
-import LoginForm from "./LoginForm";
+import React, { useEffect } from "react"
+import logo from "../../assets/images/logo.svg"
+import clsx from "clsx"
+import { useAuthContext } from "../../context/AuthProvider"
+import LoadingIcon from "../../base-components/LoadingIcon"
+import LoginForm from "./LoginForm"
 
 const Login = () => {
-  const { user, error, loading } = useAuthContext();
+  const { user, error, loading } = useAuthContext()
 
   useEffect(() => {
-    window.document.title = `Notificaciones`;
+    window.document.title = `Notificaciones CIDI`
     if (error) {
-      console.log("error login:", error);
+      console.log("error login:", error)
     }
-    if(user){
+    if (user) {
       location.reload()
     }
-  }, [user]);
-
+  }, [user])
 
   return (
     <>
@@ -34,11 +32,7 @@ const Login = () => {
             {/* BEGIN: Login Info */}
             <div className="flex-col hidden min-h-screen xl:flex">
               <div className="my-auto">
-                <img
-                  alt="Logo Villa Allende"
-                  className="w-1/2 -mt-16 -intro-x"
-                  src={logo}
-                />
+                <img alt="Logo Villa Allende" className="w-1/2 -mt-16 -intro-x" src={logo} />
               </div>
             </div>
             {/* END: Login Info */}
@@ -46,9 +40,7 @@ const Login = () => {
             <div className="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
               <div className="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none w-3/4 lg:w-2/4 xl:w-auto">
                 <h2 className="text-2xl font-bold text-center intro-x xl:text-3xl">
-                  {user
-                    ? `Bienvenido ${user.nombre} ${user.apellido}`
-                    : "Iniciar sesión"}
+                  {user ? `Bienvenido ${user.nombre} ${user.apellido}` : "Iniciar sesión"}
                 </h2>
                 <div className="mt-8 intro-x">
                   <h2 className="text-1xl intro-x xl:text-2xl xl:text-left">
@@ -72,7 +64,7 @@ const Login = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

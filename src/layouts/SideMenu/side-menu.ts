@@ -1,92 +1,89 @@
-import { NavigateFunction } from "react-router-dom";
-import { Menu } from "../../stores/sideMenuSlice";
-import { slideUp, slideDown } from "../../utils/helper";
+import { NavigateFunction } from "react-router-dom"
+import { Menu } from "../../stores/sideMenuSlice"
+import { slideUp, slideDown } from "../../utils/helper"
 
 interface Location {
-  pathname: string;
-  forceActiveMenu?: string;
+  pathname: string
+  forceActiveMenu?: string
 }
 
 export interface FormattedMenu extends Menu {
-  active?: boolean;
-  activeDropdown?: boolean;
-  subMenu?: FormattedMenu[];
+  active?: boolean
+  activeDropdown?: boolean
+  subMenu?: FormattedMenu[]
 }
 
 // Setup side menu
 const findActiveMenu = (subMenu: Menu[], location: Location): boolean => {
-  let match = false;
+  let match = false
   subMenu.forEach((item) => {
     if (
-      ((location.forceActiveMenu !== undefined &&
-        item.pathname === location.forceActiveMenu) ||
-        (location.forceActiveMenu === undefined &&
-          item.pathname === location.pathname)) &&
+      ((location.forceActiveMenu !== undefined && item.pathname === location.forceActiveMenu) ||
+        (location.forceActiveMenu === undefined && item.pathname === location.pathname)) &&
       !item.ignore
     ) {
-      match = true;
+      match = true
     } else if (!match && item.subMenu) {
-      match = findActiveMenu(item.subMenu, location);
+      match = findActiveMenu(item.subMenu, location)
     }
-  });
-  return match;
-};
+  })
+  return match
+}
 
 const nestedMenu = (menu: Array<Menu | "divider">, location: Location) => {
-  const formattedMenu: Array<FormattedMenu | "divider"> = [];
+  const formattedMenu: Array<FormattedMenu | "divider"> = []
   menu.forEach((item) => {
     if (typeof item !== "string") {
       const menuItem: FormattedMenu = {
-        icon: item.icon,
-        title: item.title,
-        pathname: item.pathname,
-        subMenu: item.subMenu,
-        ignore: item.ignore,
-      };
+        icon: item?.icon,
+        title: item?.title,
+        pathname: item?.pathname,
+        subMenu: item?.subMenu,
+        ignore: item?.ignore,
+      }
       menuItem.active =
         ((location.forceActiveMenu !== undefined &&
           menuItem.pathname === location.forceActiveMenu) ||
-          (location.forceActiveMenu === undefined &&
-            menuItem.pathname === location.pathname) ||
+          (location.forceActiveMenu === undefined && menuItem.pathname === location.pathname) ||
           (menuItem.subMenu && findActiveMenu(menuItem.subMenu, location))) &&
-        !menuItem.ignore;
+        !menuItem.ignore
 
       if (menuItem.subMenu) {
-        menuItem.activeDropdown = findActiveMenu(menuItem.subMenu, location);
+        menuItem.activeDropdown = findActiveMenu(menuItem.subMenu, location)
 
         // Nested menu
-        const subMenu: Array<FormattedMenu> = [];
+        const subMenu: Array<FormattedMenu> = []
         nestedMenu(menuItem.subMenu, location).map(
           (menu) => typeof menu !== "string" && subMenu.push(menu)
-        );
-        menuItem.subMenu = subMenu;
+        )
+        menuItem.subMenu = subMenu
       }
 
-      formattedMenu.push(menuItem);
+      formattedMenu.push(menuItem)
     } else {
-      formattedMenu.push(item);
+      formattedMenu.push(item)
     }
-  });
+  })
 
-  return formattedMenu;
-};
+  return formattedMenu
+}
 
 const linkTo = (menu: FormattedMenu, navigate: NavigateFunction) => {
   if (menu.subMenu) {
-    menu.activeDropdown = !menu.activeDropdown;
+    menu.activeDropdown = !menu.activeDropdown
   } else {
     if (menu.pathname !== undefined) {
-      navigate(menu.pathname, {replace: true});
+      navigate(menu.pathname, { replace: true })
     }
   }
-};
+}
 
 const enter = (el: HTMLElement) => {
-  slideDown(el, 300);
-};
+  slideDown(el, 300)
+}
 
 const leave = (el: HTMLElement) => {
-  slideUp(el, 300);
-};
+  slideUp(el, 300)
+}
 
-export { nestedMenu, linkTo, enter, leave };
+export { nestedMenu, linkTo, enter, leave }
