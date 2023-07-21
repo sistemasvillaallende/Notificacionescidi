@@ -17,6 +17,7 @@ html {
     font-size: theme("fontSize.sm");
     line-height: theme("lineHeight.5");
     color: theme("colors.slate.800");
+    min-width: 100vh;
 
     @media screen(sm) {
       padding-left: theme("spacing.8");
