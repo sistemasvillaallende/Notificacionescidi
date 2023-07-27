@@ -33,13 +33,13 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
         (state: { emite_notif_cidi: number }) => state?.emite_notif_cidi == 1
       )
       if (statesWithNotification) {
-        if (statesSelected.length > 0) {
-          const validateStates = statesWithNotification?.filter(
+        if (statesSelected?.length > 0) {
+          const validateStates = statesWithNotification.filter(
             (el: { descripcion_estado: string }) =>
-              statesSelected?.includes(capitalizeFirstLetter(el.descripcion_estado.trim()))
+              statesSelected.includes(capitalizeFirstLetter(el?.descripcion_estado?.trim()))
           )
-          if (validateStates.length > 0) {
-            if (validatedData && validatedData?.length > 0) {
+          if (validateStates?.length > 0) {
+            if (validatedData && validatedData.length > 0) {
               setErrorMessage("")
             }
             return validateStates.map((state: { descripcion_estado: string }) =>
@@ -78,6 +78,9 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
             validateCuil(row?.cuit.trim()) &&
             response?.includes(capitalizeFirstLetter(row.estado_Actualizado.trim()))
         )
+        if (data.length === 0)
+          setErrorMessage("No hay procuraciones seleccionadas válidas para notificar")
+        else setErrorMessage("")
         setValidatedData(data)
         return data
       })

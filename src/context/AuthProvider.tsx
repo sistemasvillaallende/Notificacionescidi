@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     localStorage.removeItem("isLoggedIn")
     setUser(null)
-    navigate("/login")
+    navigate("#/login")
     location.reload()
   }
 

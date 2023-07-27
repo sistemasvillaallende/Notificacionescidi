@@ -103,7 +103,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
                       {user && capitalizeFirstLetter(user.userName)}
                     </div>
                   </Menu.Header>
-                  {user && user.nombre_oficina?.length > 0 && (
+                  {user && user?.administrador === true && (
                     <Menu.Item
                       className="hover:bg-white/5"
                       onClick={() => navigate("/seleccionar-oficina/")}

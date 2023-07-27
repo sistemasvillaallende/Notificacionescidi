@@ -78,6 +78,11 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
             validateCuil(row?.cuit.trim()) &&
             response?.includes(capitalizeFirstLetter(row.estado_Actualizado.trim()))
         )
+        if (data.length === 0) {
+          setErrorMessage("No hay procuraciones seleccionadas válidas para notificar")
+        } else {
+          setErrorMessage("")
+        }
         setValidatedData(data)
         return data
       })

@@ -51,7 +51,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   })
   const [selectedData, setSelectedData] = useState<any>()
   const [statesEmision, setStateEmision] = useState<any>()
-
+  const [body, setBody] = useState({})
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
@@ -376,7 +376,6 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     }
   }, [])
 
-  const [body, setBody] = useState({})
   useEffect(() => {
     nroEmision && initTabulator()
     reInitOnResizeWindow()
