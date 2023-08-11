@@ -395,7 +395,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               .then((response) => {
                 const title = response?.data[0]?.tituloReporte?.trim()
                 const data = response?.data[0]?.reporte?.trim() ?? ""
-                const idTemplate = response?.data[0]?.idTemplate?.trim()
+                const idTemplate = response?.data[0]?.idTemplate
                 const stateName = estado?.descripcion_estado
                 setBody({
                   ...body,
