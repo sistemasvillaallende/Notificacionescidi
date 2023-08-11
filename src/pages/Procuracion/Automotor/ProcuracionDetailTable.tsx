@@ -377,7 +377,9 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     }
   }, [])
 
-  useEffect(() => {}, [notificationsSended])
+  useEffect(() => {
+    setSelectedData([])
+  }, [notificationsSended])
 
   useEffect(() => {
     nroEmision && initTabulator()
