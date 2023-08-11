@@ -10,12 +10,18 @@ import ModalVerification from "../components/ModalVerification"
 import { baseWebApi } from "../../../utils/axiosConfig"
 import { officesIds } from "../../../utils/officesIds"
 
-function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body }: any) {
+function ModalProcuracion({
+  table,
+  dataSelected,
+  nroEmision,
+  statesEmision,
+  body,
+  setNotificationsSended,
+}: any) {
   const [validSelectedStates, setValidSelectedStates] = useState<string[]>([])
   const [validatedData, setValidatedData] = useState<{}[]>()
   const [errorMessage, setErrorMessage] = useState("")
   const [isSend, setIsSend] = useState(false)
-  const [notificationsSended, setNotificationsSended] = useState<any>({})
   const data = table?.getData()
   const statesArray = dataSelected?.map((row: Response) =>
     capitalizeFirstLetter(row?.estado_Actualizado as string)
