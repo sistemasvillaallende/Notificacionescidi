@@ -99,6 +99,12 @@ function ModalProcuracion({
     const failedNotifications: any = []
 
     const notifications = validatedData?.map((procuracion: any) => {
+      const codigoEstado = statesEmision.find((estado: { descripcion_estado: string }) => {
+        return (
+          estado.descripcion_estado.trim().toLowerCase() ===
+          procuracion.estado_Actualizado.trim().toLowerCase()
+        )
+      })
       return new Promise((resolve, reject) => {
         const headers = {
           "Content-Type": "application/json",
@@ -116,6 +122,7 @@ function ModalProcuracion({
           tipo_proc: 4,
           idTemplate: body[procuracion.estado_Actualizado]?.idTemplate,
           tituloReporte: body[procuracion.estado_Actualizado]?.title,
+          cod_estado_actual: codigoEstado.codigo_estado,
         }
         baseWebApi
           .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
