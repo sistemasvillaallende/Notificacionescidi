@@ -67,6 +67,12 @@ function ModalProcuracion({
   useEffect(() => {
     setValidatedData([])
     setValidSelectedStates([])
+    setErrorMessage("")
+  }, [isSend])
+
+  useEffect(() => {
+    setValidatedData([])
+    setValidSelectedStates([])
     setErrorMessage("Selecciona alguna procuración para iniciar")
   }, [nroEmision])
 
@@ -122,7 +128,7 @@ function ModalProcuracion({
           tipo_proc: 4,
           idTemplate: body[procuracion.estado_Actualizado]?.idTemplate,
           tituloReporte: body[procuracion.estado_Actualizado]?.title,
-          cod_estado_actual: codigoEstado.codigo_estado,
+          cod_estado_actual: codigoEstado?.codigo_estado ?? "",
         }
         baseWebApi
           .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
@@ -154,7 +160,7 @@ function ModalProcuracion({
       setTimeout(() => {
         setValidatedData([])
         setIsSend(false)
-      }, 8000)
+      }, 3000)
       try {
         return await Promise.all(notifications) // Espera a que se cumplan todas las promesas
       } catch (error) {
