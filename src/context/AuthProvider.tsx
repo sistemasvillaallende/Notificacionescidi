@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: userData.Email,
             userName: userData.nombre,
             cuit: userData.cuit,
-            administrador: false,
+            administrador: true,
             cod_oficina: userData.cod_oficina,
             cod_usuario: userData.cod_usuario,
             nombre_oficina: userData.nombre_oficina,

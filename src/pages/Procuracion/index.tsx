@@ -33,9 +33,10 @@ function Procuracion() {
     setNumeroEmision("")
   }, [itemId])
 
-  const hasPermission = (requiredRole: number[]) => {
+  const hasPermission = (requiredRole: number[], user: User) => {
     // Verifica si el usuario está autenticado y si tiene el rol requerido
-    return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
+    if (user?.administrador === true) return true
+    else return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
   }
 
   useEffect(() => {
@@ -48,7 +49,7 @@ function Procuracion() {
   }, [])
   if (user) {
     if (office == "oficina automotor") {
-      if (hasPermission([461])) {
+      if (hasPermission([461], user)) {
         console.log("itemId", itemId)
         if (itemId && itemId === "nuevasemisiones") {
           return (
@@ -96,7 +97,7 @@ function Procuracion() {
         return <Navigate to="/permiso-denegado" replace={true} />
       }
     } else if (office == "comercio e industria") {
-      if (hasPermission([462])) {
+      if (hasPermission([462], user)) {
         return (
           <>
             {nroEmision ? (
@@ -117,8 +118,8 @@ function Procuracion() {
           </>
         )
       } else return <Navigate to="/permiso-denegado" replace={true} />
-    } else if (office == "inmuebles" && hasPermission([460])) {
-      if (hasPermission([460])) {
+    } else if (office == "inmuebles" && hasPermission([460], user)) {
+      if (hasPermission([460], user)) {
         return (
           <>
             {nroEmision ? (

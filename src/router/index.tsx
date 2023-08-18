@@ -11,12 +11,12 @@ import { User } from "../context/AuthProvider"
 import PermissionDenied from "../pages/PermissionDenied"
 const Router = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") ?? false
-  const user = isLoggedIn && JSON.parse(isLoggedIn as string)
+  const user: User = isLoggedIn && JSON.parse(isLoggedIn as string)
   const hasSingleOffice = !user?.administrador
   const userOffice = user?.nombre_oficina
-  const hasPermission = (requiredRole: number[]) => {
+  const hasPermission = (requiredRole: number[], user: User) => {
     // Verifica si el usuario está autenticado y si tiene el rol requerido
-    console.log(user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso)))
+    console.log("user", user?.administrador)
     if (user?.administrador) return true
     else return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
   }
@@ -45,7 +45,7 @@ const Router = () => {
               <Route
                 path="/:office/notificaciones"
                 element={
-                  hasPermission([459]) ? (
+                  hasPermission([459], user) ? (
                     <Notifications />
                   ) : (
                     <Navigate to="/permiso-denegado" replace={true} />
@@ -55,7 +55,7 @@ const Router = () => {
               <Route
                 path="/:office/procuracion"
                 element={
-                  hasPermission([460, 461, 462]) ? (
+                  hasPermission([460, 461, 462], user) ? (
                     <Procuracion />
                   ) : (
                     <Navigate to="/permiso-denegado" replace={true} />
