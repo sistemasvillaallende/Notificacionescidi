@@ -270,7 +270,7 @@ function Menu(props: {
       </div>
       <div
         className={clsx([
-          "w-full ml-3 hidden xl:flex items-center",
+          "w-full mx-3 hidden xl:flex items-center",
           {
             "text-primary font-medium z-10 dark:text-slate-300":
               props.menu.active && props.level == "first",
