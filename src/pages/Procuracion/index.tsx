@@ -33,7 +33,7 @@ function Procuracion() {
   }, [])
   if (user) {
     if (office == "oficina automotor") {
-      if (hasPermission([453])) {
+      if (hasPermission([461])) {
         return (
           <>
             {nroEmision ? (
@@ -58,7 +58,7 @@ function Procuracion() {
         return <Navigate to="/permiso-denegado" replace={true} />
       }
     } else if (office == "comercio e industria") {
-      if (hasPermission([454])) {
+      if (hasPermission([462])) {
         return (
           <>
             {nroEmision ? (
@@ -79,8 +79,8 @@ function Procuracion() {
           </>
         )
       } else return <Navigate to="/permiso-denegado" replace={true} />
-    } else if (office == "inmuebles" && hasPermission([452])) {
-      if (hasPermission([452])) {
+    } else if (office == "inmuebles" && hasPermission([460])) {
+      if (hasPermission([460])) {
         return (
           <>
             {nroEmision ? (

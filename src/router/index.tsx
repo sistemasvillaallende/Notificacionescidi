@@ -44,7 +44,7 @@ const Router = () => {
               <Route
                 path="/:office/notificaciones"
                 element={
-                  hasPermission([457]) ? (
+                  hasPermission([459]) ? (
                     <Notifications />
                   ) : (
                     <Navigate to="/permiso-denegado" replace={true} />
@@ -54,7 +54,7 @@ const Router = () => {
               <Route
                 path="/:office/procuracion"
                 element={
-                  hasPermission([452, 453, 457]) ? (
+                  hasPermission([460, 461, 462]) ? (
                     <Procuracion />
                   ) : (
                     <Navigate to="/permiso-denegado" replace={true} />
