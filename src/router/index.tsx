@@ -12,11 +12,10 @@ import PermissionDenied from "../pages/PermissionDenied"
 const Router = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") ?? false
   const user: User = isLoggedIn && JSON.parse(isLoggedIn as string)
-  const hasSingleOffice = !user?.administrador
+  // const hasSingleOffice = !user?.administrador
   const userOffice = user?.nombre_oficina
   const hasPermission = (requiredRole: number[], user: User) => {
     // Verifica si el usuario está autenticado y si tiene el rol requerido
-    console.log("user", user?.administrador)
     if (user?.administrador) return true
     else return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
   }
@@ -33,23 +32,19 @@ const Router = () => {
           <Header />
           <Routes>
             <Route path="/" element={<Navigate to="/seleccionar-oficina/" />} />
-            {hasSingleOffice ? (
-              <Route
-                path="/seleccionar-oficina/"
-                element={<Navigate to={`/${userOffice}/notificaciones`} />}
-              />
-            ) : (
-              <Route path="/seleccionar-oficina/" element={<SelectOffice />} />
-            )}
+            <Route
+              path="/seleccionar-oficina/"
+              element={<Navigate to={`/${userOffice}/notificaciones`} />}
+            />
             <Route path="/:office" element={<SideMenu />}>
               <Route
                 path="/:office/notificaciones"
                 element={
-                  hasPermission([459], user) ? (
-                    <Notifications />
-                  ) : (
-                    <Navigate to="/permiso-denegado" replace={true} />
-                  )
+                  // hasPermission([459], user) ? (
+                  <Notifications />
+                  // ) : (
+                  // <Navigate to="/permiso-denegado" replace={true} />
+                  // )
                 }
               />
               <Route

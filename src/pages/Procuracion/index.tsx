@@ -29,7 +29,6 @@ function Procuracion() {
 
   useEffect(() => {
     // Este efecto secundario se ejecuta cuando itemId cambia
-    console.log("itemId actualizado:", itemId)
     setNumeroEmision("")
   }, [itemId])
 
@@ -50,7 +49,6 @@ function Procuracion() {
   if (user) {
     if (office == "oficina automotor") {
       if (hasPermission([461], user)) {
-        console.log("itemId", itemId)
         if (itemId && itemId === "nuevasemisiones") {
           return (
             <>

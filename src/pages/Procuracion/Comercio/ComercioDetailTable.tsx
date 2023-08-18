@@ -75,12 +75,6 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
             formatter: "rowSelection",
             cellClick: function (e, cell) {
               const data: Response = cell.getData()
-              console.log(
-                statesValidated &&
-                  statesValidated.includes(
-                    capitalizeFirstLetter(data?.estado_Actualizado?.trim() as string)
-                  )
-              )
               if (
                 statesValidated &&
                 statesValidated.includes(

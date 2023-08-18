@@ -43,7 +43,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false)
 
   const handleLogin = async (user: string, password: string) => {
+    setError(null)
     setLoading(true)
+
     try {
       const response = await userAuth.get(
         `/Login/ValidaUsuarioConOficina?user=${user}&password=${password}`
@@ -65,10 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser({
             nombre: capitalizeFirstLetter(userData.nombre_completo?.split(" ")[0]) ?? "",
             apellido: capitalizeFirstLetter(userData.nombre_completo?.split(" ")[1]) ?? "",
-            email: userData.Email,
+            email: userData.email,
             userName: userData.nombre,
             cuit: userData.cuit,
-            administrador: true,
+            administrador: userData.administrador,
             cod_oficina: userData.cod_oficina,
             cod_usuario: userData.cod_usuario,
             nombre_oficina: userData.nombre_oficina,
@@ -80,6 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       setError(error)
+      setLoading(false)
       console.error("Error al obtener datos del usuario:", error)
     }
   }

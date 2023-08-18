@@ -40,10 +40,12 @@ function Main() {
 
   const subMenuCar = [
     {
+      icon: "MailSearch",
       pathname: `/oficina%20automotor/procuracion`,
       title: "Cambio masivo de procuración",
     },
     {
+      icon: "ArrowUp",
       pathname: `/oficina%20automotor/procuracion?id=nuevasemisiones`,
       title: "Nuevas emisiones",
     },

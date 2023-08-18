@@ -149,8 +149,6 @@ function ModalProcuracion({
       })
     })
 
-    console.log("Cargando...")
-
     if (notifications) {
       setNotificationsSended({
         successfulNotifications: notifications?.length,
@@ -177,7 +175,6 @@ function ModalProcuracion({
     try {
       const response = await sendNotifications()
       response && console.log("Notificaciones enviadas exitosamente")
-      console.log("Respuestas:", response)
     } catch (error) {
       console.error("Error al enviar notificaciones", error)
     }

@@ -55,7 +55,14 @@ const Login = () => {
                       </>
                     )}
                   </h2>
-                  <h3>{error && `ERROR DEL SERVIDOR: ${error.message}`}</h3>
+                  <h3>
+                    {error && (
+                      <p className="my-5">
+                        Ha ocurrido un error en el proceso de inicio de sesión. Por favor, verifica
+                        tus credenciales e inténtalo nuevamente
+                      </p>
+                    )}
+                  </h3>
                 </div>
               </div>
             </div>
