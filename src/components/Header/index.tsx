@@ -20,7 +20,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
     setSearchDropdown(false)
   }
   let path: string = location.hash && (location.hash?.split("/").at(2) as string)
-  if (path.includes("?")) path = path.split("?")?.[0]
+  if (path?.includes("?")) path = path.split("?")?.[0]
   console.log(path)
   if (path === "") path = "inicio"
   if (path === undefined) path = "pagina-no-encontrada"
