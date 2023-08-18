@@ -8,6 +8,9 @@ import InmueblesDetailTable from "./Inmuebles/InmueblesDetailTable"
 import ComercioTable from "./Comercio/ComercioTable"
 import ComercioDetailTable from "./Comercio/ComercioDetailTable"
 import { User } from "../../context/AuthProvider.js"
+import NuevasEmisiones from "./Automotor/Submenu/NuevasEmisiones.js"
+import CambioMasivo from "./Automotor/Submenu/CambioMasivo.js"
+import { useLocation } from "react-router-dom"
 
 function Procuracion() {
   const { office } = useParams()
@@ -15,11 +18,23 @@ function Procuracion() {
   const [user, setUser] = useState<User | null>(null)
   const navigate = useNavigate()
   const isLoggedIn = localStorage.getItem("isLoggedIn") as string
+  const [itemId, setItemId] = useState<string | null>(null)
+  const location = useLocation()
+  useEffect(() => {
+    // Obtiene el valor del parámetro 'id' de la URL
+    const searchParams = new URLSearchParams(location.search)
+    const id = searchParams.get("id")
+    id ? setItemId(id) : setItemId(null)
+  }, [location])
+
+  useEffect(() => {
+    // Este efecto secundario se ejecuta cuando itemId cambia
+    console.log("itemId actualizado:", itemId)
+    setNumeroEmision("")
+  }, [itemId])
 
   const hasPermission = (requiredRole: number[]) => {
     // Verifica si el usuario está autenticado y si tiene el rol requerido
-    console.log(user?.permisos)
-    console.log(user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso)))
     return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
   }
 
@@ -34,25 +49,48 @@ function Procuracion() {
   if (user) {
     if (office == "oficina automotor") {
       if (hasPermission([461])) {
-        return (
-          <>
-            {nroEmision ? (
-              <ProcuracionDetailTable
-                url={"/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
-                detail={true}
-                nroEmision={nroEmision}
-                setNroEmision={setNumeroEmision}
-              />
-            ) : (
-              <ProcuracionTable
-                url={"/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"}
-                detail={true}
-                nroEmision={nroEmision}
-                setNroEmision={setNumeroEmision}
-              />
-            )}
-          </>
-        )
+        console.log("itemId", itemId)
+        if (itemId && itemId === "nuevasemisiones") {
+          return (
+            <>
+              {nroEmision ? (
+                <CambioMasivo
+                  url={"/WebApiShared/Det_notificacion_auto/read?nro_emision="}
+                  detail={true}
+                  nroEmision={nroEmision}
+                  setNroEmision={setNumeroEmision}
+                />
+              ) : (
+                <NuevasEmisiones
+                  url={"/WebApiShared/Notificacion_auto/read"}
+                  detail={true}
+                  nroEmision={nroEmision}
+                  setNroEmision={setNumeroEmision}
+                />
+              )}
+            </>
+          )
+        } else {
+          return (
+            <>
+              {nroEmision ? (
+                <ProcuracionDetailTable
+                  url={"/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
+                  detail={true}
+                  nroEmision={nroEmision}
+                  setNroEmision={setNumeroEmision}
+                />
+              ) : (
+                <ProcuracionTable
+                  url={"/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"}
+                  detail={true}
+                  nroEmision={nroEmision}
+                  setNroEmision={setNumeroEmision}
+                />
+              )}
+            </>
+          )
+        }
       } else {
         console.log("no tiene permisos")
         return <Navigate to="/permiso-denegado" replace={true} />

@@ -38,11 +38,22 @@ function Main() {
     },
   ]
 
+  const subMenuCar = [
+    {
+      pathname: `/oficina%20automotor/procuracion`,
+      title: "Cambio masivo de procuración",
+    },
+    {
+      pathname: `/oficina%20automotor/procuracion?id=nuevasemisiones`,
+      title: "Nuevas emisiones",
+    },
+  ]
+
   const submenuProcu = [
     {
       icon: "Car",
-      pathname: `/oficina%20automotor/procuracion/`,
       title: "Oficina Automotor",
+      subMenu: subMenuCar,
     },
     {
       icon: "Factory",
@@ -55,6 +66,7 @@ function Main() {
       title: "Inmuebles",
     },
   ]
+
   const updatedMenu: any = [
     {
       icon: "Bell",

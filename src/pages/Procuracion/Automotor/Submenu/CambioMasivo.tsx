@@ -8,30 +8,27 @@ import React, {
   useRef,
   useState,
 } from "react"
-import { baseUrl, baseWebApi } from "../../../utils/axiosConfig"
+import { baseUrl, baseWebApi } from "../../../../utils/axiosConfig"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
-import { capitalizeFirstLetter } from "../../../utils/helper"
-import { FormInput, FormSelect } from "../../../base-components/Form"
-import Lucide from "../../../base-components/Lucide"
-import ModalProcuracion from "./ModalProcuracion"
+import { capitalizeFirstLetter } from "../../../../utils/helper"
+import { FormInput, FormSelect } from "../../../../base-components/Form"
+import Lucide from "../../../../base-components/Lucide"
+import ModalProcuracion from "../ModalProcuracion"
 
 export interface Response {
-  nro_Emision?: number
-  nro_Procuracion?: number
+  nro_emision?: number
+  nro_proc?: number
+  nro_cedulon?: number
   dominio?: string
-  nro_Badec?: number
+  nro_badec?: number
   nombre?: string
-  cuit?: string
-  estado_Actual?: string
-  estado_Actualizado?: string
-  notificado_cidi?: number
-  fecha_Inicio_Estado?: string
-  fecha_Fin_Estado?: string
-  vencimiento?: string
+  fecha_baja_real?: string
+  fecha_vencimiento?: string
   monto_original?: number
   interes?: number
   descuento?: number
   importe_pagar?: number
+  bloqueado?: boolean
 }
 
 interface Props {
@@ -41,7 +38,7 @@ interface Props {
   setNroEmision: Function
 }
 
-const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -66,7 +63,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
         layout: "fitColumns",
         responsiveLayout: "collapse",
         responsiveLayoutCollapseStartOpen: false,
-        groupBy: "estado_Actualizado",
+        groupBy: "estado_actualizado",
         placeholder: "No se han encontrado registros",
         columns: [
           {
@@ -84,7 +81,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               if (
                 statesValidated &&
                 statesValidated.includes(
-                  capitalizeFirstLetter(data?.estado_Actualizado?.trim() as string)
+                  capitalizeFirstLetter(data?.estado_actualizado?.trim() as string)
                 )
               )
                 cell.getRow().toggleSelect()
@@ -102,16 +99,26 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             title: "Nro.",
             width: 80,
             minWidth: 80,
-            field: "nro_Notificacion",
+            field: "nro_notificacion",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
           },
           {
+            title: "Cedulón",
+            width: 80,
+            minWidth: 80,
+            field: "nro_cedulon",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            headerSort: false,
+          },
+          {
             title: "Procuración",
             minWidth: 90,
             width: 90,
-            field: "nro_Procuracion",
+            field: "nro_proc",
             vertAlign: "middle",
             headerSort: false,
           },
@@ -129,55 +136,11 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             title: "Badec",
             width: 70,
             minWidth: 50,
-            field: "nro_Badec",
+            field: "nro_badec",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
-          },
-          {
-            title: "CUIT",
-            minWidth: 120,
-            width: 120,
-            field: "cuit",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-          },
-          {
-            title: "Estado Actual",
-            minWidth: 150,
-            width: 200,
-            field: "estado_Actualizado",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            formatter(cell) {
-              const response: Response = cell.getData()
-              return `<div class="h-4 flex items-start w-full">
-              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
-                response?.estado_Actualizado as string
-              )}</div>
-            </div>`
-            },
-          },
-          {
-            title: "Notificación",
-            minWidth: 100,
-            width: 150,
-            field: "notificado_cidi",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            formatter(cell) {
-              const response: Response = cell.getData()
-              const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${
-                response.notificado_cidi == 1 ? "text-success" : "text-warning"
-              }">
-                <span>${estado == 1 ? "Notificado" : "No notificado"}</span>
-              </div>`
-            },
           },
           {
             title: "Nombre",
@@ -197,45 +160,28 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             },
           },
           {
-            title: "Estado Inicial",
-            minWidth: 150,
-            width: 180,
-            field: "estado_Actual",
+            title: "Bloqueado",
+            minWidth: 100,
+            width: 150,
+            field: "bloqueado",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
               const response: Response = cell.getData()
-              return `<div class="h-4 flex items-start w-full">
-              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
-                response?.estado_Actual as string
-              )}</div>
-            </div>`
-            },
-          },
-          {
-            title: "Fecha Inicio",
-            minWidth: 120,
-            width: 120,
-            field: "fecha_Inicio_Estado",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            headerSort: false,
-            formatter(cell) {
-              const response: Response = cell.getData()
-              return `<div class="h-4 flex items-center">
-                <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_Inicio_Estado as string
-                ).toLocaleDateString()}</div>
+              const estado = response?.bloqueado
+              return `<div class="flex items-center lg:justify-start ${
+                response.bloqueado == false ? "text-success" : "text-warning"
+              }">
+                <span>${estado == false ? "No bloqueado" : "Bloqueado"}</span>
               </div>`
             },
           },
           {
-            title: "Fecha Último Estado",
+            title: "Fecha Baja",
             minWidth: 120,
             width: 120,
-            field: "fecha_Fin_Estado",
+            field: "fecha_baja_real",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
@@ -244,7 +190,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_Fin_Estado as string
+                  response?.fecha_baja_real as string
                 ).toLocaleDateString()}</div>
               </div>`
             },
@@ -253,7 +199,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             title: "Vencimiento",
             minWidth: 120,
             width: 120,
-            field: "vencimiento",
+            field: "fecha_vencimiento",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
@@ -262,20 +208,10 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.vencimiento as string
+                  response?.fecha_vencimiento as string
                 ).toLocaleDateString()}</div>
               </div>`
             },
-          },
-          {
-            title: "Cedulón",
-            minWidth: 100,
-            width: 140,
-            field: "nro_cedulon",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            headerSort: false,
           },
           {
             title: "Debe",
@@ -380,31 +316,32 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     reInitOnResizeWindow()
     setBody({})
 
-    baseWebApi(`/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=4`)
-      .then((response: any) => {
-        setStateEmision(response.data)
-        return response.data
-      })
-      .then((response: any) => {
-        response.map((estado: any) => {
-          if (estado.emite_notif_cidi == 1) {
-            baseWebApi(
-              `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}`
-            )
-              .then((response) => {
-                const title = response?.data[0]?.tituloReporte?.trim()
-                const data = response?.data[0]?.reporte?.trim() ?? ""
-                const idTemplate = response?.data[0]?.idTemplate
-                const stateName = estado?.descripcion_estado
-                setBody({
-                  ...body,
-                  [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
-                })
-              })
-              .catch((err) => console.error(err))
-          }
-        })
-      })
+    baseWebApi(
+      `/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=4`
+    ).then((response: any) => {
+      setStateEmision(response.data)
+      return response.data
+    })
+    // .then((response: any) => {
+    //   response.map((estado: any) => {
+    //     if (estado.emite_notif_cidi == 1) {
+    //       baseWebApi(
+    //         `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}`
+    //       )
+    //         .then((response) => {
+    //           const title = response?.data[0]?.tituloReporte?.trim()
+    //           const data = response?.data[0]?.reporte?.trim() ?? ""
+    //           const idTemplate = response?.data[0]?.idTemplate
+    //           const stateName = estado?.descripcion_estado
+    //           setBody({
+    //             ...body,
+    //             [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
+    //           })
+    //         })
+    //         .catch((err) => console.error(err))
+    //     }
+    //   })
+    // })
   }, [nroEmision])
 
   const handleBack = () => {
@@ -445,7 +382,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             Volver
           </div>
 
-          <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
+          {/* <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
             {tabulator?.current && (
               <FormSelect
                 id="tabulator-html-filter-field"
@@ -454,7 +391,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                   const value = e.target.value
                   setFilter({ ...filter, estado: e.target.value })
                   if (value != "nofilter") {
-                    tabulator.current?.setFilter("estado_Actualizado", "=", value)
+                    tabulator.current?.setFilter("estado_actualizado", "=", value)
                   } else {
                     tabulator.current?.clearFilter(true)
                   }
@@ -469,7 +406,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                 ))}
               </FormSelect>
             )}
-          </div>
+          </div> */}
 
           {/* Input nro de emisión */}
 
@@ -491,7 +428,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
 
           {/* Boton y modal */}
 
-          <div>
+          {/* <div>
             <ModalProcuracion
               table={tabulator.current}
               dataSelected={selectedData}
@@ -500,9 +437,9 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               body={body}
               setNotificationsSended={setNotificationsSended}
             />
-          </div>
+          </div> */}
         </div>
-        <div className="mt-5">
+        {/* <div className="mt-5">
           {statesValidated && (
             <p>
               {" "}
@@ -510,7 +447,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               {statesValidated.join(", ")}
             </p>
           )}
-        </div>
+        </div> */}
       </section>
       <div className="overflow-x-scroll scrollbar-hidden">
         <div id="tabulator" ref={tableRef} className="mt-5"></div>
@@ -519,4 +456,4 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   )
 }
 
-export default ProcuracionDetailTable
+export default CambioMasivo
