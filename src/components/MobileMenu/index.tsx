@@ -27,7 +27,7 @@ function Main() {
       new SimpleBar(scrollableRef.current)
     }
     setFormattedMenu(mobileMenu())
-  }, [sideMenuStore, location.pathname])
+  }, [sideMenuStore, location?.pathname])
 
   return (
     <>

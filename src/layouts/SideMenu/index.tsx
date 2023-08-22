@@ -14,6 +14,7 @@ import { officesIds } from "../../utils/officesIds"
 import { useAuthContext } from "../../context/AuthProvider"
 import { capitalizeFirstLetter } from "../../utils/helper"
 import NotFound from "../../pages/NotFound"
+import { getSecureItem } from "../../modules/secureStorage"
 
 function Main() {
   const location = useLocation()
@@ -24,7 +25,7 @@ function Main() {
   const dispatch = useDispatch()
   const { office } = useParams()
   const { user } = useAuthContext()
-  const userInfo = user ? user : JSON.parse(localStorage.getItem("isLoggedIn") as string)
+  const userInfo = user ? user : getSecureItem("isLoggedIn")
   const userOffice = userInfo?.nombre_oficina
 
   const Officeicon = officesIds[userOffice?.toUpperCase() as keyof typeof officesIds]?.icon

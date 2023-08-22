@@ -9,9 +9,10 @@ import Procuracion from "../pages/Procuracion"
 import ProcuracionComercio from "../pages/ProcuracionComercio"
 import { User } from "../context/AuthProvider"
 import PermissionDenied from "../pages/PermissionDenied"
+import { getSecureItem } from "../modules/secureStorage"
 const Router = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") ?? false
-  const user: User = isLoggedIn && JSON.parse(isLoggedIn as string)
+  const user: User = isLoggedIn && getSecureItem("isLoggedIn")
   // const hasSingleOffice = !user?.administrador
   const userOffice = user?.nombre_oficina
   const hasPermission = (requiredRole: number[], user: User) => {
@@ -50,7 +51,7 @@ const Router = () => {
               <Route
                 path="/:office/procuracion"
                 element={
-                  hasPermission([460, 461, 462], user) ? (
+                  hasPermission([452, 452, 454, 460, 461, 462], user) ? (
                     <Procuracion />
                   ) : (
                     <Navigate to="/permiso-denegado" replace={true} />

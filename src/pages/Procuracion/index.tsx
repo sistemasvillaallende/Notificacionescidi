@@ -11,13 +11,14 @@ import { User } from "../../context/AuthProvider.js"
 import NuevasEmisiones from "./Automotor/Submenu/NuevasEmisiones.js"
 import CambioMasivo from "./Automotor/Submenu/CambioMasivo.js"
 import { useLocation } from "react-router-dom"
+import { getSecureItem } from "../../modules/secureStorage.js"
 
 function Procuracion() {
   const { office } = useParams()
   const [nroEmision, setNumeroEmision] = useState("")
   const [user, setUser] = useState<User | null>(null)
   const navigate = useNavigate()
-  const isLoggedIn = localStorage.getItem("isLoggedIn") as string
+  const isLoggedIn = getSecureItem("isLoggedIn") as string
   const [itemId, setItemId] = useState<string | null>(null)
   const location = useLocation()
   useEffect(() => {
@@ -39,16 +40,18 @@ function Procuracion() {
   }
 
   useEffect(() => {
-    const userLocal = isLoggedIn ? JSON.parse(isLoggedIn) : null
+    const userLocal = isLoggedIn ? getSecureItem("isLoggedIn") : null
     userLocal && setUser(userLocal)
     office && localStorage?.setItem("selectedOffice", office)
     if (!officesIds[office?.toUpperCase() as keyof typeof officesIds]) {
       navigate("/404")
     }
+    console.log("userLocal", userLocal)
   }, [])
+
   if (user) {
     if (office == "oficina automotor") {
-      if (hasPermission([461], user)) {
+      if (hasPermission([453, 461], user)) {
         if (itemId && itemId === "nuevasemisiones") {
           return (
             <>
@@ -95,7 +98,7 @@ function Procuracion() {
         return <Navigate to="/permiso-denegado" replace={true} />
       }
     } else if (office == "comercio e industria") {
-      if (hasPermission([462], user)) {
+      if (hasPermission([454, 462], user)) {
         return (
           <>
             {nroEmision ? (
@@ -117,7 +120,7 @@ function Procuracion() {
         )
       } else return <Navigate to="/permiso-denegado" replace={true} />
     } else if (office == "inmuebles" && hasPermission([460], user)) {
-      if (hasPermission([460], user)) {
+      if (hasPermission([454, 460], user)) {
         return (
           <>
             {nroEmision ? (

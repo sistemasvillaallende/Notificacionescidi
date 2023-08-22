@@ -10,6 +10,7 @@ import mail from "../../assets/icons/mail.svg"
 import { useAuthContext } from "../../context/AuthProvider"
 import { capitalizeFirstLetter } from "../../utils/helper"
 import placeholderProfile from "../../assets/images/placeholders/placeholderProfile.jpg"
+import { getSecureItem } from "../../modules/secureStorage"
 
 function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   const [searchDropdown, setSearchDropdown] = useState(false)
@@ -21,6 +22,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   }
   let path: string = location.hash && (location.hash?.split("/").at(2) as string)
   if (path?.includes("?")) path = path.split("?")?.[0]
+
   if (path === "") path = "inicio"
   if (path === undefined) path = "pagina-no-encontrada"
   const { handleLogout, user, setUser } = useAuthContext()
@@ -36,7 +38,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn")
     if (isLoggedIn) {
-      const parsedUser = JSON.parse(isLoggedIn)
+      const parsedUser = getSecureItem("isLoggedIn")
       if (parsedUser) {
         setUser(parsedUser)
       }

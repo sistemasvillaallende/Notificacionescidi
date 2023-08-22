@@ -10,6 +10,7 @@ import { FormInput, FormSelect } from "../../base-components/Form"
 import NotificationModal from "../../components/NotificationModal"
 import { capitalizeAll, capitalizeFirstLetter } from "../../utils/helper"
 import { validateCuil } from "../../utils/cuilValidator"
+import { getSecureItem } from "../../modules/secureStorage.js"
 
 interface Response {
   id_notificacion?: number
@@ -48,8 +49,8 @@ function Main() {
   const [isLoading, setIsloading] = useState(true)
   const navigate = useNavigate()
   const officeId = office ? officesIds[office?.toUpperCase() as keyof typeof officesIds]?.id : ""
-  const isLoggedIn = localStorage.getItem("isLoggedIn") as string
-  const user = isLoggedIn ? JSON.parse(isLoggedIn) : null
+  const isLoggedIn = localStorage.getItem("isLoggedIn")
+  const user = isLoggedIn ? getSecureItem("isLoggedIn") : null
   const [userWithAccess, setUserWithAccess] = useState(false)
 
   const validateUser = async () => {

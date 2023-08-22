@@ -25,6 +25,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "axios": "^1.3.6",
     "chart.js": "^3.9.1",
+    "crypto-js": "^4.1.1",
     "dayjs": "^1.11.5",
     "dropzone": "^6.0.0-beta.2",
     "flat": "^5.0.2",

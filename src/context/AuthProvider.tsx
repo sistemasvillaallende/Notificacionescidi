@@ -2,6 +2,7 @@ import { useState, useContext, createContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { baseWebApi, userAuth, userOffices } from "../utils/axiosConfig"
 import { capitalizeFirstLetter } from "../utils/helper"
+import { setSecureItem } from "../modules/secureStorage"
 
 export interface User {
   nombre: string
@@ -57,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const responsePermisos = await baseWebApi.get(
         `/Login/GetPermisosCidi?cod_usuario=${response?.data?.cod_usuario}`
       )
+      console.log("responsePermisos", responsePermisos.data[0])
       if (response && officesResponse) {
         setLoading(false)
 
@@ -96,7 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("isLoggedIn", JSON.stringify(user))
+      setSecureItem("isLoggedIn", user)
 
       if (location.hash.includes("login")) {
         if (user.administrador === true) {
