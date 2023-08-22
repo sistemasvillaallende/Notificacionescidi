@@ -58,25 +58,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const responsePermisos = await baseWebApi.get(
         `/Login/GetPermisosCidi?cod_usuario=${response?.data?.cod_usuario}`
       )
-      console.log("responsePermisos", responsePermisos.data[0])
       if (response && officesResponse) {
         setLoading(false)
 
         if (response?.statusText === "OK") {
-          const userData = response.data
+          const userData = response?.data
           const offices: string[] = []
           officesResponse?.map((e: any) => offices.push(capitalizeFirstLetter(e.oficina)))
           setUser({
-            nombre: capitalizeFirstLetter(userData.nombre_completo?.split(" ")[0]) ?? "",
-            apellido: capitalizeFirstLetter(userData.nombre_completo?.split(" ")[1]) ?? "",
-            email: userData.email,
-            userName: userData.nombre,
-            cuit: userData.cuit,
-            administrador: userData.administrador,
-            cod_oficina: userData.cod_oficina,
-            cod_usuario: userData.cod_usuario,
-            nombre_oficina: userData.nombre_oficina,
-            permisos: responsePermisos?.data,
+            nombre: capitalizeFirstLetter(userData?.nombre_completo?.split(" ")[0]) ?? "",
+            apellido: capitalizeFirstLetter(userData?.nombre_completo?.split(" ")[1]) ?? "",
+            email: userData?.email,
+            userName: userData?.nombre,
+            cuit: userData?.cuit,
+            administrador: userData?.administrador,
+            cod_oficina: userData?.cod_oficina,
+            cod_usuario: userData?.cod_usuario,
+            nombre_oficina: userData?.nombre_oficina,
+            permisos: !userData?.administrador ? responsePermisos?.data : ["admin"],
           })
         } else {
           console.error("Inicio de sesión fallido")
