@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "build": "vite build --base=/notificacionescidi/",
+    "serve": "vite preview --base=/notificacionescidi/",
     "preview": "vite preview"
   },
   "dependencies": {
