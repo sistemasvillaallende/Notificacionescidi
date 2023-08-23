@@ -9,7 +9,7 @@ import ComercioTable from "./Comercio/ComercioTable"
 import ComercioDetailTable from "./Comercio/ComercioDetailTable"
 import { User } from "../../context/AuthProvider.js"
 import NuevasEmisiones from "./Automotor/Submenu/NuevasEmisiones.js"
-import CambioMasivo from "./Automotor/Submenu/CambioMasivo.js"
+import DetalleNuevasEmisiones from "./Automotor/Submenu/DetalleNuevasEmisiones.js"
 import { useLocation } from "react-router-dom"
 import { getSecureItem } from "../../modules/secureStorage.js"
 
@@ -56,7 +56,7 @@ function Procuracion() {
           return (
             <>
               {nroEmision ? (
-                <CambioMasivo
+                <DetalleNuevasEmisiones
                   url={"/WebApiShared/Det_notificacion_auto/read?nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}

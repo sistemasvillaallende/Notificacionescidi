@@ -1,13 +1,5 @@
 import { createIcons, icons } from "lucide"
-import React, {
-  ChangeEventHandler,
-  MouseEventHandler,
-  ReactEventHandler,
-  createRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { createRef, useEffect, useRef, useState } from "react"
 import { baseUrl, baseWebApi } from "../../../utils/axiosConfig"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
 import { capitalizeFirstLetter } from "../../../utils/helper"

@@ -13,12 +13,13 @@ import { TabulatorFull as Tabulator } from "tabulator-tables"
 import { capitalizeFirstLetter } from "../../../../utils/helper"
 import { FormInput, FormSelect } from "../../../../base-components/Form"
 import Lucide from "../../../../base-components/Lucide"
-import ModalProcuracion from "../ModalProcuracion"
+import ModalProcuracion from "./ModalProcuracion"
 
 export interface Response {
   nro_emision?: number
   nro_proc?: number
   nro_cedulon?: number
+  nro_notificacion?: number
   dominio?: string
   nro_badec?: number
   nombre?: string
@@ -29,6 +30,8 @@ export interface Response {
   descuento?: number
   importe_pagar?: number
   bloqueado?: boolean
+  codigo_estado_actual?: number
+  cuit?: number
 }
 
 interface Props {
@@ -38,7 +41,7 @@ interface Props {
   setNroEmision: Function
 }
 
-const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -63,7 +66,6 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
         layout: "fitColumns",
         responsiveLayout: "collapse",
         responsiveLayoutCollapseStartOpen: false,
-        groupBy: "estado_actualizado",
         placeholder: "No se han encontrado registros",
         columns: [
           {
@@ -76,16 +78,6 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
               rowRange: "active",
             },
             formatter: "rowSelection",
-            cellClick: function (e, cell) {
-              const data: Response = cell.getData()
-              if (
-                statesValidated &&
-                statesValidated.includes(
-                  capitalizeFirstLetter(data?.estado_actualizado?.trim() as string)
-                )
-              )
-                cell.getRow().toggleSelect()
-            },
           },
           {
             title: "",
@@ -158,6 +150,16 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
               )}</div>
             </div>`
             },
+          },
+          {
+            title: "CUIT",
+            minWidth: 100,
+            width: 140,
+            field: "cuit",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            headerSort: false,
           },
           {
             title: "Bloqueado",
@@ -317,31 +319,33 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
     setBody({})
 
     baseWebApi(
-      `/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=4`
-    ).then((response: any) => {
-      setStateEmision(response.data)
-      return response.data
-    })
-    // .then((response: any) => {
-    //   response.map((estado: any) => {
-    //     if (estado.emite_notif_cidi == 1) {
-    //       baseWebApi(
-    //         `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}`
-    //       )
-    //         .then((response) => {
-    //           const title = response?.data[0]?.tituloReporte?.trim()
-    //           const data = response?.data[0]?.reporte?.trim() ?? ""
-    //           const idTemplate = response?.data[0]?.idTemplate
-    //           const stateName = estado?.descripcion_estado
-    //           setBody({
-    //             ...body,
-    //             [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
-    //           })
-    //         })
-    //         .catch((err) => console.error(err))
-    //     }
-    //   })
-    // })
+      `/Estados_procuracion/ListarEstadosxNotifNuevas?nro_emision=${nroEmision}&subsistema=4`
+    )
+      .then((response: any) => {
+        console.log(response.data)
+        setStateEmision(response.data)
+        return response.data
+      })
+      .then((response: any) => {
+        response.map((estado: any) => {
+          if (estado.emite_notif_cidi == 1) {
+            baseWebApi(
+              `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}`
+            )
+              .then((response) => {
+                const title = response?.data[0]?.tituloReporte?.trim()
+                const data = response?.data[0]?.reporte?.trim() ?? ""
+                const idTemplate = response?.data[0]?.idTemplate
+                const stateName = estado?.descripcion_estado
+                setBody({
+                  ...body,
+                  [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
+                })
+              })
+              .catch((err) => console.error(err))
+          }
+        })
+      })
   }, [nroEmision])
 
   const handleBack = () => {
@@ -368,9 +372,12 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
 
   const statesValidated = statesEmision
     ?.filter((state: any) => state.emite_notif_cidi == 1)
-    ?.map((el: { descripcion_estado: string }) =>
-      capitalizeFirstLetter(el.descripcion_estado.trim())
-    )
+    ?.map((el: { descripcion_estado: string; codigo_estado: number }) => {
+      return {
+        descripcion_estado: capitalizeFirstLetter(el.descripcion_estado.trim()),
+        codigo_estado: el.codigo_estado,
+      }
+    })
   return (
     <>
       <section className="flex flex-col">
@@ -382,7 +389,7 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
             Volver
           </div>
 
-          {/* <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
+          <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
             {tabulator?.current && (
               <FormSelect
                 id="tabulator-html-filter-field"
@@ -406,7 +413,7 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
                 ))}
               </FormSelect>
             )}
-          </div> */}
+          </div>
 
           {/* Input nro de emisión */}
 
@@ -428,7 +435,7 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
 
           {/* Boton y modal */}
 
-          {/* <div>
+          <div>
             <ModalProcuracion
               table={tabulator.current}
               dataSelected={selectedData}
@@ -437,17 +444,21 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
               body={body}
               setNotificationsSended={setNotificationsSended}
             />
-          </div> */}
+          </div>
         </div>
-        {/* <div className="mt-5">
+        <div className="mt-5">
           {statesValidated && (
             <p>
               {" "}
               <span className="font-bold">Estados validos para notificar: </span>
-              {statesValidated.join(", ")}
+              {statesValidated.map((state: any) =>
+                statesValidated.indexOf(state) === 0
+                  ? state.descripcion_estado
+                  : ", " + state.descripcion_estado
+              )}
             </p>
           )}
-        </div> */}
+        </div>
       </section>
       <div className="overflow-x-scroll scrollbar-hidden">
         <div id="tabulator" ref={tableRef} className="mt-5"></div>
@@ -456,4 +467,4 @@ const CambioMasivo = ({ url, detail = false, nroEmision, setNroEmision }: Props)
   )
 }
 
-export default CambioMasivo
+export default DetallesNuevasEmisiones

@@ -10,7 +10,15 @@ import Button from "../../../base-components/Button"
 import { Dialog } from "../../../base-components/Headless"
 import Lucide from "../../../base-components/Lucide"
 
-const ModalVerification = ({ onClick }: { onClick: Function }) => {
+const ModalVerification = ({
+  onClick,
+  validatedData,
+  setSuperlargeModalSizePreview,
+}: {
+  onClick: Function
+  validatedData: any
+  setSuperlargeModalSizePreview: Function
+}) => {
   const [deleteModalPreview, setDeleteModalPreview] = useState(false)
   const deleteButtonRef = useRef(null)
   return (
@@ -20,18 +28,33 @@ const ModalVerification = ({ onClick }: { onClick: Function }) => {
           <Preview>
             {/* BEGIN: Modal Toggle */}
             <div className="text-center">
-              <Button
-                as="a"
-                href="#"
-                variant="secondary"
-                className="mr-2 ml-5 mt-5 text-white text-lg rounded-md px-5 py-2 shadow-md bg-secondary"
-                onClick={(event: React.MouseEvent) => {
-                  event.preventDefault()
-                  setDeleteModalPreview(true)
-                }}
-              >
-                Notificar
-              </Button>
+              {validatedData.length ? (
+                <Button
+                  as="a"
+                  href="#"
+                  variant="secondary"
+                  className="mr-2 ml-5 mt-5 text-white text-lg rounded-md px-5 py-2 shadow-md bg-secondary"
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault()
+                    setDeleteModalPreview(true)
+                  }}
+                >
+                  Notificar
+                </Button>
+              ) : (
+                <Button
+                  as="a"
+                  href="#"
+                  variant="secondary"
+                  className="mr-2 ml-5 mt-5 text-white text-lg rounded-md px-5 py-2 shadow-md bg-secondary"
+                  onClick={(event: React.MouseEvent) => {
+                    event.preventDefault()
+                    setSuperlargeModalSizePreview(false)
+                  }}
+                >
+                  Volver
+                </Button>
+              )}
             </div>
             {/* END: Modal Toggle */}
             {/* BEGIN: Modal Content */}
@@ -44,13 +67,8 @@ const ModalVerification = ({ onClick }: { onClick: Function }) => {
             >
               <Dialog.Panel>
                 <div className="p-5 text-center">
-                  <Lucide
-                    icon="BellRing"
-                    className="w-16 h-16 mx-auto mt-3 text-info"
-                  />
-                  <div className="mt-5 text-3xl">
-                    Estás a punto de enviar notificaciones
-                  </div>
+                  <Lucide icon="BellRing" className="w-16 h-16 mx-auto mt-3 text-info" />
+                  <div className="mt-5 text-3xl">Estás a punto de enviar notificaciones</div>
                   <div className="mt-2 text-slate-500">¿Deseas continuar?</div>
                 </div>
                 <div className="px-5 pb-8 text-center">
