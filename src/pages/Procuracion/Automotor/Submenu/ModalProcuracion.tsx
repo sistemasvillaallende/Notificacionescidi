@@ -79,7 +79,6 @@ function ModalProcuracion({
   }, [nroEmision])
 
   useEffect(() => {
-    console.log("setIsSend", isSend)
     if (!isSend) {
       getStates()
         .then((response) => {
@@ -156,9 +155,9 @@ function ModalProcuracion({
       })
       setErrorMessage("")
       setIsSend(true)
-      dataSelected(null)
       setTimeout(() => {
         setValidatedData([])
+        setSuperlargeModalSizePreview(false)
         setIsSend(false)
       }, 3000)
       try {
@@ -223,56 +222,53 @@ function ModalProcuracion({
               <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
             ) : (
               <>
-                {validatedData && (
-                  <>
-                    <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
-                    <main className="my-6">
-                      <article className="text-left my-5 text-base">
-                        <p>
-                          <span className="">Procuraciones válidas para notificar: </span>
-                          {validatedData?.length}
-                        </p>
-                        <div>
-                          <span className="">Estados Seleccionados: </span>
-                          <ul>
-                            {validSelectedStates?.map((estado: any) => {
-                              const codigo_estado = statesSelected?.filter((state: any) =>
-                                state?.descripcion_estado
-                                  .toLowerCase()
-                                  .trim()
-                                  .includes(estado.toLowerCase().trim())
-                              )?.[0]?.codigo_estado
-                              const itemsForStates = validatedData?.filter(
-                                (e: Response) => e?.codigo_estado_actual === codigo_estado
-                              )?.length
-                              if (itemsForStates && itemsForStates > 0) {
-                                return (
-                                  <li key={estado} className="mt-6">
-                                    <span className="font-bold text-lg">{`- ${estado}`}</span>
-                                    <p>
-                                      Procuraciones Seleccionadas:
-                                      {` ${itemsForStates}`}
-                                    </p>
-                                    <span>
-                                      <p>Asunto: {body[estado?.toUpperCase()]?.title}</p>
-                                      <p className="">Notificación: </p>
-                                      <p>{body[estado?.toUpperCase()]?.body}</p>
-                                    </span>
-                                  </li>
-                                )
-                              }
-                            })}
-                          </ul>
-                        </div>
-                      </article>
-                    </main>
-                  </>
-                )}
-                <ModalVerification
-                  validatedData={validatedData}
-                  setSuperlargeModalSizePreview={setSuperlargeModalSizePreview}
-                  onClick={handleSubmit}
-                />
+                <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
+                <main className="my-6">
+                  <article className="text-left my-5 text-base">
+                    <p>
+                      <span className="">Procuraciones válidas para notificar: </span>
+                      {validatedData?.length}
+                    </p>
+                    <div>
+                      <span className="">Estados Seleccionados: </span>
+                      <ul>
+                        {validSelectedStates?.map((estado: any) => {
+                          const codigo_estado = statesSelected?.filter((state: any) =>
+                            state?.descripcion_estado
+                              .toLowerCase()
+                              .trim()
+                              .includes(estado.toLowerCase().trim())
+                          )?.[0]?.codigo_estado
+                          const itemsForStates = validatedData?.filter(
+                            (e: Response) => e?.codigo_estado_actual === codigo_estado
+                          )?.length
+                          if (itemsForStates && itemsForStates > 0) {
+                            return (
+                              <li key={estado} className="mt-6">
+                                <span className="font-bold text-lg">{`- ${estado}`}</span>
+                                <p>
+                                  Procuraciones Seleccionadas:
+                                  {` ${itemsForStates}`}
+                                </p>
+                                <span>
+                                  <p>Asunto: {body[estado?.toUpperCase()]?.title}</p>
+                                  <p className="">Notificación: </p>
+                                  <p>{body[estado?.toUpperCase()]?.body}</p>
+                                </span>
+                              </li>
+                            )
+                          }
+                        })}
+                      </ul>
+                    </div>
+                  </article>
+
+                  <ModalVerification
+                    validatedData={validatedData}
+                    setSuperlargeModalSizePreview={setSuperlargeModalSizePreview}
+                    onClick={handleSubmit}
+                  />
+                </main>
               </>
             )}
           </Dialog.Panel>
