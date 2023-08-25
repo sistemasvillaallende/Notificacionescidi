@@ -363,7 +363,6 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
     setBody({})
 
     if (tabulator?.current) {
-      console.log("tabulator", tabulator.current.getData())
     }
     baseWebApi(`/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=3`)
       .then((response: any) => {

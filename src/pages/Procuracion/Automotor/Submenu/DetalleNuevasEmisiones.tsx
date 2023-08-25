@@ -322,7 +322,6 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
       `/Estados_procuracion/ListarEstadosxNotifNuevas?nro_emision=${nroEmision}&subsistema=4`
     )
       .then((response: any) => {
-        console.log(response.data)
         setStateEmision(response.data)
         return response.data
       })

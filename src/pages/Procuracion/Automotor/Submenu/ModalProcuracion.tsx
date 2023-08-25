@@ -28,7 +28,6 @@ function ModalProcuracion({
   const statesSelected = statesArray?.filter(
     (item: any, index: number) => statesArray.indexOf(item) === index
   )
-  console.log("validatedData", validatedData)
   const office = window?.localStorage?.getItem("selectedOffice") ?? ""
   const { user } = useAuthContext()
   const officeId = officesIds[office.toUpperCase() as keyof typeof officesIds]?.id ?? 0
@@ -129,7 +128,7 @@ function ModalProcuracion({
           cod_estado_actual: procuracion.codigo_estado_actual ?? "",
         }
         baseWebApi
-          .post("/ComunicacionesCIDI/", bodyObject, {
+          .post("/ComunicacionesCIDI/enviarNotificacionProcuracionNuevas", bodyObject, {
             headers: headers,
           })
           .then((response: any) => {
@@ -230,18 +229,15 @@ function ModalProcuracion({
                       <span className="">Estados Seleccionados: </span>
                       <ul>
                         {validSelectedStates?.map((estado: any) => {
-                          console.log("estado", estado)
-                          const codigo_estado = statesSelected.filter((state: any) =>
-                            state.descripcion_estado
+                          const codigo_estado = statesSelected?.filter((state: any) =>
+                            state?.descripcion_estado
                               .toLowerCase()
                               .trim()
                               .includes(estado.toLowerCase().trim())
-                          )?.[0].codigo_estado
-                          console.log("codigo_estado", codigo_estado)
+                          )?.[0]?.codigo_estado
                           const itemsForStates = validatedData?.filter(
-                            (e: Response) => e.codigo_estado_actual === codigo_estado
+                            (e: Response) => e?.codigo_estado_actual === codigo_estado
                           )?.length
-                          console.log("itemsForStates", itemsForStates)
                           if (itemsForStates && itemsForStates > 0) {
                             return (
                               <li key={estado} className="mt-6">

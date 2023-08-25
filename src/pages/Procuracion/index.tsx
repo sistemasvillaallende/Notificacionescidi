@@ -46,7 +46,6 @@ function Procuracion() {
     if (!officesIds[office?.toUpperCase() as keyof typeof officesIds]) {
       navigate("/404")
     }
-    console.log("userLocal", userLocal)
   }, [])
 
   if (user) {
