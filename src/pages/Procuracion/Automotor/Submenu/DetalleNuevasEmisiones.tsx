@@ -29,7 +29,7 @@ export interface Response {
   interes?: number
   descuento?: number
   importe_pagar?: number
-  bloqueado?: boolean
+  notificado_cidi?: boolean
   codigo_estado_actual?: number
   cuit?: number
 }
@@ -162,20 +162,20 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             headerSort: false,
           },
           {
-            title: "Bloqueado",
+            title: "Notificación",
             minWidth: 100,
             width: 150,
-            field: "bloqueado",
+            field: "notificado_cidi",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
               const response: Response = cell.getData()
-              const estado = response?.bloqueado
+              const estado = response?.notificado_cidi
               return `<div class="flex items-center lg:justify-start ${
-                response.bloqueado == false ? "text-success" : "text-warning"
+                response.notificado_cidi ? "text-success" : "text-warning"
               }">
-                <span>${estado == false ? "No bloqueado" : "Bloqueado"}</span>
+                <span>${estado ? "Notificado" : "No notificado"}</span>
               </div>`
             },
           },
@@ -397,7 +397,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
                   const value = e.target.value
                   setFilter({ ...filter, estado: e.target.value })
                   if (value != "nofilter") {
-                    tabulator.current?.setFilter("estado_actualizado", "=", value)
+                    tabulator.current?.setFilter("codigo_estado_actual", "=", value)
                   } else {
                     tabulator.current?.clearFilter(true)
                   }
@@ -406,7 +406,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
               >
                 <option value="nofilter">Filtrar por estado</option>
                 {statesEmision?.map((state: any) => (
-                  <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
+                  <option key={state.codigo_estado} value={state.codigo_estado}>
                     {capitalizeFirstLetter(state.descripcion_estado.trim())}
                   </option>
                 ))}

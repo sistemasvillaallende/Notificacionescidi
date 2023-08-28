@@ -87,7 +87,7 @@ function ModalProcuracion({
         })
         .then((response) => {
           const data = dataSelected?.filter((row: any) => {
-            return row?.cuit?.length > 1 && !row.bloqueado && validateCuil(row?.cuit.trim())
+            return row?.cuit?.length > 1 && !row.notificado_cidi && validateCuil(row?.cuit.trim())
           })
           if (data?.length === 0)
             setErrorMessage("No hay procuraciones seleccionadas válidas para notificar")

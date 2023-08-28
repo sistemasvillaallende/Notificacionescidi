@@ -154,9 +154,11 @@ function ModalProcuracion({
         successfulNotifications: notifications?.length,
         failedNotifications: failedNotifications,
       })
+      setErrorMessage("")
       setIsSend(true)
       setTimeout(() => {
         setValidatedData([])
+        setSuperlargeModalSizePreview(false)
         setIsSend(false)
       }, 3000)
       try {
@@ -215,10 +217,10 @@ function ModalProcuracion({
           }}
         >
           <Dialog.Panel className="p-10 text-center max-h-[95vh] overflow-y-auto">
-            {errorMessage?.length > 0 ? (
-              <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
-            ) : isSend ? (
+            {isSend ? (
               <h2 className="text-success text-xl font-bold">Notificaciones Enviadas con Exito</h2>
+            ) : errorMessage?.length > 0 ? (
+              <h3 className="font-bold text-lg text-warning">{errorMessage}</h3>
             ) : (
               <>
                 <h2 className="font-bold  text-2xl">Crea una nueva notificación</h2>
