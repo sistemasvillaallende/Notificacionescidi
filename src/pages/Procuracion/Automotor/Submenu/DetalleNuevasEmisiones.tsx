@@ -168,7 +168,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
               return `<div class="flex items-center lg:justify-start ${
                 response.notificado_cidi ? "text-success" : "text-warning"
               }">
-                <span>${estado ? "Notificado" : "No notificado"}</span>
+                <span>${estado ? "Enviado" : "No enviado"}</span>
               </div>`
             },
           },

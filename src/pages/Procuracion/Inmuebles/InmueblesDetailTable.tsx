@@ -171,7 +171,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
               return `<div class="flex items-center lg:justify-start ${
                 response.notificado_cidi == 1 ? "text-success" : "text-warning"
               }">
-                <span>${estado == 1 ? "Notificado" : "No notificado"}</span>
+                <span>${estado == 1 ? "Enviado" : "No enviado"}</span>
               </div>`
             },
           },
