@@ -366,7 +366,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
           }
         })
       })
-  }, [nroEmision])
+  }, [nroEmision, notificationsSended])
 
   const handleBack = () => {
     setNroEmision("")

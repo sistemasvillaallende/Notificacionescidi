@@ -104,54 +104,64 @@ function ModalProcuracion({
     const successfulNotifications: any = []
     const failedNotifications: any = []
 
-    const notifications = validatedData?.map((procuracion: any) => {
-      const codigoEstado = statesEmision.find((estado: { descripcion_estado: string }) => {
-        return (
-          estado.descripcion_estado.trim().toLowerCase() ===
-          procuracion.estado_Actualizado.trim().toLowerCase()
-        )
+    const notifications = async () => {
+      const promisesNotifications = validatedData?.map(async (procuracion: any) => {
+        const codigoEstado = statesEmision.find((estado: { descripcion_estado: string }) => {
+          return (
+            estado.descripcion_estado.trim().toLowerCase() ===
+            procuracion.estado_Actualizado.trim().toLowerCase()
+          )
+        })
+        const newPromise = new Promise((resolve) => {
+          const headers = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+          const bodyObject = {
+            cuit: procuracion.cuit,
+            subject: body[procuracion.estado_Actualizado]?.title,
+            body: body[procuracion.estado_Actualizado]?.body,
+            Nro_Emision: procuracion.nro_Emision,
+            Nro_Notificacion: procuracion.nro_Notificacion,
+            nro_procuracion: procuracion.nro_Procuracion,
+            id_oficina: parseInt(officeId),
+            id_usuario: user?.cod_usuario,
+            tipo_proc: 4,
+            idTemplate: body[procuracion.estado_Actualizado]?.idTemplate,
+            tituloReporte: body[procuracion.estado_Actualizado]?.title,
+            cod_estado_actual: codigoEstado?.codigo_estado ?? "",
+          }
+          baseWebApi
+            .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
+              headers: headers,
+            })
+            .then((response) => {
+              console.log("Notificación enviada correctamente:", response)
+              successfulCount++
+              successfulNotifications.push(response)
+              resolve(procuracion)
+            })
+            .catch((error) => {
+              console.error("Error al enviar notificación:", error)
+              setErrorMessage("Error al enviar la notificación")
+              failedCount++
+              failedNotifications.push(procuracion)
+            })
+        })
+        return newPromise
       })
-      return new Promise((resolve, reject) => {
-        const headers = {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        }
-        const bodyObject = {
-          cuit: procuracion.cuit,
-          subject: body[procuracion.estado_Actualizado]?.title,
-          body: body[procuracion.estado_Actualizado]?.body,
-          Nro_Emision: procuracion.nro_Emision,
-          Nro_Notificacion: procuracion.nro_Notificacion,
-          nro_procuracion: procuracion.nro_Procuracion,
-          id_oficina: parseInt(officeId),
-          id_usuario: user?.cod_usuario,
-          tipo_proc: 4,
-          idTemplate: body[procuracion.estado_Actualizado]?.idTemplate,
-          tituloReporte: body[procuracion.estado_Actualizado]?.title,
-          cod_estado_actual: codigoEstado?.codigo_estado ?? "",
-        }
-        baseWebApi
-          .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
-            headers: headers,
-          })
-          .then((response) => {
-            console.log("Notificación enviada correctamente:", response)
-            successfulCount++
-            successfulNotifications.push(response)
-            resolve(procuracion)
-          })
-          .catch((error) => {
-            console.error("Error al enviar notificación:", error)
-            failedCount++
-            failedNotifications.push(procuracion)
-            reject(error)
-          })
-      })
-    })
-
-    if (notifications) {
+      if (promisesNotifications) {
+        const response = await Promise.all(promisesNotifications)
+        console.log("response dentro", response)
+        return response
+      } else {
+        return []
+      }
+    }
+    const resolvedNotifications = await notifications()
+    if (resolvedNotifications) {
       setNotificationsSended({
-        successfulNotifications: notifications?.length,
+        successfulNotifications: resolvedNotifications?.length,
         failedNotifications: failedNotifications,
       })
       setErrorMessage("")
@@ -162,7 +172,7 @@ function ModalProcuracion({
         setIsSend(false)
       }, 3000)
       try {
-        return await Promise.all(notifications) // Espera a que se cumplan todas las promesas
+        return await Promise.all(resolvedNotifications) // Espera a que se cumplan todas las promesas
       } catch (error) {
         // Manejar errores si es necesario
         console.error(error)
@@ -257,7 +267,11 @@ function ModalProcuracion({
                       </ul>
                     </div>
                   </article>
-                  <ModalVerification onClick={handleSubmit} />
+                  <ModalVerification
+                    setSuperlargeModalSizePreview={setSuperlargeModalSizePreview}
+                    validatedData={validatedData}
+                    onClick={handleSubmit}
+                  />
                 </main>
               </>
             )}

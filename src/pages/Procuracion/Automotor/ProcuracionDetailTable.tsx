@@ -397,7 +397,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
           }
         })
       })
-  }, [nroEmision])
+  }, [nroEmision, notificationsSended])
 
   const handleBack = () => {
     setNroEmision("")

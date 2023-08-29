@@ -28,7 +28,7 @@ const ModalVerification = ({
           <Preview>
             {/* BEGIN: Modal Toggle */}
             <div className="text-center">
-              {validatedData.length ? (
+              {validatedData?.length ? (
                 <Button
                   as="a"
                   href="#"

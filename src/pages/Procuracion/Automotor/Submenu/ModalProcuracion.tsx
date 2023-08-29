@@ -104,51 +104,62 @@ function ModalProcuracion({
     const successfulNotifications: any = []
     const failedNotifications: any = []
 
-    const notifications = validatedData?.map((procuracion: Response) => {
-      const descripcion_estado = statesSelected.find(
-        (state: { codigo_estado: number }) =>
-          procuracion.codigo_estado_actual === state.codigo_estado
-      )?.descripcion_estado
-      return new Promise((resolve, reject) => {
-        const headers = {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        }
-        const bodyObject = {
-          cuit: procuracion.cuit,
-          subject: body[descripcion_estado]?.title,
-          body: body[descripcion_estado]?.body,
-          Nro_Emision: procuracion.nro_emision,
-          Nro_Notificacion: procuracion.nro_notificacion,
-          nro_procuracion: procuracion.nro_proc,
-          nro_cedulon: procuracion.nro_cedulon,
-          id_oficina: parseInt(officeId),
-          id_usuario: user?.cod_usuario,
-          tipo_proc: 4,
-          idTemplate: body[descripcion_estado]?.idTemplate,
-          tituloReporte: body[descripcion_estado]?.title,
-          cod_estado_actual: procuracion.codigo_estado_actual ?? "",
-        }
-        baseWebApi
-          .post("/ComunicacionesCIDI/enviarNotificacionProcuracionNuevas", bodyObject, {
-            headers: headers,
-          })
-          .then((response: any) => {
-            console.log("Notificación enviada correctamente:", response)
-            successfulCount++
-            successfulNotifications.push(response)
-            resolve(procuracion)
-          })
-          .catch((error: any) => {
-            console.error("Error al enviar notificación:", error)
-            failedCount++
-            failedNotifications.push(procuracion)
-            reject(error)
-          })
+    const notifications = async () => {
+      const promisesNotifications = await validatedData?.map((procuracion: Response) => {
+        const descripcion_estado = statesSelected.find(
+          (state: { codigo_estado: number }) =>
+            procuracion.codigo_estado_actual === state.codigo_estado
+        )?.descripcion_estado
+        const newPromise = new Promise((resolve, reject) => {
+          const headers = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+          const bodyObject = {
+            cuit: procuracion.cuit,
+            subject: body[descripcion_estado]?.title,
+            body: body[descripcion_estado]?.body,
+            Nro_Emision: procuracion.nro_emision,
+            Nro_Notificacion: procuracion.nro_notificacion,
+            nro_procuracion: procuracion.nro_proc,
+            nro_cedulon: procuracion.nro_cedulon,
+            id_oficina: parseInt(officeId),
+            id_usuario: user?.cod_usuario,
+            tipo_proc: 4,
+            idTemplate: body[descripcion_estado]?.idTemplate,
+            tituloReporte: body[descripcion_estado]?.title,
+            cod_estado_actual: procuracion.codigo_estado_actual ?? "",
+          }
+          baseWebApi
+            .post("/ComunicacionesCIDI/enviarNotificacionProcuracionNuevas", bodyObject, {
+              headers: headers,
+            })
+            .then((response: any) => {
+              console.log("Notificación enviada correctamente:", response)
+              successfulCount++
+              successfulNotifications.push(response)
+              resolve(procuracion)
+            })
+            .catch((error: any) => {
+              console.error("Error al enviar notificación:", error)
+              failedCount++
+              failedNotifications.push(procuracion)
+              setErrorMessage("Error al enviar la notificación")
+              reject(error)
+            })
+        })
+        return newPromise
       })
-    })
-
-    if (notifications) {
+      if (promisesNotifications) {
+        const response = await Promise.all(promisesNotifications)
+        console.log("response dentro", response)
+        return response
+      } else {
+        return []
+      }
+    }
+    const resolvedNotifications = await notifications()
+    if (resolvedNotifications) {
       setNotificationsSended({
         successfulNotifications: notifications?.length,
         failedNotifications: failedNotifications,
@@ -161,7 +172,7 @@ function ModalProcuracion({
         setIsSend(false)
       }, 3000)
       try {
-        return await Promise.all(notifications) // Espera a que se cumplan todas las promesas
+        return await Promise.all(resolvedNotifications) // Espera a que se cumplan todas las promesas
       } catch (error) {
         // Manejar errores si es necesario
         console.error(error)
