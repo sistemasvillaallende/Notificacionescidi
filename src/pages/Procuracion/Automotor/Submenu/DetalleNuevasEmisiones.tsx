@@ -14,6 +14,7 @@ import { capitalizeFirstLetter } from "../../../../utils/helper"
 import { FormInput, FormSelect } from "../../../../base-components/Form"
 import Lucide from "../../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
+import { StringChain } from "lodash"
 
 export interface Response {
   nro_emision?: number
@@ -31,6 +32,7 @@ export interface Response {
   importe_pagar?: number
   notificado_cidi?: boolean
   codigo_estado_actual?: number
+  estado_Actual?: string
   cuit?: number
 }
 
@@ -66,6 +68,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
         layout: "fitColumns",
         responsiveLayout: "collapse",
         responsiveLayoutCollapseStartOpen: false,
+        groupBy: "estado_Actual",
         placeholder: "No se han encontrado registros",
         columns: [
           {
@@ -97,16 +100,6 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             vertAlign: "middle",
           },
           {
-            title: "Cedulón",
-            width: 80,
-            minWidth: 80,
-            field: "nro_cedulon",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            headerSort: false,
-          },
-          {
             title: "Procuración",
             minWidth: 90,
             width: 90,
@@ -135,23 +128,6 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             headerSort: false,
           },
           {
-            title: "Nombre",
-            minWidth: 100,
-            width: 180,
-            field: "nombre",
-            hozAlign: "left",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            formatter(cell) {
-              const response: Response = cell.getData()
-              return `<div class="h-4 flex items-start w-full">
-              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
-                response?.nombre as string
-              )}</div>
-            </div>`
-            },
-          },
-          {
             title: "CUIT",
             minWidth: 100,
             width: 140,
@@ -160,6 +136,23 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
+          },
+          {
+            title: "Estado Actual",
+            minWidth: 150,
+            width: 200,
+            field: "estado_Actual",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            formatter(cell) {
+              const response: Response = cell.getData()
+              return `<div class="h-4 flex items-start w-full">
+              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
+                response?.estado_Actual?.trim() as string
+              )}</div>
+            </div>`
+            },
           },
           {
             title: "Notificación",
@@ -180,7 +173,25 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             },
           },
           {
-            title: "Fecha Baja",
+            title: "Nombre",
+            minWidth: 100,
+            width: 180,
+            field: "nombre",
+            hozAlign: "left",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            formatter(cell) {
+              const response: Response = cell.getData()
+              return `<div class="h-4 flex items-start w-full">
+              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
+                response?.nombre as string
+              )}</div>
+            </div>`
+            },
+          },
+
+          {
+            title: "Fecha Inicio",
             minWidth: 120,
             width: 120,
             field: "fecha_baja_real",
@@ -214,6 +225,16 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
                 ).toLocaleDateString()}</div>
               </div>`
             },
+          },
+          {
+            title: "Cedulón",
+            width: 80,
+            minWidth: 80,
+            field: "nro_cedulon",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            headerSort: false,
           },
           {
             title: "Debe",

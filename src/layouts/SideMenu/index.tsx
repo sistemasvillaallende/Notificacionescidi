@@ -264,9 +264,9 @@ function Menu(props: {
     >
       <div
         className={clsx({
-          "text-primary z-10 dark:text-slate-300": props.menu.active && props.level == "first",
-          "text-slate-700 dark:text-slate-300": props.menu.active && props.level != "first",
-          "dark:text-slate-400": !props.menu.active,
+          "text-primary z-10": props.menu.active && props.level == "first",
+          "text-slate-400": props.menu.active && props.level != "first",
+          "text-slate-700": props.menu.active,
         })}
       >
         <Lucide icon={props?.menu?.icon} />
@@ -275,11 +275,9 @@ function Menu(props: {
         className={clsx([
           "w-full mx-3 hidden xl:flex items-center",
           {
-            "text-primary font-medium z-10 dark:text-slate-300":
-              props.menu.active && props.level == "first",
-            "text-slate-700 font-medium dark:text-slate-300":
-              props.menu.active && props.level != "first",
-            "dark:text-slate-400": !props.menu.active,
+            "text-primary font-medium z-10": props.menu.active && props.level == "first",
+            "text-slate-400": props.menu.active && props.level != "first",
+            "text-slate-700 font-medium": props.menu.active,
           },
         ])}
       >

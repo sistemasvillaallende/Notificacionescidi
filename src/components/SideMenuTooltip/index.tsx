@@ -6,7 +6,6 @@ type MainProps<C extends React.ElementType> = PolymorphicComponentPropWithRef<
   C,
   {
     content: string
-    zz
   }
 >
 

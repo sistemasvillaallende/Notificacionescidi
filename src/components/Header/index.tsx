@@ -22,7 +22,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   }
   let path: string = location.hash && (location.hash?.split("/").at(2) as string)
   if (path?.includes("?")) path = path.split("?")?.[0]
-
+  if (location?.hash?.includes("id=")) path = location.hash.split("id=")?.[1]
   if (path === "") path = "inicio"
   if (path === undefined) path = "pagina-no-encontrada"
   const { handleLogout, user, setUser } = useAuthContext()
@@ -32,6 +32,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
     inicio: { title: "Inicio", icon: "Home" },
     notificaciones: { title: "Notificaciones", icon: "Bell" },
     procuracion: { title: "Procuración", icon: "FileWarning" },
+    nuevasemisiones: { title: "Nuevas Emisiones", icon: "ArrowUp" },
     "pagina-no-encontrada": { title: "Página no encontrada", icon: "Warning" },
   }
 
