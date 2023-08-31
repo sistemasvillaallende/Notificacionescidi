@@ -106,10 +106,13 @@ function ModalProcuracion({
 
     const notifications = async () => {
       const promisesNotifications = await validatedData?.map((procuracion: Response) => {
-        const descripcion_estado = statesSelected.find(
-          (state: { codigo_estado: number }) =>
-            procuracion.codigo_estado_actual === state.codigo_estado
-        )?.descripcion_estado
+        const descripcion_estado = statesSelected
+          .find(
+            (state: { codigo_estado: number }) =>
+              procuracion.codigo_estado_actual === state.codigo_estado
+          )
+          ?.descripcion_estado.trim()
+          .toUpperCase()
         const newPromise = new Promise((resolve, reject) => {
           const headers = {
             "Content-Type": "application/json",
