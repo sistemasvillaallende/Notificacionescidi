@@ -56,7 +56,7 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <DetalleNuevasEmisiones
-                  url={"/WebApiShared/Det_notificacion_auto/read?nro_emision="}
+                  url={"/WebApiShared/Det_notificacion_auto/listarDetalle?Nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}

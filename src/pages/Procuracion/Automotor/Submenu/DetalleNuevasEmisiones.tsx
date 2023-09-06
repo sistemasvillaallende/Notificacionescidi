@@ -32,7 +32,7 @@ export interface Response {
   importe_pagar?: number
   notificado_cidi?: boolean
   codigo_estado_actual?: number
-  estado_Actual?: string
+  estado_actual?: string
   cuit?: number
 }
 
@@ -68,7 +68,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
         layout: "fitColumns",
         responsiveLayout: "collapse",
         responsiveLayoutCollapseStartOpen: false,
-        groupBy: "estado_Actual",
+        groupBy: "estado_actual",
         placeholder: "No se han encontrado registros",
         columns: [
           {
@@ -141,15 +141,15 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             title: "Estado Actual",
             minWidth: 150,
             width: 200,
-            field: "estado_Actual",
+            field: "estado_actual",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
               const response: Response = cell.getData()
-              return `<div class="h-4 flex items-start w-full">
+              return `<div class="h-4 flex items-start justify-center w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
-                response?.estado_Actual?.trim() as string
+                response?.estado_actual?.trim() as string
               )}</div>
             </div>`
             },

@@ -74,7 +74,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
           </Link>
           {/* END: Logo */}
           {/* BEGIN: Title */}
-          <div className="absolute right-0 flex items-center gap-16">
+          <div className="absolute right-0 flex items-center gap-16 max-w-[75%]">
             <div className="flex items-center text-primary lg:text-5xl md:text-3xl font-semibold drop-shadow-[1px_1px_2px_#00000025]">
               {`${headerTitle[path as keyof typeof headerTitle]?.title}`}
               <Lucide
