@@ -347,6 +347,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
         return response.data
       })
       .then((response: any) => {
+        let newBody = {}
         response.map((estado: any) => {
           if (estado.emite_notif_cidi == 1) {
             baseWebApi(
@@ -357,10 +358,12 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
                 const data = response?.data[0]?.reporte?.trim() ?? ""
                 const idTemplate = response?.data[0]?.idTemplate
                 const stateName = estado?.descripcion_estado
-                setBody({
-                  ...body,
+                newBody = {
+                  ...newBody,
                   [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
-                })
+                }
+                console.log("newBody", newBody)
+                setBody(newBody)
               })
               .catch((err) => console.error(err))
           }

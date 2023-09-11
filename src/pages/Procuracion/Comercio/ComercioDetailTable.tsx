@@ -11,7 +11,7 @@ export interface Response {
   nro_Notificacion?: number
   nro_Emision?: number
   nro_Procuracion?: number
-  dominio?: string
+  legajo?: string
   nro_Badec?: number
   nombre?: string
   cuit?: string
