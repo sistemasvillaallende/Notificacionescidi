@@ -24,6 +24,7 @@ export interface Response {
   interes?: number
   descuento?: number
   importe_pagar?: number
+  cuit_valido?: string
 }
 
 interface Props {
@@ -60,6 +61,13 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
         responsiveLayoutCollapseStartOpen: false,
         groupBy: "estado_Actualizado",
         placeholder: "No se han encontrado registros",
+        selectable: true,
+        selectableCheck: function (row) {
+          const data: Response = row.getData()
+          if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
+            return true
+          else return false
+        },
         columns: [
           {
             title: "",
@@ -378,6 +386,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
         return response.data
       })
       .then((response: any) => {
+        let newBody = {}
         response.map((estado: any) => {
           if (estado.emite_notif_cidi == 1) {
             baseWebApi(
@@ -388,10 +397,11 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                 const data = response?.data[0]?.reporte?.trim() ?? ""
                 const idTemplate = response?.data[0]?.idTemplate
                 const stateName = estado?.descripcion_estado
-                setBody({
-                  ...body,
+                newBody = {
+                  ...newBody,
                   [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
-                })
+                }
+                setBody(newBody)
               })
               .catch((err) => console.error(err))
           }

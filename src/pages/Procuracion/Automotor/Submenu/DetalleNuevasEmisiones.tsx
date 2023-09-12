@@ -30,10 +30,11 @@ export interface Response {
   interes?: number
   descuento?: number
   importe_pagar?: number
-  notificado_cidi?: boolean
+  notificado_cidi?: number
   codigo_estado_actual?: number
   estado_actual?: string
   cuit?: number
+  cuit_valido?: string
 }
 
 interface Props {
@@ -70,6 +71,13 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
         responsiveLayoutCollapseStartOpen: false,
         groupBy: "estado_actual",
         placeholder: "No se han encontrado registros",
+        selectable: true,
+        selectableCheck: function (row) {
+          const data: Response = row.getData()
+          if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
+            return true
+          else return false
+        },
         columns: [
           {
             title: "",
@@ -362,7 +370,6 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
                   ...newBody,
                   [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
                 }
-                console.log("newBody", newBody)
                 setBody(newBody)
               })
               .catch((err) => console.error(err))
