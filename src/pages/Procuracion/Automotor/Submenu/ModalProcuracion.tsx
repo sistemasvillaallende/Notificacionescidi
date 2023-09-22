@@ -23,7 +23,7 @@ function ModalProcuracion({
   const [errorMessage, setErrorMessage] = useState("")
   const [isSend, setIsSend] = useState(false)
   const statesArray = statesEmision?.filter((row: { codigo_estado: number }) =>
-    dataSelected.some((data: Response) => data.codigo_estado_actual === row?.codigo_estado)
+    dataSelected?.some((data: Response) => data.codigo_estado_actual === row?.codigo_estado)
   )
   const statesSelected = statesArray?.filter(
     (item: any, index: number) => statesArray.indexOf(item) === index

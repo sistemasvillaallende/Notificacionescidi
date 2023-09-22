@@ -41,6 +41,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     field: "",
     type: "=",
     estado: "",
+    notificado_cidi: -1,
   })
   const [selectedData, setSelectedData] = useState<any>()
   const [statesEmision, setStateEmision] = useState<any>()
@@ -173,9 +174,11 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               const response: Response = cell.getData()
               const estado = response?.notificado_cidi
               return `<div class="flex items-center lg:justify-start ${
-                response.notificado_cidi == 1 ? "text-success" : "text-warning"
+                estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
               }">
-                <span>${estado == 1 ? "Enviado" : "No enviado"}</span>
+                <span>${
+                  estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
+                }</span>
               </div>`
             },
           },
@@ -373,12 +376,24 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
 
   useEffect(() => {
     setSelectedData([])
+    setFilter({
+      field: "",
+      type: "=",
+      estado: "",
+      notificado_cidi: -1,
+    })
   }, [notificationsSended])
 
   useEffect(() => {
     nroEmision && initTabulator()
     reInitOnResizeWindow()
     setBody({})
+    setFilter({
+      field: "",
+      type: "=",
+      estado: "",
+      notificado_cidi: -1,
+    })
 
     baseWebApi(`/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=4`)
       .then((response: any) => {
@@ -449,27 +464,48 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
 
           <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
             {tabulator?.current && (
-              <FormSelect
-                id="tabulator-html-filter-field"
-                value={filter.estado}
-                onChange={(e) => {
-                  const value = e.target.value
-                  setFilter({ ...filter, estado: e.target.value })
-                  if (value != "nofilter") {
-                    tabulator.current?.setFilter("estado_Actualizado", "=", value)
-                  } else {
-                    tabulator.current?.clearFilter(true)
-                  }
-                }}
-                className="w-full 2xl:w-full"
-              >
-                <option value="nofilter">Filtrar por estado</option>
-                {statesEmision?.map((state: any) => (
-                  <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
-                    {capitalizeFirstLetter(state.descripcion_estado.trim())}
-                  </option>
-                ))}
-              </FormSelect>
+              <>
+                <FormSelect
+                  id="tabulator-html-filter-field"
+                  value={filter.estado}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    setFilter({ ...filter, estado: e.target.value })
+                    if (value != "nofilter") {
+                      tabulator.current?.setFilter("estado_Actualizado", "=", value)
+                    } else {
+                      tabulator.current?.clearFilter(true)
+                    }
+                  }}
+                  className="w-full 2xl:w-full"
+                >
+                  <option value="nofilter">Filtrar por estado</option>
+                  {statesEmision?.map((state: any) => (
+                    <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
+                      {capitalizeFirstLetter(state.descripcion_estado.trim())}
+                    </option>
+                  ))}
+                </FormSelect>
+                <FormSelect
+                  id="tabulator-html-filter-field"
+                  value={filter.notificado_cidi}
+                  onChange={(e) => {
+                    const value = e.target.value
+                    setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
+                    if (value != "-1") {
+                      tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
+                    } else {
+                      tabulator.current?.clearFilter(true)
+                    }
+                  }}
+                  className="ml-2 w-full 2xl:w-full"
+                >
+                  <option value="-1">Filtrar por notificación</option>
+                  <option value="1">Enviado</option>
+                  <option value="0">No Enviado</option>
+                  <option value="2">No entregado</option>
+                </FormSelect>
+              </>
             )}
           </div>
 
