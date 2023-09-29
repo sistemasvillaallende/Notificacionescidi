@@ -87,9 +87,15 @@ function ModalProcuracion({
         })
         .then((response) => {
           const data = dataSelected?.filter((row: any) => {
+            const validateState = statesEmision.filter(
+              (state: { codigo_estado: number }) => state.codigo_estado === row.codigo_estado_actual
+            )?.[0]?.emite_notif_cidi
+
+            console.log("validateState", validateState)
             return (
               row?.cuit?.length > 1 &&
               !row.notificado_cidi &&
+              validateState &&
               row?.cuit_valido.trim() === "CUIT_VALIDADO" &&
               validateCuil(row?.cuit.trim())
             )
