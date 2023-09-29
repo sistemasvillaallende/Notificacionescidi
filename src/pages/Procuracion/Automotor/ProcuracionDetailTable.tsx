@@ -335,6 +335,26 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     }
   }
 
+  const sortTable = () => {
+    tabulator.current?.off("dataProcessed", sortTable)
+    const dataTable = tabulator.current?.getData()
+    if (dataTable) {
+      const ciutValidadoArray = dataTable?.filter((row) => row.cuit_valido === "CUIT_VALIDADO")
+      const validadoNoEnviado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 0)
+      const validadoEnviado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 1)
+      const validadoNoEntregado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 2)
+      const cuitNoValidadoArray = dataTable?.filter((row) => row.cuit_valido === "CUIT_NO_VALIDADO")
+
+      const result = [
+        ...validadoNoEnviado,
+        ...validadoNoEntregado,
+        ...validadoEnviado,
+        ...cuitNoValidadoArray,
+      ]
+      tabulator.current?.replaceData(result)
+    }
+  }
+
   tabulator?.current?.on("renderComplete", () => {
     createIcons({
       icons,
@@ -348,6 +368,8 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   tabulator.current?.on("rowSelectionChanged", () => {
     setSelectedData(tabulator?.current?.getSelectedData())
   })
+
+  tabulator?.current?.on("dataProcessed", sortTable)
 
   // Redraw table onresize
   const reInitOnResizeWindow = () => {

@@ -175,7 +175,6 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
               const response: Response = cell.getData()
 
               const estado = response?.notificado_cidi
-              console.log("estado", estado)
               return `<div class="flex items-center lg:justify-start ${
                 estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
               }">
@@ -303,6 +302,28 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
       })
     }
   }
+
+  const sortTable = () => {
+    tabulator.current?.off("dataProcessed", sortTable)
+    const dataTable = tabulator.current?.getData()
+    if (dataTable) {
+      const ciutValidadoArray = dataTable?.filter((row) => row.cuit_valido === "CUIT_VALIDADO")
+      const validadoNoEnviado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 0)
+      const validadoEnviado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 1)
+      const validadoNoEntregado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 2)
+      const cuitNoValidadoArray = dataTable?.filter((row) => row.cuit_valido === "CUIT_NO_VALIDADO")
+
+      const result = [
+        ...validadoNoEnviado,
+        ...validadoNoEntregado,
+        ...validadoEnviado,
+        ...cuitNoValidadoArray,
+      ]
+      tabulator.current?.replaceData(result)
+    }
+  }
+
+  tabulator?.current?.on("dataProcessed", sortTable)
 
   tabulator?.current?.on("renderComplete", () => {
     createIcons({
