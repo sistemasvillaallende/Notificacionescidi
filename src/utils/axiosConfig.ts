@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseUrl = "https://vecino.villaallende.gov.ar"
+export const baseUrl = "http://10.0.0.24"
 
 export const baseWebApi = axios.create({
   baseURL: `${baseUrl}/WebApiShared`,
