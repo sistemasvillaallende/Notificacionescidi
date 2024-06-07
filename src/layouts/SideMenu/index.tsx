@@ -52,6 +52,19 @@ function Main() {
     },
   ]
 
+  const subMenuComercio = [
+    {
+      icon: "MailSearch",
+      pathname: `/comercio%20e%20industria/procuracion/`,
+      title: "Cambio masivo de procuración - COMERCIO",
+    },
+    {
+      icon: "ArrowUp",
+      pathname: `/comercio%20e%20industria/procuracion?id=nuevasemisiones`,
+      title: "Nuevas emisiones - COMERCIO",
+    },
+  ]
+
   const submenuProcu = [
     {
       icon: "Car",
@@ -60,8 +73,8 @@ function Main() {
     },
     {
       icon: "Factory",
-      pathname: `/comercio%20e%20industria/procuracion/`,
       title: "Comercio e industria",
+      subMenu: subMenuComercio,
     },
     {
       icon: "Building",
@@ -69,6 +82,7 @@ function Main() {
       title: "Inmuebles",
     },
   ]
+
 
   const updatedMenu: any = [
     {
