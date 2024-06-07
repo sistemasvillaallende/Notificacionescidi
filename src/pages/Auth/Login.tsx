@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import logo from "../../assets/images/logo.svg"
+import logo from "../../assets/images/logo.png"
 import clsx from "clsx"
 import { useAuthContext } from "../../context/AuthProvider"
 import LoadingIcon from "../../base-components/LoadingIcon"

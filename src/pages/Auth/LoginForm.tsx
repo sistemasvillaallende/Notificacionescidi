@@ -3,7 +3,7 @@ import * as yup from "yup"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useAuthContext } from "../../context/AuthProvider"
-
+import "../../assets/css/style.css";
 import { FormInput, FormLabel } from "../../base-components/Form"
 import Button from "../../base-components/Button"
 

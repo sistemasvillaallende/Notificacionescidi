@@ -56,16 +56,16 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <DetalleNuevasEmisiones
-                  //url={"/WebApiShared/Det_notificacion_auto/listarDetalle?Nro_emision="}
-                  url={"/Det_notificacion_auto/listarDetalle?Nro_emision="}
+                  url={"/WebApiShared/Det_notificacion_auto/listarDetalle?Nro_emision="}
+                  //url={"/Det_notificacion_auto/listarDetalle?Nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
                 />
               ) : (
                 <NuevasEmisiones
-                  //url={"/WebApiShared/Notificacion_auto/read"}
-                  url={"/Notificacion_auto/read"}
+                  url={"/WebApiShared/Notificacion_auto/read"}
+                  //url={"/Notificacion_auto/read"}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
@@ -78,16 +78,16 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <ProcuracionDetailTable
-                  //url={"/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
-                  url={"/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
+                  url={"/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
+                  //url={"/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
                 />
               ) : (
                 <ProcuracionTable
-                  //url={"/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"}
-                  url={"/Notificacion_estado_proc_auto/listNotifProcAuto"}
+                  url={"/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"}
+                  //url={"/Notificacion_estado_proc_auto/listNotifProcAuto"}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
@@ -147,16 +147,16 @@ function Procuracion() {
           <>
             {nroEmision ? (
               <ComercioDetailTable
-                //url={"/WebApiShared/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
-                url={"/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
+                url={"/WebApiShared/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
+                //={"/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
                 detail={true}
                 nroEmision={nroEmision}
                 setNroEmision={setNumeroEmision}
               />
             ) : (
               <ComercioTable
-                //url={"/WebApiShared/Notificacion_estado_proc_iyc/listNotifProcIyc"}
-                url={"/Notificacion_estado_proc_iyc/listNotifProcIyc"}
+                url={"/WebApiShared/Notificacion_estado_proc_iyc/listNotifProcIyc"}
+                //url={"/Notificacion_estado_proc_iyc/listNotifProcIyc"}
                 detail={true}
                 nroEmision={nroEmision}
                 setNroEmision={setNumeroEmision}
@@ -172,8 +172,8 @@ function Procuracion() {
           <>
             {nroEmision ? (
               <InmueblesDetailTable
-                //url={"/WebApiShared/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
-                url={"/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
+                url={"/WebApiShared/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
+                //url={"/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
                 detail={true}
                 nroEmision={nroEmision}
                 setNroEmision={setNumeroEmision}
