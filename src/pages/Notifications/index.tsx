@@ -83,7 +83,8 @@ function Main() {
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${baseUrl}/webapishared/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
+        ajaxURL: `${baseUrl}/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
+        //ajaxURL: `${baseUrl}/webapishared/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
         //   ajaxURLGenerator:function(url, config, params){
         //     //url - the url from the ajaxURL property or setData function
         //     //config - the request config object from the ajaxConfig property
@@ -356,7 +357,8 @@ function Main() {
           try {
             setFilter({ ...filter, estado: "" })
             table.setData(
-              `${baseUrl}/webapishared/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
+             // `${baseUrl}/webapishared/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
+              `${baseUrl}/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
             )
             setCuilInput({ ...cuilInput, error: false, reset: true })
           } catch (err) {
@@ -366,7 +368,8 @@ function Main() {
       } else if (estado && field === "estado") {
         try {
           table.setData(
-            `${baseUrl}/webapishared/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
+            //`${baseUrl}/webapishared/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
+            `${baseUrl}/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
           )
         } catch (err) {
           console.log(err)
