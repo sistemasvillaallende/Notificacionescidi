@@ -12,6 +12,8 @@ import NuevasEmisiones from "./Automotor/Submenu/NuevasEmisiones.js"
 import DetalleNuevasEmisiones from "./Automotor/Submenu/DetalleNuevasEmisiones.js"
 import { useLocation } from "react-router-dom"
 import { getSecureItem } from "../../modules/secureStorage.js"
+import NuevasEmisionesC from "./Comercio/submenu/NuevasEmisiones.js"
+import DetallesNuevasEmisionesC from "./Comercio/submenu/DetalleNuevasEmisiones.js"
 
 function Procuracion() {
   const { office } = useParams()
@@ -126,14 +128,14 @@ function Procuracion() {
           return (
             <>
               {nroEmision ? (
-                <DetalleNuevasEmisiones
-                  url={"/WebApiShared/Det_notificacion_auto/listarDetalle?Nro_emision="}
+                <DetallesNuevasEmisionesC
+                  url={"/WebApiShared/Det_notificacion_iyc/listarDetalle?Nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
                 />
               ) : (
-                <NuevasEmisiones
+                <NuevasEmisionesC
                   url={"/WebApiShared/Notificacion_auto/read"}
                   detail={true}
                   nroEmision={nroEmision}
