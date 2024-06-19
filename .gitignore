@@ -7,6 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+#archivos de React que deben ser ignorados
+node_modules
+build
+dist
+coverage
+
 # node_modules
 dist
 dist-ssr
