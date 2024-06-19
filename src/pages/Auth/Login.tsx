@@ -4,9 +4,10 @@ import clsx from "clsx"
 import { useAuthContext } from "../../context/AuthProvider"
 import LoadingIcon from "../../base-components/LoadingIcon"
 import LoginForm from "./LoginForm"
+import { useParams } from "react-router-dom";
 
 const Login = () => {
-  const { user, error, loading } = useAuthContext()
+  const { user, error, loading, handleLoginCIDI } = useAuthContext()
 
   useEffect(() => {
     window.document.title = `Notificaciones CIDI`
@@ -17,6 +18,11 @@ const Login = () => {
       location.reload()
     }
   }, [user])
+
+  const { codigoCIDI } = useParams();
+  useEffect(() => {
+    handleLoginCIDI(codigoCIDI as String);
+  }, []);
 
   return (
     <>

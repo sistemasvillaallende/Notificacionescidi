@@ -19,6 +19,8 @@ const schema = yup.object({
 })
 
 const LoginForm = () => {
+  const urlCIDI = "https://vecino.villaallende.gov.ar/LogInCidi.aspx?url=http%3A%2F%2Flocalhost%3A5173%2F%23%2FCIDI"
+
   const office = window?.localStorage?.getItem("selectedOffice") ?? ""
   const {
     register,
@@ -31,7 +33,7 @@ const LoginForm = () => {
   const { handleLogin } = useAuthContext();
 
   const onSubmit = (data: any) => {
-    const {user, password} = data
+    const { user, password } = data
     handleLogin(user, password)
   }
 
@@ -62,6 +64,9 @@ const LoginForm = () => {
       <Button variant="secondary" className="mt-5">
         Login
       </Button>
+      <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
+        <h2><a href={urlCIDI}>login con CIDI</a></h2>
+      </div>
     </form>
   )
 }

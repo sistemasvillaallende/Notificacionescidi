@@ -1,8 +1,9 @@
 import { useState, useContext, createContext, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { UNSAFE_useRouteId, useNavigate } from "react-router-dom"
 import { baseWebApi, userAuth, userOffices } from "../utils/axiosConfig"
 import { capitalizeFirstLetter } from "../utils/helper"
 import { setSecureItem } from "../modules/secureStorage"
+import axios from "axios"
 
 export interface User {
   nombre: string
@@ -25,6 +26,7 @@ interface AuthContextType {
   handleLogout: () => void
   error: any
   loading: boolean
+  handleLoginCIDI: (codigoCIDI: String) => void
 }
 
 const AuthContext = createContext({} as AuthContextType)
@@ -43,6 +45,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<any>(null)
   const [loading, setLoading] = useState(false)
 
+
+  const handleLoginCIDI = async (codigoCIDI: String) => {
+    console.log("codigoCIDI", codigoCIDI)
+    try {
+      const response = await axios.get(
+        `http://10.0.0.24/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
+      );
+      if (response.data) {
+        console.log(response.data)
+        const user = response.data;
+
+        const empleado = JSON.parse(response.data.empleado)
+        console.log("empleado", empleado)
+        const responseOffice: { data: any } = await userOffices.get(`/GetOficinas?cod_usuario=${empleado.cod_usuario}`)
+        const officesResponse: { oficina: string }[] = responseOffice?.data
+
+        const responsePermisos = await baseWebApi.get(`/Login/GetPermisosCidi?cod_usuario=${empleado.cod_usuario}`)
+
+        if (user.empleado == "N" || !user.empleado) {
+          console.log("NO EMPLEADO: ", user.empleado)
+        } else {
+          const userData = response?.data
+          const offices: string[] = []
+          officesResponse?.map((e: any) => offices.push(capitalizeFirstLetter(e.oficina)))
+          setUser({
+            nombre: userData?.nombre,
+            apellido: userData?.apellido,
+            email: userData?.email,
+            userName: empleado?.nombre,
+            cuit: userData?.cuil,
+            administrador: true,
+            cod_oficina: userData?.cod_oficina,
+            cod_usuario: empleado.cod_usuario,
+            nombre_oficina: officesResponse[0]?.oficina,
+            permisos: !userData?.administrador ? responsePermisos?.data : ["admin"],
+          })
+        }
+      } else {
+        setError("Usuario o contraseña incorrectos");
+      }
+    }
+    catch (error) {
+      console.error("Error al validar el usuario:", error);
+      setError("Usuario o contraseña incorrectos");
+    }
+  }
+
   const handleLogin = async (user: string, password: string) => {
     setError(null)
     setLoading(true)
@@ -51,13 +100,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await userAuth.get(
         `/Login/ValidaUsuarioConOficina?user=${user}&password=${password}`
       )
-      const responseOffice: { data: any } = await userOffices.get(
-        `/GetOficinas?cod_usuario=${response?.data?.cod_usuario}`
-      )
-      const officesResponse: {}[] = responseOffice?.data
-      const responsePermisos = await baseWebApi.get(
-        `/Login/GetPermisosCidi?cod_usuario=${response?.data?.cod_usuario}`
-      )
+      console.log("cod_usuario", response?.data?.cod_usuario)
+      const responseOffice: { data: any } = await userOffices.get(`/GetOficinas?cod_usuario=${response?.data?.cod_usuario}`)
+      const officesResponse: { oficina: string }[] = responseOffice?.data
+      const responsePermisos = await baseWebApi.get(`/Login/GetPermisosCidi?cod_usuario=${response?.data?.cod_usuario}`)
       if (response && officesResponse) {
         setLoading(false)
 
@@ -98,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       setSecureItem("isLoggedIn", user)
-
+      console.log("user", user)
       if (location.hash.includes("login")) {
         if (user.administrador === true) {
           navigate("/seleccionar-oficina/", { replace: true })
@@ -111,8 +157,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, navigate])
 
+  useEffect(() => {
+    if (user) {
+      setSecureItem("isLoggedIn", user)
+      navigate(`/${user.nombre_oficina}/notificaciones`)
+    }
+  }, [user])
+
+
   return (
-    <AuthContext.Provider value={{ user, setUser, handleLogin, handleLogout, error, loading }}>
+    <AuthContext.Provider value={{
+      user,
+      setUser,
+      handleLogin,
+      handleLogout,
+      error,
+      loading,
+      handleLoginCIDI
+    }}>
       {children}
     </AuthContext.Provider>
   )

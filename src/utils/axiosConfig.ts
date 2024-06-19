@@ -4,7 +4,7 @@ export const baseUrl = "https://vecino.villaallende.gov.ar"
 
 export const baseWebApi = axios.create({
   //baseURL: `${baseUrl}/WebApiShared`,
-  baseURL: `http://localhost:5298/`,
+  baseURL: `http://10.0.0.24/WebApiShared`,
     headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"

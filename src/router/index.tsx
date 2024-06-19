@@ -26,6 +26,7 @@ const Router = () => {
         <Routes>
           <Route path="/*" element={<Login />} />
           <Route path="/login/" element={<Login />} />
+          <Route path="/CIDI/:codigoCIDI" element={<Login />} />
         </Routes>
       ) : (
         <>
