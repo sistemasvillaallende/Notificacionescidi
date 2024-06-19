@@ -19,7 +19,7 @@ const schema = yup.object({
 })
 
 const LoginForm = () => {
-  const urlCIDI = "https://vecino.villaallende.gov.ar/LogInCidi.aspx?url=http%3A%2F%2Flocalhost%3A5173%2F%23%2FCIDI"
+  const urlCIDI = `${import.meta.env.VITE_URL_URL_CIDI}`
 
   const office = window?.localStorage?.getItem("selectedOffice") ?? ""
   const {
