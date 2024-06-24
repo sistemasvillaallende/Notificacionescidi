@@ -46,7 +46,7 @@ const Login = () => {
             <div className="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
               <div className="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none w-3/4 lg:w-2/4 xl:w-auto">
                 <h2 className="text-2xl font-bold text-center intro-x xl:text-3xl">
-                  {user ? `Bienvenido ${user.nombre} ${user.apellido}` : "Iniciar sesión"}
+                  {user ? `Bienvenido ${user.nombre} ${user.apellido}` : ""}
                 </h2>
                 <div className="mt-8 intro-x">
                   <h2 className="text-1xl intro-x xl:text-2xl xl:text-left">
@@ -64,8 +64,7 @@ const Login = () => {
                   <h3>
                     {error && (
                       <p className="my-5">
-                        Ha ocurrido un error en el proceso de inicio de sesión. Por favor, verifica
-                        tus credenciales e inténtalo nuevamente
+                       
                       </p>
                     )}
                   </h3>
