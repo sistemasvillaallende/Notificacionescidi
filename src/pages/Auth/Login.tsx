@@ -21,7 +21,7 @@ const Login = () => {
 
   const { codigoCIDI } = useParams();
   useEffect(() => {
-    handleLoginCIDI(codigoCIDI as String);
+    handleLoginCIDI(codigoCIDI as string);
   }, []);
 
   return (

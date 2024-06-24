@@ -16,6 +16,7 @@ export interface User {
   cod_usuario: string
   administrador: boolean
   img?: string
+  hash?: string
   permisos: {}[]
 }
 
@@ -26,7 +27,7 @@ interface AuthContextType {
   handleLogout: () => void
   error: any
   loading: boolean
-  handleLoginCIDI: (codigoCIDI: String) => void
+  handleLoginCIDI: (codigoCIDI: string) => void
 }
 
 const AuthContext = createContext({} as AuthContextType)
@@ -46,11 +47,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false)
 
 
-  const handleLoginCIDI = async (codigoCIDI: String) => {
+  const handleLoginCIDI = async (codigoCIDI: string) => {
     console.log("codigoCIDI", codigoCIDI)
     try {
       const response = await axios.get(
-        `http://10.0.0.24/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
+        //`http://10.0.0.24/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
+        `http://localhost:5298/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
       );
       if (response.data) {
         console.log(response.data)
@@ -79,6 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             cod_oficina: userData?.cod_oficina,
             cod_usuario: empleado.cod_usuario,
             nombre_oficina: officesResponse[0]?.oficina,
+            hash: codigoCIDI,
             permisos: !userData?.administrador ? responsePermisos?.data : ["admin"],
           })
         }
