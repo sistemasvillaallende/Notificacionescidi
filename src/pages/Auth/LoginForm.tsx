@@ -6,6 +6,7 @@ import { useAuthContext } from "../../context/AuthProvider"
 import "../../assets/css/style.css";
 import { FormInput, FormLabel } from "../../base-components/Form"
 import Button from "../../base-components/Button"
+import logo from  "../../assets/images/logocidi.png"
 
 const schema = yup.object({
   user: yup
@@ -39,33 +40,9 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <FormLabel htmlFor="vertical-form-1">Usuario</FormLabel>
-        <FormInput
-          id="vertical-form-1"
-          type="text"
-          placeholder="Nombre de usuario"
-          {...register("user")}
-        />
-        {errors.user?.message as string}
-      </div>
-
-      <div className="mt-3">
-        <FormLabel htmlFor="vertical-form-2">Contraseña</FormLabel>
-        <FormInput
-          id="vertical-form-2"
-          type="password"
-          placeholder="Contraseña"
-          {...register("password")}
-        />
-        {errors.password?.message as string}
-      </div>
-
-      <Button variant="secondary" className="mt-5">
-        Login
-      </Button>
       <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-        <h2><a href={urlCIDI}>login con CIDI</a></h2>
+        <h2 style={{ textAlign: 'center' }}><a href={urlCIDI} style={{display: 'ruby', width: '100%'}}>
+          <img src={logo} alt="logo" style={{ height: '90px'}}/></a></h2>
       </div>
     </form>
   )
