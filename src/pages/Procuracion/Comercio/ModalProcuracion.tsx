@@ -238,7 +238,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
                       </ul>
                     </div>
                   </article>
-                  <ModalVerification onClick={handleSubmit} />
+
                 </main>
               </>
             )}

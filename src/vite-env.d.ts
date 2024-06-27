@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_URL_URL_CIDI: string 
+  readonly VITE_URL_WEBAPISHARED: string
 }
 
 interface ImportMeta {

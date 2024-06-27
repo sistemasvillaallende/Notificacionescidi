@@ -1,6 +1,6 @@
 import { createIcons, icons } from "lucide"
 import React, { createRef, useEffect, useRef, useState } from "react"
-import { baseUrl, baseWebApi } from "../../../utils/axiosConfig"
+import { baseWebApi } from "../../../utils/axiosConfig"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
 import { capitalizeFirstLetter } from "../../../utils/helper"
 import { FormInput, FormSelect } from "../../../base-components/Form"
@@ -50,7 +50,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${baseUrl}${url}${nroEmision}`,
+        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,

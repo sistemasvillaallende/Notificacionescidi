@@ -80,7 +80,6 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <ProcuracionDetailTable
-                  ///url={"/WebApiShared/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
                   url={"/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
@@ -88,7 +87,6 @@ function Procuracion() {
                 />
               ) : (
                 <ProcuracionTable
-                  //url={"/WebApiShared/Notificacion_estado_proc_auto/listNotifProcAuto"}
                   url={"/Notificacion_estado_proc_auto/listNotifProcAuto"}
                   detail={true}
                   nroEmision={nroEmision}

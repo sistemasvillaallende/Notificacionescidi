@@ -1,11 +1,7 @@
 import axios from "axios";
 
-export const baseUrl = "https://vecino.villaallende.gov.ar"
-//export const baseUrl = "http://localhost:5298"
 export const baseWebApi = axios.create({
-  baseURL: `${baseUrl}/WebApiShared`,
-  //baseURL: `http://localhost:5298`,
-  //baseURL: `http://10.0.0.24/WebApiShared`,
+  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}`,
     headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -13,17 +9,16 @@ export const baseWebApi = axios.create({
 });
 
 baseWebApi.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
 );
 
 export const comunicacionesCidi = axios.create({
-  baseURL: `${baseUrl}/WebApiShared/ComunicacionesCIDI`,
-  //baseURL: `${baseUrl}/ComunicacionesCIDI`,
+  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/ComunicacionesCIDI`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -31,18 +26,17 @@ export const comunicacionesCidi = axios.create({
 });
 
 comunicacionesCidi.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
 );
 
 // Autenticación
 export const userAuth = axios.create({
-  baseURL: `${baseUrl}/WebApiShared`,
-  //baseURL: `${baseUrl}`,
+  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -50,18 +44,17 @@ export const userAuth = axios.create({
 });
 
 userAuth.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
 );
 
 // Oficinas por usuario
 export const userOffices = axios.create({
-  baseURL: `${baseUrl}/WebApiShared/Notificacion_digital`,
-  //baseURL: `${baseUrl}/Notificacion_digital`,
+  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -69,18 +62,17 @@ export const userOffices = axios.create({
 });
 
 userOffices.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
 );
 
 // Procuración
 export const getProcuracion = axios.create({
-  baseURL: `${baseUrl}/WebApiShared/Notificacion_estado_proc_auto`,
-  //baseURL: `${baseUrl}/Notificacion_estado_proc_auto`,
+  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_estado_proc_auto`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -88,18 +80,17 @@ export const getProcuracion = axios.create({
 })
 
 getProcuracion.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
 );
 
 // Trae expediente
 export const getExpediente = axios.create({
-  baseURL: `${baseUrl}/WebApiShared/Resoluciones_multas`,
-  //baseURL: `${baseUrl}/Resoluciones_multas`,
+  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Resoluciones_multas`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -107,10 +98,10 @@ export const getExpediente = axios.create({
 });
 
 getExpediente.interceptors.response.use(
-  (response) => {
+  (response: any) => {
     return response;
   },
-  (error) => {
+  (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
 );

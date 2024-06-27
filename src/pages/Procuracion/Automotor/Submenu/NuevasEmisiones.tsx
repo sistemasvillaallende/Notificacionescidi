@@ -1,6 +1,5 @@
 import { createIcons, icons } from "lucide"
 import React, { createRef, useEffect, useRef } from "react"
-import { baseUrl } from "../../../../utils/axiosConfig"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
 import { capitalizeFirstLetter } from "../../../../utils/helper"
 
@@ -29,7 +28,7 @@ const NuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmision }: Pro
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${baseUrl}${url}`,
+        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}`,
         paginationMode: "local",
         filterMode: "remote",
         printStyled: true,

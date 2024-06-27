@@ -127,6 +127,7 @@ function ModalProcuracion({
         const newPromise = new Promise((resolve, reject) => {
           const headers = {
             "Content-Type": "application/json",
+            "hash": user?.hash,
             Accept: "application/json",
           }
           const bodyObject = {

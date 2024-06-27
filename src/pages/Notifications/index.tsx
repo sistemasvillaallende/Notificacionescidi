@@ -4,7 +4,7 @@ import { createIcons, icons } from "lucide"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
 
 import { officesIds } from "../../utils/officesIds.js"
-import { baseUrl, baseWebApi } from "../../utils/axiosConfig"
+import { baseWebApi } from "../../utils/axiosConfig"
 import Button from "../../base-components/Button"
 import { FormInput, FormSelect } from "../../base-components/Form"
 import NotificationModal from "../../components/NotificationModal"
@@ -83,16 +83,7 @@ function Main() {
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${baseUrl}/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
-        //ajaxURL: `${baseUrl}/webapishared/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
-        //   ajaxURLGenerator:function(url, config, params){
-        //     //url - the url from the ajaxURL property or setData function
-        //     //config - the request config object from the ajaxConfig property
-        //     //params - the params object from the ajaxParams property, this will also include any pagination, filter and sorting properties based on table setup
-
-        //     //return request url
-        //     return url + "?params=" + encodeURI(JSON.stringify(params)); //encode parameters as a json object
-        // },
+        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
         paginationMode: "local",
         filterMode: "remote",
         // sortMode: "remote",
@@ -358,7 +349,7 @@ function Main() {
             setFilter({ ...filter, estado: "" })
             table.setData(
               //`${baseUrl}/webapishared/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
-              `${baseUrl}/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
+              `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
             )
             setCuilInput({ ...cuilInput, error: false, reset: true })
           } catch (err) {
@@ -369,7 +360,7 @@ function Main() {
         try {
           table.setData(
             //`${baseUrl}/webapishared/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
-            `${baseUrl}/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
+            `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
           )
         } catch (err) {
           console.log(err)

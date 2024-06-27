@@ -8,13 +8,13 @@ import React, {
   useRef,
   useState,
 } from "react"
-import { baseUrl, baseWebApi } from "../../../../utils/axiosConfig"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
 import { capitalizeFirstLetter } from "../../../../utils/helper"
 import { FormInput, FormSelect } from "../../../../base-components/Form"
 import Lucide from "../../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
 import { StringChain } from "lodash"
+import { baseWebApi } from "../../../../utils/axiosConfig"
 
 export interface Response {
   nro_emision?: number
@@ -60,7 +60,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${baseUrl}${url}${nroEmision}`,
+        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,
