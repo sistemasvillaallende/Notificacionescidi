@@ -238,7 +238,11 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
                       </ul>
                     </div>
                   </article>
-
+                  <ModalVerification
+                    setSuperlargeModalSizePreview={setSuperlargeModalSizePreview}
+                    validatedData={validatedData}
+                    onClick={handleSubmit}
+                  />
                 </main>
               </>
             )}
