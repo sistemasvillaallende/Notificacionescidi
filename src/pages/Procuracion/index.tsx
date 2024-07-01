@@ -58,7 +58,6 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <DetalleNuevasEmisiones
-                  //url={"/WebApiShared/Det_notificacion_auto/listarDetalle?Nro_emision="}
                   url={"/Det_notificacion_auto/listarDetalle?Nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
@@ -66,7 +65,6 @@ function Procuracion() {
                 />
               ) : (
                 <NuevasEmisiones
-                  //url={"/WebApiShared/Notificacion_auto/read"}
                   url={"/Notificacion_auto/read"}
                   detail={true}
                   nroEmision={nroEmision}
@@ -102,32 +100,13 @@ function Procuracion() {
       }
     } else if (office == "comercio e industria") {
       if (hasPermission([454, 462], user)) {
-        // return (
-        //   <>
-        //     {nroEmision ? (
-        //       <ComercioDetailTable
-        //         url={"/WebApiShared/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
-        //         detail={true}
-        //         nroEmision={nroEmision}
-        //         setNroEmision={setNumeroEmision}
-        //       />
-        //     ) : (
-        //       <ComercioTable
-        //         url={"/WebApiShared/Notificacion_estado_proc_iyc/listNotifProcIyc"}
-        //         detail={true}
-        //         nroEmision={nroEmision}
-        //         setNroEmision={setNumeroEmision}
-        //       />
-        //     )}
-        //   </>
-        // )
+
         if (itemId && itemId === "nuevasemisiones") {
           console.log("hola")
           return (
             <>
               {nroEmision ? (
                 <DetallesNuevasEmisionesC
-                  //url={"/WebApiShared/Det_notificacion_iyc/listarDetalle?Nro_emision="}
                   url={"/Det_notificacion_iyc/listarDetalle?Nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
@@ -135,7 +114,6 @@ function Procuracion() {
                 />
               ) : (
                 <NuevasEmisionesC
-                  //url={"/WebApiShared/Notificacion_auto/read"}
                   url={"/Notificacion_auto/read"}
                   detail={true}
                   nroEmision={nroEmision}
@@ -149,7 +127,6 @@ function Procuracion() {
           <>
             {nroEmision ? (
               <ComercioDetailTable
-                //url={"/WebApiShared/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
                 url={"/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
                 detail={true}
                 nroEmision={nroEmision}
@@ -157,7 +134,6 @@ function Procuracion() {
               />
             ) : (
               <ComercioTable
-                //url={"/WebApiShared/Notificacion_estado_proc_iyc/listNotifProcIyc"}
                 url={"/Notificacion_estado_proc_iyc/listNotifProcIyc"}
                 detail={true}
                 nroEmision={nroEmision}
@@ -174,7 +150,6 @@ function Procuracion() {
           <>
             {nroEmision ? (
               <InmueblesDetailTable
-                //url={"/WebApiShared/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
                 url={"/Det_notificacion_estado_proc_inm/listarDetalle?nro_emision="}
                 detail={true}
                 nroEmision={nroEmision}
@@ -182,7 +157,6 @@ function Procuracion() {
               />
             ) : (
               <InmueblesTable
-                //url={"/WebApiShared/Notificacion_estado_proc_inm/listNotifProcInm"}
                 url={"/Notificacion_estado_proc_inm/listNotifProcInm"}
                 detail={true}
                 nroEmision={nroEmision}

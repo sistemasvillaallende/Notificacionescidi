@@ -348,7 +348,6 @@ function Main() {
           try {
             setFilter({ ...filter, estado: "" })
             table.setData(
-              //`${baseUrl}/webapishared/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
               `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
             )
             setCuilInput({ ...cuilInput, error: false, reset: true })
@@ -359,7 +358,6 @@ function Main() {
       } else if (estado && field === "estado") {
         try {
           table.setData(
-            //`${baseUrl}/webapishared/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
             `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
           )
         } catch (err) {
