@@ -112,9 +112,10 @@ function Main() {
   return (
     <div className="py-5 md:py-0 bg-white box-border">
       <MobileMenu />
-      <div className="flex overflow-hidden px-2 sm:px-5 mt-[120px] md:mt-5 bg-white">
+      <div className="flex mt-[120px] md:mt-5 bg-white" style={{ marginTop: '-10px' }}>
         {/* BEGIN: Side Menu */}
-        <nav className="w-[105px] xl:w-[260px] px-5 pb-16 rounded-md overflow-x-hidden z-50 pt-4 hidden md:block bg-light">
+        <nav className="w-[105px] xl:w-[260px] px-5 pb-16 rounded-md overflow-x-hidden z-50 pt-4 hidden md:block"
+          style={{ listStyle: 'none', boxShadow: 'rgb(0 0 0 / 50%) 0px 2px 10px', minHeight: '100vh', paddingRight: '15px' }}>
           <ul>
             {/* BEGIN: First Child */}
             {formattedMenu.map((menu, menuKey) =>
@@ -125,8 +126,7 @@ function Main() {
                     "my-6",
 
                     // Animation
-                    `opacity-0 animate-[0.4s_ease-in-out_0.1s_intro-divider] animate-fill-mode-forwards animate-delay-${
-                      (menuKey + 1) * 10
+                    `opacity-0 animate-[0.4s_ease-in-out_0.1s_intro-divider] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10
                     }`,
                   ])}
                   key={menuKey}
@@ -136,9 +136,8 @@ function Main() {
                   <Menu
                     className={clsx({
                       // Animation
-                      [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                        (menuKey + 1) * 10
-                      }`]: !menu.active,
+                      [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10
+                        }`]: !menu.active,
                     })}
                     menu={menu}
                     formattedMenuState={[formattedMenu, setFormattedMenu]}
@@ -193,9 +192,8 @@ function Main() {
                                       <Menu
                                         className={clsx({
                                           // Animation
-                                          [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                                            (lastSubMenuKey + 1) * 10
-                                          }`]: !lastSubMenu.active,
+                                          [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(lastSubMenuKey + 1) * 10
+                                            }`]: !lastSubMenu.active,
                                         })}
                                         menu={lastSubMenu}
                                         formattedMenuState={[formattedMenu, setFormattedMenu]}
@@ -221,7 +219,7 @@ function Main() {
         </nav>
         {/* END: Side Menu */}
         {/* BEGIN: Content */}
-        <div
+        <div style={{ paddingTop: '40px'}}
           className={clsx([
             "max-w-full md:max-w-none md:rounded-none px-4 md:px-[22px] min-w-0 min-h-screen bg-white flex-1 pb-10 mt-5 md:mt-0 relative dark:bg-darkmode-700",
             "before:content-[''] before:w-full before:h-px before:block",
