@@ -102,7 +102,6 @@ function Procuracion() {
       if (hasPermission([454, 462], user)) {
 
         if (itemId && itemId === "nuevasemisiones") {
-          console.log("hola")
           return (
             <>
               {nroEmision ? (
@@ -114,7 +113,7 @@ function Procuracion() {
                 />
               ) : (
                 <NuevasEmisionesC
-                  url={"/Notificacion_auto/read"}
+                  url={"/Notificacion_iyc/read"}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}

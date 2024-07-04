@@ -386,7 +386,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
     })
 
     baseWebApi(
-      `/Estados_procuracion/ListarEstadosxNotifNuevas?nro_emision=${nroEmision}&subsistema=4`
+      `/Estados_procuracion/ListarEstadosxNotifNuevas?nro_emision=${nroEmision}&subsistema=3`
     )
       .then((response: any) => {
         setStateEmision(response.data)
