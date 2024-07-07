@@ -168,9 +168,8 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             formatter(cell) {
               const response: Response = cell.getData()
               const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${
-                response.notificado_cidi == 1 ? "text-success" : "text-warning"
-              }">
+              return `<div class="flex items-center lg:justify-start ${response.notificado_cidi == 1 ? "text-success" : "text-warning"
+                }">
                 <span>${estado == 1 ? "Enviado" : "No enviado"}</span>
               </div>`
             },
@@ -222,8 +221,8 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.vencimiento as string
-                ).toLocaleDateString()}</div>
+                response?.vencimiento as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -463,7 +462,9 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
           )}
         </div>
       </section>
-      <div className="overflow-x-scroll scrollbar-hidden">
+      <div className="overflow-x-scroll scrollbar-hidden" style={{ padding: '40px', paddingTop: '10px' }}>
+        <h1 style={{ fontSize: '22px', fontWeight: '600' }}>Procuraciones - Cambio de estado masivo</h1>
+        <hr style={{ marginTop: '15px', border: 'solid 1px gray', marginBottom: '35px' }} />
         <div id="tabulator" ref={tableRef} className="mt-5"></div>
       </div>
     </>

@@ -31,8 +31,8 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
   const headerTitle: any = {
     inicio: { title: "Inicio", icon: "Home" },
     notificaciones: { title: "Notificaciones", icon: "Bell" },
-    procuracion: { title: "Procuración", icon: "FileWarning" },
-    nuevasemisiones: { title: "Nuevas Emisiones", icon: "ArrowUp" },
+    procuracion: { title: "", icon: "" },
+    nuevasemisiones: { title: "", icon: "" },
     "pagina-no-encontrada": { title: "Página no encontrada", icon: "Warning" },
   }
 

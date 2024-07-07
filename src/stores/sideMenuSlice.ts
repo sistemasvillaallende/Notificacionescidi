@@ -23,7 +23,7 @@ const initialState: SideMenuState = {
     },
     {
       icon: "FileWarning",
-      pathname: "/${hash}/resoluciones/",
+      pathname: `/${hash}/resoluciones/`,
       title: "Resoluciones",
     },
   ],

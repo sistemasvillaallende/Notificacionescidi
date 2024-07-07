@@ -2,6 +2,7 @@ import { createIcons, icons } from "lucide";
 import React, { createRef, useEffect, useRef } from "react";
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 import { capitalizeFirstLetter } from "../../../utils/helper";
+import Lucide from "../../../base-components/Lucide";
 
 interface Response {
   nro_Emision?: number;
@@ -14,14 +15,14 @@ interface Response {
   porcentaje?: number;
 }
 
-interface Props{
-  url:string
-  detail?:boolean
-  nroEmision?:string
-  setNroEmision:Function
+interface Props {
+  url: string
+  detail?: boolean
+  nroEmision?: string
+  setNroEmision: Function
 }
 
-const ComercioTable = ({ url, detail=false, nroEmision, setNroEmision }: Props) => {
+const ComercioTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>();
   const tabulator = useRef<Tabulator>();
 
@@ -77,8 +78,8 @@ const ComercioTable = ({ url, detail=false, nroEmision, setNroEmision }: Props) 
               const response: Response = cell.getData();
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_Emision as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_Emision as string
+              ).toLocaleDateString()}</div>
               </div>`;
             },
           },
@@ -94,8 +95,8 @@ const ComercioTable = ({ url, detail=false, nroEmision, setNroEmision }: Props) 
               const response: Response = cell.getData();
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_Vencimiento as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_Vencimiento as string
+              ).toLocaleDateString()}</div>
               </div>`;
             },
           },
@@ -160,9 +161,10 @@ const ComercioTable = ({ url, detail=false, nroEmision, setNroEmision }: Props) 
               return `<div 
                 class="font-medium whitespace-nowrap">Ver detalles</div>`;
             },
-            cellClick:(e, cell)=>{
+            cellClick: (e, cell) => {
               const response: Response = cell.getData();
-              setNroEmision(response.nro_Emision)}
+              setNroEmision(response.nro_Emision)
+            }
           },
         ],
       });
@@ -215,7 +217,15 @@ const ComercioTable = ({ url, detail=false, nroEmision, setNroEmision }: Props) 
 
   return (
     <>
-      <div className="overflow-x-scroll scrollbar-hidden">
+      <div className="overflow-x-scroll scrollbar-hidden" style={{ padding: '40px', marginTop: '20px', paddingTop: '0px' }}>
+        
+        <h1 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '5px', display: 'flex', alignItems: 'flex-start' }}>  
+          <Lucide icon="Car" className="w-4 h-4 mr-2" style={{height: '50px', width: '50px', 
+            color: 'rgb(192, 158, 118)', borderRight: 'solid', paddingRight: '10px' }}/> 
+          <span style={{paddingTop:'5px', paddingLeft: '10px'}}>Industria y Comercio</span> </h1>
+        <h1 style={{ fontSize: '16px', fontWeight: '600', color: 'gray', marginLeft: '68px', marginTop: '-30px' }}>
+          Procuraciones - Cambio de estado masivo</h1>
+        <hr style={{ marginTop: '15px', border: 'solid 1px gray', marginBottom: '20px' }} />
         <div id="tabulator" ref={tableRef} className="mt-5"></div>
       </div>
     </>

@@ -91,14 +91,14 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             },
             formatter: "rowSelection",
           },
-          {
+          /*{
             title: "",
             formatter: "responsiveCollapse",
             width: 40,
             minWidth: 40,
             hozAlign: "center",
             headerSort: false,
-          },
+          },*/
           {
             title: "Nro.",
             width: 80,
@@ -548,7 +548,8 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
           )}
         </div>
       </section>
-      <div className="overflow-x-scroll scrollbar-hidden">
+      <div className="scrollbar-hidden">
+
         <div id="tabulator" ref={tableRef} className="mt-5"></div>
       </div>
     </>

@@ -41,12 +41,10 @@ function Main() {
 
   const subMenuCar = [
     {
-      icon: "MailSearch",
       pathname: `/oficina%20automotor/procuracion`,
-      title: "Cambio masivo de procuración",
+      title: "Cambio de estado masivo",
     },
     {
-      icon: "ArrowUp",
       pathname: `/oficina%20automotor/procuracion?id=nuevasemisiones`,
       title: "Nuevas emisiones",
     },
@@ -54,12 +52,10 @@ function Main() {
 
   const subMenuComercio = [
     {
-      icon: "MailSearch",
       pathname: `/comercio%20e%20industria/procuracion/`,
-      title: "Cambio masivo de procuración - COMERCIO",
+      title: "Cambio de estado masivo",
     },
     {
-      icon: "ArrowUp",
       pathname: `/comercio%20e%20industria/procuracion?id=nuevasemisiones`,
       title: "Nuevas emisiones - COMERCIO",
     },
@@ -85,16 +81,16 @@ function Main() {
 
 
   const updatedMenu: any = [
-    {
+   /* {
       icon: "Bell",
       title: "Notificaciones",
-      activeDropdown: true,
+      activeDropdown: false,
       subMenu: submenuNoti,
-    },
+    },*/
     {
       icon: "FileWarning",
       title: "Procuración Administrativa",
-      activeDropdown: true,
+      activeDropdown: false,
       subMenu: submenuProcu,
     },
   ]
@@ -219,7 +215,7 @@ function Main() {
         </nav>
         {/* END: Side Menu */}
         {/* BEGIN: Content */}
-        <div style={{ paddingTop: '40px'}}
+        <div style={{ paddingTop: '10px'}}
           className={clsx([
             "max-w-full md:max-w-none md:rounded-none px-4 md:px-[22px] min-w-0 min-h-screen bg-white flex-1 pb-10 mt-5 md:mt-0 relative dark:bg-darkmode-700",
             "before:content-[''] before:w-full before:h-px before:block",

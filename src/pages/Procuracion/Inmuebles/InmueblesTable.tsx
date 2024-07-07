@@ -14,14 +14,14 @@ interface Response {
   porcentaje?: number;
 }
 
-interface Props{
-  url:string
-  detail?:boolean
-  nroEmision?:string
-  setNroEmision:Function
+interface Props {
+  url: string
+  detail?: boolean
+  nroEmision?: string
+  setNroEmision: Function
 }
 
-const ProcuracionTable = ({ url, detail=false, nroEmision, setNroEmision }: Props) => {
+const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>();
   const tabulator = useRef<Tabulator>();
 
@@ -77,8 +77,8 @@ const ProcuracionTable = ({ url, detail=false, nroEmision, setNroEmision }: Prop
               const response: Response = cell.getData();
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_emision as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_emision as string
+              ).toLocaleDateString()}</div>
               </div>`;
             },
           },
@@ -94,8 +94,8 @@ const ProcuracionTable = ({ url, detail=false, nroEmision, setNroEmision }: Prop
               const response: Response = cell.getData();
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_vencimiento as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_vencimiento as string
+              ).toLocaleDateString()}</div>
               </div>`;
             },
           },
@@ -160,9 +160,10 @@ const ProcuracionTable = ({ url, detail=false, nroEmision, setNroEmision }: Prop
               return `<div 
                 class="font-medium whitespace-nowrap">Ver detalles</div>`;
             },
-            cellClick:(e, cell)=>{
+            cellClick: (e, cell) => {
               const response: Response = cell.getData();
-              setNroEmision(response.nro_emision)}
+              setNroEmision(response.nro_emision)
+            }
           },
         ],
       });
@@ -215,7 +216,9 @@ const ProcuracionTable = ({ url, detail=false, nroEmision, setNroEmision }: Prop
 
   return (
     <>
-      <div className="overflow-x-scroll scrollbar-hidden">
+      <div className="overflow-x-scroll scrollbar-hidden" style={{ padding: '40px', paddingTop: '10px' }}>
+        <h1 style={{ fontSize: '22px', fontWeight: '600' }}>Procuraciones - Cambio de estado masivo</h1>
+        <hr style={{ marginTop: '15px', border: 'solid 1px gray', marginBottom: '35px' }} />
         <div id="tabulator" ref={tableRef} className="mt-5"></div>
       </div>
     </>

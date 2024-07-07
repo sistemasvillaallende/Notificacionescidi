@@ -176,15 +176,13 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
               const response: Response = cell.getData()
 
               const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${
-                estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
-              }">
-                <span>${
-                  estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
+              return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
+                }">
+                <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
                 }</span>
               </div>`
             },
-          },
+          },/*
           {
             title: "Nombre",
             minWidth: 100,
@@ -298,7 +296,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
-          },
+          },*/
         ],
       })
     }

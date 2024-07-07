@@ -139,8 +139,8 @@ function Main() {
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_notif as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_notif as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -197,9 +197,8 @@ function Main() {
             formatter(cell) {
               const response: Response = cell.getData()
               const estado = response?.estado?.toLocaleLowerCase()
-              return `<div class="flex items-center lg:justify-start ${
-                response.estado == "NOTIFICADO" ? "text-success" : "text-warning"
-              }">
+              return `<div class="flex items-center lg:justify-start ${response.estado == "NOTIFICADO" ? "text-success" : "text-warning"
+                }">
                 <span>${estado ? estado.charAt(0)?.toUpperCase() + estado.slice(1) : ""}</span>
               </div>`
             },
@@ -250,9 +249,8 @@ function Main() {
               const response: Response = cell.getData()
               const oficina = response?.oficina?.toLowerCase()
               return `<div class="h-4 flex items-center">
-              <div class="font-normal whitespace-nowrap">${
-                oficina ? capitalizeFirstLetter(oficina) : ""
-              }</div>
+              <div class="font-normal whitespace-nowrap">${oficina ? capitalizeFirstLetter(oficina) : ""
+                }</div>
             </div>`
             },
           },
@@ -466,7 +464,9 @@ function Main() {
             </div>
             {/* BEGIN: HTML Table Data */}
 
-            <div className="overflow-x-scroll scrollbar-hidden">
+            <div className="overflow-x-scroll scrollbar-hidden" style={{ padding: '40px', paddingTop: '10px' }}>
+              <h1 style={{ fontSize: '22px', fontWeight: '600' }}>Procuraciones - </h1>
+              <hr style={{ marginTop: '15px', border: 'solid 1px gray', marginBottom: '35px' }} />
               <div id="tabulator" ref={tableRef} className="mt-5"></div>
             </div>
           </div>

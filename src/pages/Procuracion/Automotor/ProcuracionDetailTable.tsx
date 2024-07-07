@@ -91,14 +91,14 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                 cell.getRow().toggleSelect()
             },
           },
-          {
+          /*{
             title: "",
             formatter: "responsiveCollapse",
             width: 40,
             minWidth: 40,
             hozAlign: "center",
             headerSort: false,
-          },
+          },*/
           {
             title: "Nro.",
             width: 80,
@@ -173,11 +173,9 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             formatter(cell) {
               const response: Response = cell.getData()
               const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${
-                estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
-              }">
-                <span>${
-                  estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
+              return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
+                }">
+                <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
                 }</span>
               </div>`
             },
@@ -229,8 +227,8 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_Inicio_Estado as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_Inicio_Estado as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -247,8 +245,8 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_Fin_Estado as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_Fin_Estado as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -265,8 +263,8 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.vencimiento as string
-                ).toLocaleDateString()}</div>
+                response?.vencimiento as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -477,7 +475,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     <>
       <section className="flex flex-col">
         <div className="flex justify-between flex-wrap">
-          <div
+          <div 
             className="flex items-center mr-2 text-secondary font-bold text-base text-right hover:underline cursor-pointer"
             onClick={handleBack}
           >
