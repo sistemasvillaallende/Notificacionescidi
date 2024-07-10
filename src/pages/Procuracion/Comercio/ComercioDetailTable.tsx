@@ -27,6 +27,7 @@ export interface Response {
   interes?: number
   descuento?: number
   importe_pagar?: number
+  cuit_valido?: string
 }
 
 interface Props {
@@ -43,10 +44,12 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
     field: "",
     type: "=",
     estado: "",
+    notificado_cidi: -1,
   })
   const [selectedData, setSelectedData] = useState<any>()
   const [statesEmision, setStateEmision] = useState<any>()
-
+  const [notificationsSended, setNotificationsSended] = useState<any>({})
+  const [body, setBody] = useState({})
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
@@ -62,6 +65,13 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
         responsiveLayoutCollapseStartOpen: false,
         groupBy: "estado_Actualizado",
         placeholder: "No se han encontrado registros",
+        selectable: true,
+        selectableCheck: function (row) {
+          const data: Response = row.getData()
+          if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
+            return true
+          else return false
+        },        
         columns: [
           {
             title: "",
@@ -157,10 +167,11 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
             formatter(cell) {
               const response: Response = cell.getData()
               const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${response.notificado_cidi == 1 ? "text-success" : "text-warning"
-                }">
-                <span>${estado == 1 ? "Enviado" : "No enviado"}</span>
-              </div>`
+              return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
+              }">
+              <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
+              }</span>
+            </div>`
             },
           },
           {
@@ -355,7 +366,6 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
     }
   }, [])
 
-  const [body, setBody] = useState({})
   useEffect(() => {
     nroEmision && initTabulator()
     reInitOnResizeWindow()
@@ -426,6 +436,7 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
 
           <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
             {tabulator?.current && (
+              <>
               <FormSelect
                 id="tabulator-html-filter-field"
                 value={filter.estado}
@@ -447,6 +458,26 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
                   </option>
                 ))}
               </FormSelect>
+                <FormSelect
+                id="tabulator-html-filter-field"
+                value={filter.notificado_cidi}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
+                  if (value != "-1") {
+                    tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
+                  } else {
+                    tabulator.current?.clearFilter(true)
+                  }
+                }}
+                className="ml-2 w-full 2xl:w-full"
+              >
+                <option value="-1">Filtrar por notificación</option>
+                <option value="1">Enviado</option>
+                <option value="0">No Enviado</option>
+                <option value="2">No entregado</option>
+              </FormSelect>     
+              </>         
             )}
           </div>
 

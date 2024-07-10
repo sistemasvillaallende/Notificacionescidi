@@ -65,7 +65,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
         selectable: true,
         selectableCheck: function (row) {
           const data: Response = row.getData()
-          if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO")// && data?.notificado_cidi === 0)
+          if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
             return true
           else return false
         },

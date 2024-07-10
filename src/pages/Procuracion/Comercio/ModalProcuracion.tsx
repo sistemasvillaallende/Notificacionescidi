@@ -98,6 +98,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
       return new Promise((resolve, reject) => {
         const headers = {
           "Content-Type": "application/json",
+          "hash": user?.hash,
           Accept: "application/json",
         }
         const bodyObject = {

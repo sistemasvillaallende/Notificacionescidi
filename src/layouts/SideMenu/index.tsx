@@ -15,6 +15,9 @@ import { useAuthContext } from "../../context/AuthProvider"
 import { capitalizeFirstLetter } from "../../utils/helper"
 import NotFound from "../../pages/NotFound"
 import { getSecureItem } from "../../modules/secureStorage"
+import  Sidebar  from "../../layouts/menu2"
+
+
 
 function Main() {
   const location = useLocation()
@@ -90,7 +93,7 @@ function Main() {
     {
       icon: "FileWarning",
       title: "Procuración Administrativa",
-      activeDropdown: false,
+     // activeDropdown: false,
       subMenu: submenuProcu,
     },
   ]
@@ -114,14 +117,14 @@ function Main() {
           style={{ listStyle: 'none', boxShadow: 'rgb(0 0 0 / 50%) 0px 2px 10px', minHeight: '100vh', paddingRight: '15px' }}>
           <ul>
             {/* BEGIN: First Child */}
-            {formattedMenu.map((menu, menuKey) =>
+            <Sidebar></Sidebar>
+            { /*formattedMenu.map((menu, menuKey) =>
               menu == "divider" ? (
                 <Divider
                   type="li"
                   className={clsx([
                     "my-6",
 
-                    // Animation
                     `opacity-0 animate-[0.4s_ease-in-out_0.1s_intro-divider] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10
                     }`,
                   ])}
@@ -131,7 +134,6 @@ function Main() {
                 <li key={menuKey}>
                   <Menu
                     className={clsx({
-                      // Animation
                       [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10
                         }`]: !menu.active,
                     })}
@@ -139,7 +141,7 @@ function Main() {
                     formattedMenuState={[formattedMenu, setFormattedMenu]}
                     level="first"
                   ></Menu>
-                  {/* BEGIN: Second Child */}
+           
                   {menu.subMenu && (
                     <Transition
                       in={menu.activeDropdown}
@@ -167,7 +169,7 @@ function Main() {
                               formattedMenuState={[formattedMenu, setFormattedMenu]}
                               level="second"
                             ></Menu>
-                            {/* BEGIN: Third Child */}
+
                             {subMenu.subMenu && (
                               <Transition
                                 in={subMenu.activeDropdown}
@@ -200,16 +202,16 @@ function Main() {
                                 </ul>
                               </Transition>
                             )}
-                            {/* END: Third Child */}
+
                           </li>
                         ))}
                       </ul>
                     </Transition>
                   )}
-                  {/* END: Second Child */}
+
                 </li>
               )
-            )}
+            )*/}
             {/* END: First Child */}
           </ul>
         </nav>

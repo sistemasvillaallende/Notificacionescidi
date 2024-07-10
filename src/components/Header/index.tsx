@@ -78,13 +78,10 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
           {/* END: Logo */}
           {/* BEGIN: Title */}
 
-          <div style={{ width: "33%", fontSize: "24px" }} className="flex items-center text-primary font-semibold drop-shadow-[1px_1px_2px_#00000025]">
-            <Lucide
-              icon={headerTitle[path as keyof typeof headerTitle]?.icon}
-              className="w-12 h-12 ml-5 text-primary" style={{ marginRight: "10px" }}
-            />
-            {`${headerTitle[path as keyof typeof headerTitle]?.title}`}
+          <div style={{ width: "33%", fontSize: "24px", display: 'ruby', textAlign: 'center' }} 
+            className="flex items-center text-primary font-semibold drop-shadow-[1px_1px_2px_#00000025]">
 
+              <span style={{textDecoration: 'overline', paddingTop: '10px', lineHeight: '20px' }}>Notificaciones CiDi</span>
           </div>
           <div style={{ width: "33%" }} className="flex justify-around items-center md:w-[290px] md:h-[69px] lg:w-[352px] lg:h-[80px] rounded-l-[20px]">
             <Menu style=

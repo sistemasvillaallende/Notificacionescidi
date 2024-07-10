@@ -220,7 +220,7 @@ const ComercioTable = ({ url, detail = false, nroEmision, setNroEmision }: Props
       <div className="overflow-x-scroll scrollbar-hidden" style={{ padding: '40px', marginTop: '20px', paddingTop: '0px' }}>
         
         <h1 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '5px', display: 'flex', alignItems: 'flex-start' }}>  
-          <Lucide icon="Car" className="w-4 h-4 mr-2" style={{height: '50px', width: '50px', 
+          <Lucide icon="Factory" className="w-4 h-4 mr-2" style={{height: '50px', width: '50px', 
             color: 'rgb(192, 158, 118)', borderRight: 'solid', paddingRight: '10px' }}/> 
           <span style={{paddingTop:'5px', paddingLeft: '10px'}}>Industria y Comercio</span> </h1>
         <h1 style={{ fontSize: '16px', fontWeight: '600', color: 'gray', marginLeft: '68px', marginTop: '-30px' }}>
