@@ -196,6 +196,7 @@ const NuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmision }: Pr
         <h1 style={{ fontSize: '16px', fontWeight: '600', color: 'gray', marginLeft: '68px', marginTop: '-30px' }}>
           Procuraciones - Nuevas Emiciones</h1>
         <hr style={{ marginTop: '15px', border: 'solid 1px gray', marginBottom: '20px' }} />
+        <div id="tabulator" ref={tableRef} className="mt-5"></div>
       </div>
     </>
   )
