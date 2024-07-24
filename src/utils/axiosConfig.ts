@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const baseWebApi = axios.create({
-  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}`,
+  baseURL: `${import.meta.env.VITE_URL_LOGINCIDI}`,
     headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -54,7 +54,7 @@ userAuth.interceptors.response.use(
 
 // Oficinas por usuario
 export const userOffices = axios.create({
-  baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital`,
+  baseURL: `${import.meta.env.VITE_URL_LOGINCIDI}Notificacion_digital`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"

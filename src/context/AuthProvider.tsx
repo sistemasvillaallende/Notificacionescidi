@@ -50,10 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLoginCIDI = async (codigoCIDI: string) => {
     console.log("codigoCIDI", codigoCIDI)
     try {
-      const response = await axios.get(
-        `https://vecino.villaallende.gov.ar/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
-        //`http://localhost:5298/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
-      );
+      const response = await axios.get(`${import.meta.env.VITE_URL_LOGINCIDI}UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`);
       if (response.data) {
         console.log(response.data)
         const user = response.data;
