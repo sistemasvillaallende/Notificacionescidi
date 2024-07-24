@@ -396,7 +396,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
         response.map((estado: any) => {
           if (estado.emite_notif_cidi == 1) {
             baseWebApi(
-              `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}`
+              `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}&subsistema=4`
             )
               .then((response) => {
                 const title = response?.data[0]?.tituloReporte?.trim()

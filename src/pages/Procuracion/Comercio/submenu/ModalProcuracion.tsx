@@ -140,7 +140,7 @@ function ModalProcuracionC({
             nro_cedulon: procuracion.nro_cedulon,
             id_oficina: parseInt(officeId),
             id_usuario: user?.cod_usuario,
-            tipo_proc: 4,
+            tipo_proc: 3,
             idTemplate: body[descripcion_estado]?.idTemplate,
             tituloReporte: body[descripcion_estado]?.title,
             cod_estado_actual: procuracion.codigo_estado_actual ?? "",

@@ -52,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await axios.get(
         `https://vecino.villaallende.gov.ar/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
+        //`http://localhost:5298/WebApiShared/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`
       );
       if (response.data) {
         console.log(response.data)
