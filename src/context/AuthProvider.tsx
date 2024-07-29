@@ -1,6 +1,6 @@
 import { useState, useContext, createContext, useEffect } from "react"
 import { UNSAFE_useRouteId, useNavigate } from "react-router-dom"
-import { baseWebApi, userAuth, userOffices } from "../utils/axiosConfig"
+import { baseWebApi } from "../utils/axiosConfig"
 import { capitalizeFirstLetter } from "../utils/helper"
 import { setSecureItem } from "../modules/secureStorage"
 import axios from "axios"
@@ -50,14 +50,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const handleLoginCIDI = async (codigoCIDI: string) => {
     console.log("codigoCIDI", codigoCIDI)
     try {
-      const response = await axios.get(`${import.meta.env.VITE_URL_LOGINCIDI}UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`);
+      const response = await baseWebApi.get(`/UsuarioCIDI/ObtenerUsuarioCIDI2?Hash=${codigoCIDI}`);
       if (response.data) {
         console.log(response.data)
         const user = response.data;
 
         const empleado = JSON.parse(response.data.empleado)
         console.log("empleado", empleado)
-        const responseOffice: { data: any } = await userOffices.get(`/GetOficinas?cod_usuario=${empleado.cod_usuario}`)
+        const responseOffice: { data: any } = await baseWebApi.get(`/Notificacion_digital/GetOficinas?cod_usuario=${empleado.cod_usuario}`)
         const officesResponse: { oficina: string }[] = responseOffice?.data
 
         const responsePermisos = await baseWebApi.get(`/Login/GetPermisosCidi?cod_usuario=${empleado.cod_usuario}`)
@@ -97,11 +97,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
 
     try {
-      const response = await userAuth.get(
+      const response = await baseWebApi.get(
         `/Login/ValidaUsuarioConOficina?user=${user}&password=${password}`
       )
       console.log("cod_usuario", response?.data?.cod_usuario)
-      const responseOffice: { data: any } = await userOffices.get(`/GetOficinas?cod_usuario=${response?.data?.cod_usuario}`)
+      const responseOffice: { data: any } = await baseWebApi.get(`/Notificacion_digital/GetOficinas?cod_usuario=${response?.data?.cod_usuario}`)
       const officesResponse: { oficina: string }[] = responseOffice?.data
       const responsePermisos = await baseWebApi.get(`/Login/GetPermisosCidi?cod_usuario=${response?.data?.cod_usuario}`)
       if (response && officesResponse) {

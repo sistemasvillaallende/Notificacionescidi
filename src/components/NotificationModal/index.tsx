@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { validateCuil } from "../../utils/cuilValidator";
 import { ClassicEditor } from "../../base-components/Ckeditor";
-import { comunicacionesCidi } from "../../utils/axiosConfig";
+import { baseWebApi } from "../../utils/axiosConfig";
 import { useAuthContext } from "../../context/AuthProvider";
 
 const schema = yup.object({
@@ -88,8 +88,8 @@ function NotificationModal() {
         body: bodyValue,
       };
       try {
-        const response = await comunicacionesCidi.post(
-          "/enviarNotificacionGeneral",
+        const response = await baseWebApi.post(
+          "/ComunicacionesCIDI/enviarNotificacionGeneral",
           body
         );
         response?.data &&

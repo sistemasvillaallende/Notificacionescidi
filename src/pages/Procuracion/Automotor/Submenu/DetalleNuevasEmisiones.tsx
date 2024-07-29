@@ -60,7 +60,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`,
+        ajaxURL: baseWebApi+`${url}${nroEmision}`,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,

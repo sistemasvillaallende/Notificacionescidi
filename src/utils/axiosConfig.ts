@@ -1,13 +1,12 @@
 import axios from "axios";
-
 export const baseWebApi = axios.create({
-  baseURL: `${import.meta.env.VITE_URL_LOGINCIDI}`,
+  baseURL: import.meta.env.VITE_URL_WEBAPISHARED,
     headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
   },
 });
-
+/*
 baseWebApi.interceptors.response.use(
   (response: any) => {
     return response;
@@ -24,7 +23,7 @@ export const comunicacionesCidi = axios.create({
     "Accept": "application/json"
   },
 });
-
+/*
 comunicacionesCidi.interceptors.response.use(
   (response: any) => {
     return response;
@@ -52,7 +51,6 @@ userAuth.interceptors.response.use(
   }
 );
 
-// Oficinas por usuario
 export const userOffices = axios.create({
   baseURL: `${import.meta.env.VITE_URL_LOGINCIDI}Notificacion_digital`,
   headers: {
@@ -70,7 +68,7 @@ userOffices.interceptors.response.use(
   }
 );
 
-// Procuración
+
 export const getProcuracion = axios.create({
   baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_estado_proc_auto`,
   headers: {
@@ -88,7 +86,7 @@ getProcuracion.interceptors.response.use(
   }
 );
 
-// Trae expediente
+
 export const getExpediente = axios.create({
   baseURL: `${import.meta.env.VITE_URL_WEBAPISHARED}/Resoluciones_multas`,
   headers: {
@@ -104,4 +102,4 @@ getExpediente.interceptors.response.use(
   (error: { response: { data: any; }; }) => {
     throw { response: error?.response?.data };
   }
-);
+);*/

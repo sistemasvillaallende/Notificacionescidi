@@ -83,7 +83,7 @@ function Main() {
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${import.meta.env.VITE_URL_LOGINCIDI}Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
+        ajaxURL: baseWebApi+`/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
         paginationMode: "local",
         filterMode: "remote",
         // sortMode: "remote",
@@ -346,7 +346,7 @@ function Main() {
           try {
             setFilter({ ...filter, estado: "" })
             table.setData(
-              `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/listNotifxcuil?cuil=${cuil}`
+              baseWebApi.get(`/Notificacion_digital/listNotifxcuil?cuil=${cuil}`)
             )
             setCuilInput({ ...cuilInput, error: false, reset: true })
           } catch (err) {
@@ -356,7 +356,7 @@ function Main() {
       } else if (estado && field === "estado") {
         try {
           table.setData(
-            `${import.meta.env.VITE_URL_WEBAPISHARED}/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`
+            baseWebApi.get(`/Notificacion_digital/ListNotifxEstado?cod_estado=${estado}`)
           )
         } catch (err) {
           console.log(err)
