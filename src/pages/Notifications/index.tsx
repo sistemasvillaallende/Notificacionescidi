@@ -83,7 +83,7 @@ function Main() {
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: baseWebApi+`/Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
+        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}Notificacion_digital/ListNotifxOficina?cod_oficina=${officeId}`,
         paginationMode: "local",
         filterMode: "remote",
         // sortMode: "remote",

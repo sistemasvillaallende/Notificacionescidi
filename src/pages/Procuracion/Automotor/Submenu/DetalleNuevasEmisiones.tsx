@@ -60,7 +60,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: baseWebApi+`${url}${nroEmision}`,
+        ajaxURL: `${url}${nroEmision}`,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,
@@ -175,11 +175,9 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
               const response: Response = cell.getData()
 
               const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${
-                estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
-              }">
-                <span>${
-                  estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
+              return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
+                }">
+                <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
                 }</span>
               </div>`
             },
@@ -215,8 +213,8 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_baja_real as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_baja_real as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -233,8 +231,8 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_vencimiento as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_vencimiento as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },

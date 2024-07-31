@@ -58,14 +58,14 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <DetalleNuevasEmisiones
-                  url={"/Det_notificacion_auto/listarDetalle?Nro_emision="}
+                  url={`${import.meta.env.VITE_URL_WEBAPISHARED}Det_notificacion_auto/listarDetalle?Nro_emision=`}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
                 />
               ) : (
                 <NuevasEmisiones
-                  url={"/Notificacion_auto/read"}
+                  url={"Notificacion_auto/read"}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
@@ -78,14 +78,14 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <ProcuracionDetailTable
-                  url={"/Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
+                  url={"Det_notificacion_estado_proc_auto/listarDetalle?nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
                 />
               ) : (
                 <ProcuracionTable
-                  url={"/Notificacion_estado_proc_auto/listNotifProcAuto"}
+                  url={"Notificacion_estado_proc_auto/listNotifProcAuto"}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
@@ -106,14 +106,14 @@ function Procuracion() {
             <>
               {nroEmision ? (
                 <DetallesNuevasEmisionesC
-                  url={"/Det_notificacion_iyc/listarDetalle?Nro_emision="}
+                  url={"Det_notificacion_iyc/listarDetalle?Nro_emision="}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
                 />
               ) : (
                 <NuevasEmisionesC
-                  url={"/Notificacion_iyc/read"}
+                  url={"Notificacion_iyc/read"}
                   detail={true}
                   nroEmision={nroEmision}
                   setNroEmision={setNumeroEmision}
@@ -122,25 +122,25 @@ function Procuracion() {
             </>
           )
         } else {
-        return (
-          <>
-            {nroEmision ? (
-              <ComercioDetailTable
-                url={"/Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
-                detail={true}
-                nroEmision={nroEmision}
-                setNroEmision={setNumeroEmision}
-              />
-            ) : (
-              <ComercioTable
-                url={"/Notificacion_estado_proc_iyc/listNotifProcIyc"}
-                detail={true}
-                nroEmision={nroEmision}
-                setNroEmision={setNumeroEmision}
-              />
-            )}
-          </>
-        )
+          return (
+            <>
+              {nroEmision ? (
+                <ComercioDetailTable
+                  url={"Det_notificacion_estado_proc_iyc/listarDetalle?nro_emision="}
+                  detail={true}
+                  nroEmision={nroEmision}
+                  setNroEmision={setNumeroEmision}
+                />
+              ) : (
+                <ComercioTable
+                  url={"Notificacion_estado_proc_iyc/listNotifProcIyc"}
+                  detail={true}
+                  nroEmision={nroEmision}
+                  setNroEmision={setNumeroEmision}
+                />
+              )}
+            </>
+          )
         }
       } else return <Navigate to="/permiso-denegado" replace={true} />
     } else if (office == "inmuebles" && hasPermission([460], user)) {
