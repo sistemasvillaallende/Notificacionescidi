@@ -118,25 +118,33 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             headerSort: false,
           },
           {
-            title: "Dominio",
+            title: "Legajo",
             width: 100,
             minWidth: 100,
-            field: "dominio",
+            field: "legajo",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
           },
           {
-            title: "Badec",
-            width: 70,
-            minWidth: 50,
-            field: "nro_badec",
-            hozAlign: "center",
+            title: "Nombre",
+            minWidth: 100,
+            width: 180,
+            field: "nombre",
+            hozAlign: "left",
             headerHozAlign: "center",
             vertAlign: "middle",
-            headerSort: false,
+            formatter(cell) {
+              const response: Response = cell.getData()
+              return `<div class="h-4 flex items-start w-full">
+              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
+                response?.nombre as string
+              )}</div>
+            </div>`
+            },
           },
+          
           {
             title: "CUIT",
             minWidth: 100,
@@ -183,22 +191,15 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
               </div>`
             },
           },/*
-          {
-            title: "Nombre",
-            minWidth: 100,
-            width: 180,
-            field: "nombre",
-            hozAlign: "left",
+{
+            title: "Badec",
+            width: 70,
+            minWidth: 50,
+            field: "nro_badec",
+            hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
-            formatter(cell) {
-              const response: Response = cell.getData()
-              return `<div class="h-4 flex items-start w-full">
-              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
-                response?.nombre as string
-              )}</div>
-            </div>`
-            },
+            headerSort: false,
           },
 
           {
