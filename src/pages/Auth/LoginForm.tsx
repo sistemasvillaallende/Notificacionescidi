@@ -22,8 +22,6 @@ const schema = yup.object({
 const LoginForm = () => {
   const urlCIDI = import.meta.env.VITE_URL_LOGINCIDI
 
-
-
   const office = window?.localStorage?.getItem("selectedOffice") ?? ""
   const {
     register,

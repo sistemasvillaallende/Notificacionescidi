@@ -6,35 +6,9 @@ import { capitalizeFirstLetter } from "../../../utils/helper"
 import { FormInput, FormSelect } from "../../../base-components/Form"
 import Lucide from "../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
+import { ResponseProcuracion, PropsDetailTable } from "../../../types/notificaiones"
 
-export interface Response {
-  nro_Emision?: number
-  nro_Procuracion?: number
-  dominio?: string
-  nro_Badec?: number
-  nombre?: string
-  cuit?: string
-  estado_Actual?: string
-  estado_Actualizado?: string
-  notificado_cidi?: number
-  fecha_Inicio_Estado?: string
-  fecha_Fin_Estado?: string
-  vencimiento?: string
-  monto_original?: number
-  interes?: number
-  descuento?: number
-  importe_pagar?: number
-  cuit_valido?: string
-}
-
-interface Props {
-  url: string
-  detail?: boolean
-  nroEmision?: string
-  setNroEmision: Function
-}
-
-const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: PropsDetailTable) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -64,7 +38,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
         placeholder: "No se han encontrado registros",
         selectable: true,
         selectableCheck: function (row) {
-          const data: Response = row.getData()
+          const data: ResponseProcuracion = row.getData()
           if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
             return true
           else return false
@@ -81,7 +55,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             },
             formatter: "rowSelection",
             cellClick: function (e, cell) {
-              const data: Response = cell.getData()
+              const data: ResponseProcuracion = cell.getData()
               if (
                 statesValidated &&
                 statesValidated.includes(
@@ -154,7 +128,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.estado_Actualizado as string
@@ -171,7 +145,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               const estado = response?.notificado_cidi
               return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
                 }">
@@ -189,7 +163,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.nombre as string
@@ -206,7 +180,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.estado_Actual as string
@@ -224,7 +198,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             vertAlign: "middle",
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.fecha_Inicio_Estado as string
@@ -242,7 +216,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             vertAlign: "middle",
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.fecha_Fin_Estado as string
@@ -260,7 +234,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
             vertAlign: "middle",
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseProcuracion = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.vencimiento as string
@@ -475,7 +449,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     <>
       <section className="flex flex-col">
         <div className="flex justify-between flex-wrap">
-          <div 
+          <div
             className="flex items-center mr-2 text-secondary font-bold text-base text-right hover:underline cursor-pointer"
             onClick={handleBack}
           >

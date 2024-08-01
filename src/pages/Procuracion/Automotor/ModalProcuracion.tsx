@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Response } from "./ProcuracionDetailTable"
+import { ResponseProcuracion } from "../../../types/notificaiones"
 import { Preview } from "../../../base-components/PreviewComponent"
 import { Dialog } from "../../../base-components/Headless"
 import Button from "../../../base-components/Button"
@@ -23,7 +23,7 @@ function ModalProcuracion({
   const [errorMessage, setErrorMessage] = useState("")
   const [isSend, setIsSend] = useState(false)
   const data = table?.getData()
-  const statesArray = dataSelected?.map((row: Response) =>
+  const statesArray = dataSelected?.map((row: ResponseProcuracion) =>
     capitalizeFirstLetter(row?.estado_Actualizado as string)
   )
   const statesSelected = statesArray?.filter(

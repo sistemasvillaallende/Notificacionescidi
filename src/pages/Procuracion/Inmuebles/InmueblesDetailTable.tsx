@@ -6,48 +6,9 @@ import { FormInput, FormSelect } from "../../../base-components/Form"
 import Lucide from "../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
 import { baseWebApi } from "../../../utils/axiosConfig"
+import { ResponseDetailsTable, PropsDetailTable } from "../../../types/notificaiones"
 
-export interface Response {
-  nro_emision?: number
-  nro_notificacion?: number
-  nro_procuracion?: number
-  circunscripcion?: number
-  seccion?: number
-  manzana?: number
-  parcela?: number
-  p_h?: number
-  nro_badec?: number
-  nombre?: string
-  estado_actual?: string
-  estado_actualizado?: string
-  fecha_inicio_estado?: string
-  fecha_fin_estado?: string
-  estado_inmueble?: string
-  barrio?: string
-  calle?: string
-  nro?: string
-  vencimiento?: string
-  nro_cedulon?: number
-  debe?: number
-  barcode39?: string
-  barcodeint25?: string
-  monto_original?: number
-  interes?: number
-  descuento?: number
-  importe_pagar?: number
-  estado_Actualizado?: string
-  cuit?: string
-  notificado_cidi?: number
-}
-
-interface Props {
-  url: string
-  detail?: boolean
-  nroEmision?: string
-  setNroEmision: Function
-}
-
-const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: PropsDetailTable) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -86,7 +47,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             },
             formatter: "rowSelection",
             cellClick: function (e, cell) {
-              const data: Response = cell.getData()
+              const data: ResponseDetailsTable = cell.getData()
               if (
                 statesValidated &&
                 statesValidated.includes(
@@ -149,7 +110,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseDetailsTable = cell.getData()
               return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.estado_Actualizado as string
@@ -166,7 +127,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseDetailsTable = cell.getData()
               const estado = response?.notificado_cidi
               return `<div class="flex items-center lg:justify-start ${response.notificado_cidi == 1 ? "text-success" : "text-warning"
                 }">
@@ -183,7 +144,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseDetailsTable = cell.getData()
               return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.nombre as string
@@ -200,7 +161,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseDetailsTable = cell.getData()
               return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.estado_actual as string
@@ -218,7 +179,7 @@ const InmueblesDetailTable = ({ url, detail = false, nroEmision, setNroEmision }
             vertAlign: "middle",
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseDetailsTable = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.vencimiento as string

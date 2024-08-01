@@ -13,7 +13,6 @@ import { capitalizeFirstLetter } from "../../../../utils/helper"
 import { FormInput, FormSelect } from "../../../../base-components/Form"
 import Lucide from "../../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
-import { StringChain } from "lodash"
 import { baseWebApi } from "../../../../utils/axiosConfig"
 
 export interface Response {
@@ -91,14 +90,6 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
             },
             formatter: "rowSelection",
           },
-          /*{
-            title: "",
-            formatter: "responsiveCollapse",
-            width: 40,
-            minWidth: 40,
-            hozAlign: "center",
-            headerSort: false,
-          },*/
           {
             title: "Nro.",
             width: 80,

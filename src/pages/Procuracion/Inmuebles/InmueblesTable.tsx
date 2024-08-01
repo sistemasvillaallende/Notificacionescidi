@@ -2,26 +2,10 @@ import { createIcons, icons } from "lucide";
 import React, { createRef, useEffect, useRef } from "react";
 import { TabulatorFull as Tabulator } from "tabulator-tables";
 import { capitalizeFirstLetter } from "../../../utils/helper";
+import { ResponseInmuebleTable, PropsDetailTable } from "../../../types/notificaiones";
 
-interface Response {
-  nro_emision?: number;
-  fecha_emision?: string;
-  fecha_vencimiento?: string;
-  cod_estado_procuracion?: number;
-  nvo_estado_procuracion?: string;
-  cantidad_reg?: number;
-  total?: number;
-  porcentaje?: number;
-}
 
-interface Props {
-  url: string
-  detail?: boolean
-  nroEmision?: string
-  setNroEmision: Function
-}
-
-const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: PropsDetailTable) => {
   const tableRef = createRef<HTMLDivElement>();
   const tabulator = useRef<Tabulator>();
 
@@ -59,7 +43,7 @@ const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Pr
             download: false,
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData();
+              const response: ResponseInmuebleTable = cell.getData();
               return `<div>
                 <div class="font-medium whitespace-nowrap">${response?.nro_emision}</div>
               </div>`;
@@ -74,7 +58,7 @@ const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Pr
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData();
+              const response: ResponseInmuebleTable = cell.getData();
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.fecha_emision as string
@@ -91,7 +75,7 @@ const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Pr
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData();
+              const response: ResponseInmuebleTable = cell.getData();
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.fecha_vencimiento as string
@@ -109,7 +93,7 @@ const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Pr
             vertAlign: "middle",
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData();
+              const response: ResponseInmuebleTable = cell.getData();
               return `<div class="h-4 flex items-center w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
                 response?.nvo_estado_procuracion as string
@@ -161,7 +145,7 @@ const ProcuracionTable = ({ url, detail = false, nroEmision, setNroEmision }: Pr
                 class="font-medium whitespace-nowrap">Ver detalles</div>`;
             },
             cellClick: (e, cell) => {
-              const response: Response = cell.getData();
+              const response: ResponseInmuebleTable = cell.getData();
               setNroEmision(response.nro_emision)
             }
           },

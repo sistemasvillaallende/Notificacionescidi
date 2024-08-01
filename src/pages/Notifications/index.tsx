@@ -11,25 +11,7 @@ import NotificationModal from "../../components/NotificationModal"
 import { capitalizeAll, capitalizeFirstLetter } from "../../utils/helper"
 import { validateCuil } from "../../utils/cuilValidator"
 import { getSecureItem } from "../../modules/secureStorage.js"
-
-interface Response {
-  id_notificacion?: number
-  nombre?: string
-  fecha_notif?: string
-  Id_Oficina?: number
-  Id_usuario?: number
-  Modo_Notificacion?: string
-  cidi_nivel?: number
-  estado_notif?: string
-  cuil?: string
-  subject_notif?: string
-  body_notif?: string
-  id_oficina?: number
-  desc_tipo_notif?: number | null
-  estado?: string
-  usuario?: string
-  oficina?: string
-}
+import { ResponseNotificaciones } from "../../types/notificaiones"
 
 function Main() {
   const { office } = useParams()
@@ -119,7 +101,7 @@ function Main() {
             download: false,
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseNotificaciones = cell.getData()
               return `<div>
                 <div class="font-medium whitespace-nowrap">${response?.id_notificacion}</div>
               </div>`
@@ -136,7 +118,7 @@ function Main() {
             print: false,
             download: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseNotificaciones = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
                 response?.fecha_notif as string
@@ -154,7 +136,7 @@ function Main() {
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseNotificaciones = cell.getData()
               const nombre = response?.nombre && capitalizeAll(response.nombre)
 
               return `<div class="h-4 flex items-center">
@@ -195,7 +177,7 @@ function Main() {
             print: false,
             download: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseNotificaciones = cell.getData()
               const estado = response?.estado?.toLocaleLowerCase()
               return `<div class="flex items-center lg:justify-start ${response.estado == "NOTIFICADO" ? "text-success" : "text-warning"
                 }">
@@ -246,7 +228,7 @@ function Main() {
             download: false,
             headerSort: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseNotificaciones = cell.getData()
               const oficina = response?.oficina?.toLowerCase()
               return `<div class="h-4 flex items-center">
               <div class="font-normal whitespace-nowrap">${oficina ? capitalizeFirstLetter(oficina) : ""
@@ -295,7 +277,7 @@ function Main() {
             print: false,
             download: false,
             formatter(cell) {
-              const response: Response = cell.getData()
+              const response: ResponseNotificaciones = cell.getData()
 
               return `<div class="h-4 flex items-center h-fit">
               <div class="font-normal whitespace-pre-wrap h-4 h-fit">${response.body_notif}</div>
