@@ -144,7 +144,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       setSecureItem("isLoggedIn", user)
-      console.log("user", user)
       if (location.hash.includes("login")) {
         if (user.administrador === true) {
           navigate("/seleccionar-oficina/", { replace: true })

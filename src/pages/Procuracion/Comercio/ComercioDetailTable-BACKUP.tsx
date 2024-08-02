@@ -1,40 +1,32 @@
 import { createIcons, icons } from "lucide"
-import React, {
-  ChangeEventHandler,
-  MouseEventHandler,
-  ReactEventHandler,
-  createRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { createRef, useEffect, useRef, useState } from "react"
 import { TabulatorFull as Tabulator } from "tabulator-tables"
-import { capitalizeFirstLetter } from "../../../../utils/helper"
-import { FormInput, FormSelect } from "../../../../base-components/Form"
-import Lucide from "../../../../base-components/Lucide"
-//import ModalProcuracion from "./ModalProcuracion"
-import { StringChain } from "lodash"
-import ModalProcuracionC from "./ModalProcuracion"
-import { baseWebApi } from "../../../../utils/axiosConfig"
+import { capitalizeFirstLetter } from "../../../utils/helper"
+import { FormInput, FormSelect } from "../../../base-components/Form"
+import Lucide from "../../../base-components/Lucide"
+import ModalProcuracion from "./ModalProcuracion"
+import { baseWebApi } from "../../../utils/axiosConfig"
 
 export interface Response {
-  nro_emision?: number
-  nro_proc?: number
-  nro_cedulon?: number
-  nro_notificacion?: number
-  dominio?: string
-  nro_badec?: number
+  nro_Notificacion?: number
+  nro_Emision?: number
+  nro_Procuracion?: number
+  legajo?: string
+  nro_Badec?: number
   nombre?: string
-  fecha_baja_real?: string
-  fecha_vencimiento?: string
+  cuit?: string
+  estado_Actual?: string
+  estado_Actualizado?: string
+  notificado_cidi?: number
+  fecha_Inicio_Estado?: string
+  fecha_Fin_Estado?: string
+  vencimiento?: string
+  nro_cedulon?: number
+  debe?: number
   monto_original?: number
   interes?: number
   descuento?: number
   importe_pagar?: number
-  notificado_cidi?: number
-  codigo_estado_actual?: number
-  estado_actual?: string
-  cuit?: number
   cuit_valido?: string
 }
 
@@ -45,7 +37,7 @@ interface Props {
   setNroEmision: Function
 }
 
-const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -71,7 +63,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
         layout: "fitColumns",
         responsiveLayout: "collapse",
         responsiveLayoutCollapseStartOpen: false,
-        groupBy: "estado_actual",
+        groupBy: "estado_Actualizado",
         placeholder: "No se han encontrado registros",
         selectable: true,
         selectableCheck: function (row) {
@@ -91,6 +83,16 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
               rowRange: "active",
             },
             formatter: "rowSelection",
+            cellClick: function (e, cell) {
+              const data: Response = cell.getData()
+              if (
+                statesValidated &&
+                statesValidated.includes(
+                  capitalizeFirstLetter(data?.estado_Actualizado?.trim() as string)
+                )
+              )
+                cell.getRow().toggleSelect()
+            },
           },
           {
             title: "",
@@ -101,19 +103,10 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             headerSort: false,
           },
           {
-            title: "Nro.",
-            width: 80,
-            minWidth: 80,
-            field: "nro_notificacion",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-          },
-          {
             title: "Procuración",
             minWidth: 90,
             width: 90,
-            field: "nro_proc",
+            field: "nro_Procuracion",
             vertAlign: "middle",
             headerSort: false,
           },
@@ -126,6 +119,60 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
+          },
+          {
+            title: "Badec",
+            width: 100,
+            minWidth: 100,
+            field: "nro_Badec",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            headerSort: false,
+          },
+          {
+            title: "CUIT",
+            minWidth: 120,
+            width: 120,
+            field: "cuit",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+          },
+          {
+            title: "Estado Actual",
+            minWidth: 150,
+            width: 200,
+            field: "estado_Actualizado",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            formatter(cell) {
+              const response: Response = cell.getData()
+              return `<div class="h-4 flex items-start w-full">
+              <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
+                response?.estado_Actualizado as string
+              )}</div>
+            </div>`
+            },
+          },
+          {
+            title: "Notificación",
+            minWidth: 100,
+            width: 150,
+            field: "notificado_cidi",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            formatter(cell) {
+              const response: Response = cell.getData()
+              const estado = response?.notificado_cidi
+              return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
+                }">
+              <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
+                }</span>
+            </div>`
+            },
           },
           {
             title: "Nombre",
@@ -144,69 +191,28 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             </div>`
             },
           },
-
           {
-            title: "CUIT",
-            minWidth: 100,
-            width: 140,
-            field: "cuit",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            headerSort: false,
-          },
-          {
-            title: "Estado Actual",
+            title: "Estado Inicial",
             minWidth: 150,
-            width: 200,
-            field: "estado_actual",
+            width: 180,
+            field: "estado_Actual",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
             formatter(cell) {
               const response: Response = cell.getData()
-              return `<div class="h-4 flex items-start justify-center w-full">
+              return `<div class="h-4 flex items-start w-full">
               <div class="font-normal whitespace-nowrap">${capitalizeFirstLetter(
-                response?.estado_actual?.trim() as string
+                response?.estado_Actual as string
               )}</div>
             </div>`
             },
           },
           {
-            title: "Notificación",
-            minWidth: 100,
-            width: 150,
-            field: "notificado_cidi",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            formatter(cell) {
-              const response: Response = cell.getData()
-
-              const estado = response?.notificado_cidi
-              return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
-                }">
-                <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
-                }</span>
-              </div>`
-            },
-          },/*
-{
-            title: "Badec",
-            width: 70,
-            minWidth: 50,
-            field: "nro_badec",
-            hozAlign: "center",
-            headerHozAlign: "center",
-            vertAlign: "middle",
-            headerSort: false,
-          },
-
-          {
             title: "Fecha Inicio",
             minWidth: 120,
             width: 120,
-            field: "fecha_baja_real",
+            field: "fecha_Inicio_Estado",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
@@ -215,8 +221,26 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_baja_real as string
-                ).toLocaleDateString()}</div>
+                response?.fecha_Inicio_Estado as string
+              ).toLocaleDateString()}</div>
+              </div>`
+            },
+          },
+          {
+            title: "Fecha Último Estado",
+            minWidth: 120,
+            width: 120,
+            field: "fecha_Fin_Estado",
+            hozAlign: "center",
+            headerHozAlign: "center",
+            vertAlign: "middle",
+            headerSort: false,
+            formatter(cell) {
+              const response: Response = cell.getData()
+              return `<div class="h-4 flex items-center">
+                <div class="font-normal whitespace-nowrap">${new Date(
+                response?.fecha_Fin_Estado as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
@@ -224,7 +248,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             title: "Vencimiento",
             minWidth: 120,
             width: 120,
-            field: "fecha_vencimiento",
+            field: "vencimiento",
             hozAlign: "center",
             headerHozAlign: "center",
             vertAlign: "middle",
@@ -233,15 +257,15 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
               const response: Response = cell.getData()
               return `<div class="h-4 flex items-center">
                 <div class="font-normal whitespace-nowrap">${new Date(
-                  response?.fecha_vencimiento as string
-                ).toLocaleDateString()}</div>
+                response?.vencimiento as string
+              ).toLocaleDateString()}</div>
               </div>`
             },
           },
           {
             title: "Cedulón",
-            width: 80,
-            minWidth: 80,
+            minWidth: 100,
+            width: 140,
             field: "nro_cedulon",
             hozAlign: "center",
             headerHozAlign: "center",
@@ -297,33 +321,11 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
-          },*/
+          },
         ],
       })
     }
   }
-
-  const sortTable = () => {
-    tabulator.current?.off("dataProcessed", sortTable)
-    const dataTable = tabulator.current?.getData()
-    if (dataTable) {
-      const ciutValidadoArray = dataTable?.filter((row) => row.cuit_valido === "CUIT_VALIDADO")
-      const validadoNoEnviado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 0)
-      const validadoEnviado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 1)
-      const validadoNoEntregado = ciutValidadoArray?.filter((row) => row.notificado_cidi === 2)
-      const cuitNoValidadoArray = dataTable?.filter((row) => row.cuit_valido === "CUIT_NO_VALIDADO")
-
-      const result = [
-        ...validadoNoEnviado,
-        ...validadoNoEntregado,
-        ...validadoEnviado,
-        ...cuitNoValidadoArray,
-      ]
-      tabulator.current?.replaceData(result)
-    }
-  }
-
-  tabulator?.current?.on("dataProcessed", sortTable)
 
   tabulator?.current?.on("renderComplete", () => {
     createIcons({
@@ -342,7 +344,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
   // Redraw table onresize
   const reInitOnResizeWindow = () => {
     window.addEventListener("resize", () => {
-      if (tabulator.current) {
+      if (tabulator?.current) {
         tabulator.current.redraw()
         createIcons({
           icons,
@@ -365,55 +367,34 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
   }, [])
 
   useEffect(() => {
-    setFilter({
-      field: "",
-      type: "=",
-      estado: "",
-      notificado_cidi: -1,
-    })
-  }, [notificationsSended])
-
-  useEffect(() => {
     nroEmision && initTabulator()
     reInitOnResizeWindow()
     setBody({})
-    setFilter({
-      field: "",
-      type: "=",
-      estado: "",
-      notificado_cidi: -1,
-    })
 
-    baseWebApi(
-      `/Estados_procuracion/ListarEstadosxNotifNuevas?nro_emision=${nroEmision}&subsistema=3`
-    )
+    if (tabulator?.current) {
+    }
+    baseWebApi(`/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=3`)
       .then((response: any) => {
         setStateEmision(response.data)
         return response.data
       })
       .then((response: any) => {
-        let newBody = {}
         response.map((estado: any) => {
           if (estado.emite_notif_cidi == 1) {
             baseWebApi(
-              `/Template_notificacion/ObtenerTextoReporte?idTemplate=${estado.codigo_estado}&subsistema=3`
+              "/Template_notificacion/ObtenerTextoReporte?idTemplate=" + estado.codigo_estado + "&subsistema=3"
             )
               .then((response) => {
                 const title = response?.data[0]?.tituloReporte?.trim()
                 const data = response?.data[0]?.reporte?.trim() ?? ""
-                const idTemplate = response?.data[0]?.idTemplate
                 const stateName = estado?.descripcion_estado
-                newBody = {
-                  ...newBody,
-                  [stateName.trim()]: { idTemplate: idTemplate, title: title, body: data },
-                }
-                setBody(newBody)
+                setBody({ ...body, [stateName.trim()]: { title: title, body: data } })
               })
               .catch((err) => console.error(err))
           }
         })
       })
-  }, [nroEmision, notificationsSended])
+  }, [nroEmision])
 
   const handleBack = () => {
     setNroEmision("")
@@ -439,12 +420,9 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
 
   const statesValidated = statesEmision
     ?.filter((state: any) => state.emite_notif_cidi == 1)
-    ?.map((el: { descripcion_estado: string; codigo_estado: number }) => {
-      return {
-        descripcion_estado: capitalizeFirstLetter(el.descripcion_estado.trim()),
-        codigo_estado: el.codigo_estado,
-      }
-    })
+    ?.map((el: { descripcion_estado: string }) =>
+      capitalizeFirstLetter(el.descripcion_estado.trim())
+    )
   return (
     <>
       <section className="flex flex-col">
@@ -466,7 +444,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
                     const value = e.target.value
                     setFilter({ ...filter, estado: e.target.value })
                     if (value != "nofilter") {
-                      tabulator.current?.setFilter("codigo_estado_actual", "=", value)
+                      tabulator.current?.setFilter("estado_Actualizado", "=", value)
                     } else {
                       tabulator.current?.clearFilter(true)
                     }
@@ -475,7 +453,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
                 >
                   <option value="nofilter">Filtrar por estado</option>
                   {statesEmision?.map((state: any) => (
-                    <option key={state.codigo_estado} value={state.codigo_estado}>
+                    <option key={state.codigo_estado} value={state.descripcion_estado.trim()}>
                       {capitalizeFirstLetter(state.descripcion_estado.trim())}
                     </option>
                   ))}
@@ -524,13 +502,12 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
           {/* Boton y modal */}
 
           <div>
-            <ModalProcuracionC
+            <ModalProcuracion
               table={tabulator.current}
               dataSelected={selectedData}
               nroEmision={nroEmision}
               statesEmision={statesEmision}
               body={body}
-              setNotificationsSended={setNotificationsSended}
             />
           </div>
         </div>
@@ -539,11 +516,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             <p>
               {" "}
               <span className="font-bold">Estados validos para notificar: </span>
-              {statesValidated.map((state: any) =>
-                statesValidated.indexOf(state) === 0
-                  ? state.descripcion_estado
-                  : ", " + state.descripcion_estado
-              )}
+              {statesValidated.join(", ")}
             </p>
           )}
         </div>
@@ -555,4 +528,4 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
   )
 }
 
-export default DetallesNuevasEmisionesC
+export default ComercioDetailTable

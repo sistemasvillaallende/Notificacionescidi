@@ -6,6 +6,7 @@ import { FormInput, FormSelect } from "../../../base-components/Form"
 import Lucide from "../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
 import { baseWebApi } from "../../../utils/axiosConfig"
+import axios from "axios"
 
 export interface Response {
   nro_Notificacion?: number
@@ -38,6 +39,8 @@ interface Props {
 }
 
 const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -50,10 +53,24 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
   const [statesEmision, setStateEmision] = useState<any>()
   const [notificationsSended, setNotificationsSended] = useState<any>({})
   const [body, setBody] = useState({})
+  const [listado, setListado] = useState<any>([])
+
+  const obtenerListado = async () => {
+    const urlConsulta = `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`;
+    try {
+      const response = await axios.get(urlConsulta);
+      setListado(response.data);
+      setDataLoaded(true); // Indicar que los datos están listos
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`,
+        data: listado,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,
@@ -67,11 +84,11 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
         placeholder: "No se han encontrado registros",
         selectable: true,
         selectableCheck: function (row) {
-          const data: Response = row.getData()
-          if (data?.cuit_valido?.trim() != "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
-            return true
-          else return false
-        },        
+          const data: Response = row.getData();
+          if (data?.cuit_valido?.trim() !== "CUIT_NO_VALIDADO" && data?.notificado_cidi === 0)
+            return true;
+          return false;
+        },
         columns: [
           {
             title: "",
@@ -168,9 +185,9 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
               const response: Response = cell.getData()
               const estado = response?.notificado_cidi
               return `<div class="flex items-center lg:justify-start ${estado === 1 ? "text-success" : estado === 0 ? "text-info" : "text-warning"
-              }">
+                }">
               <span>${estado === 1 ? "Enviado" : estado === 0 ? "No enviado" : "No entregado"
-              }</span>
+                }</span>
             </div>`
             },
           },
@@ -324,6 +341,8 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
           },
         ],
       })
+      // Actualizar la tabla después de inicializarla
+      tabulator.current.setData(listado);
     }
   }
 
@@ -358,6 +377,13 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
   }
 
   useEffect(() => {
+    if (dataLoaded) {
+      initTabulator();
+    }
+  }, [dataLoaded, listado]);
+
+
+  useEffect(() => {
     return () => {
       setNroEmision("")
       setStateEmision([])
@@ -367,16 +393,11 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
   }, [])
 
   useEffect(() => {
-    nroEmision && initTabulator()
-    reInitOnResizeWindow()
-    setBody({})
-
-    if (tabulator?.current) {
-    }
+    obtenerListado();
     baseWebApi(`/Estados_procuracion/ListarEstadosxNotif?nro_emision=${nroEmision}&subsistema=3`)
       .then((response: any) => {
-        setStateEmision(response.data)
-        return response.data
+        setStateEmision(response.data);
+        return response.data;
       })
       .then((response: any) => {
         response.map((estado: any) => {
@@ -385,16 +406,37 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
               "/Template_notificacion/ObtenerTextoReporte?idTemplate=" + estado.codigo_estado + "&subsistema=3"
             )
               .then((response) => {
-                const title = response?.data[0]?.tituloReporte?.trim()
-                const data = response?.data[0]?.reporte?.trim() ?? ""
-                const stateName = estado?.descripcion_estado
-                setBody({ ...body, [stateName.trim()]: { title: title, body: data } })
+                const title = response?.data[0]?.tituloReporte?.trim();
+                const data = response?.data[0]?.reporte?.trim() ?? "";
+                const stateName = estado?.descripcion_estado;
+                setBody({ ...body, [stateName.trim()]: { title: title, body: data } });
               })
-              .catch((err) => console.error(err))
+              .catch((err) => console.error(err));
           }
-        })
-      })
-  }, [nroEmision])
+        });
+      });
+  }, [nroEmision]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (tabulator?.current) {
+        tabulator.current.redraw();
+        createIcons({
+          icons,
+          attrs: {
+            "stroke-width": 1.5,
+          },
+          nameAttr: "data-lucide",
+        });
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
 
   const handleBack = () => {
     setNroEmision("")
@@ -423,6 +465,34 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
     ?.map((el: { descripcion_estado: string }) =>
       capitalizeFirstLetter(el.descripcion_estado.trim())
     )
+
+  const filtrarPorEstado = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setFilter({ ...filter, estado: value });
+
+    if (value !== "nofilter") {
+      // Filtrar el listado en función del estado seleccionado
+      const filteredList = listado.filter((item: Response) =>
+        item.estado_Actualizado === value
+      );
+      tabulator.current?.setData(filteredList);
+    } else {
+      // Si no hay filtro, mostrar todos los datos
+      tabulator.current?.setData(listado);
+    }
+  };
+
+
+  const filtrarPorNotificacion = (e: any) => {
+    const value = e.target.value
+    setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
+    if (value != "-1") {
+      tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
+    } else {
+      tabulator.current?.clearFilter(true)
+    }
+  }
+
   return (
     <>
       <section className="flex flex-col">
@@ -435,20 +505,11 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
           </div>
 
           <div className="items-baseline lg:pl-8 lg:flex sm:mr-4 mt-2 lg:mt-0 w-full sm:w-auto">
-            {tabulator?.current && (
-              <>
+            <>
               <FormSelect
                 id="tabulator-html-filter-field"
                 value={filter.estado}
-                onChange={(e) => {
-                  const value = e.target.value
-                  setFilter({ ...filter, estado: e.target.value })
-                  if (value != "nofilter") {
-                    tabulator.current?.setFilter("estado_Actualizado", "=", value)
-                  } else {
-                    tabulator.current?.clearFilter(true)
-                  }
-                }}
+                onChange={filtrarPorEstado}
                 className="w-full 2xl:w-full"
               >
                 <option value="nofilter">Filtrar por estado</option>
@@ -458,27 +519,18 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
                   </option>
                 ))}
               </FormSelect>
-                <FormSelect
+              <FormSelect
                 id="tabulator-html-filter-field"
                 value={filter.notificado_cidi}
-                onChange={(e) => {
-                  const value = e.target.value
-                  setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
-                  if (value != "-1") {
-                    tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
-                  } else {
-                    tabulator.current?.clearFilter(true)
-                  }
-                }}
+                onChange={filtrarPorNotificacion}
                 className="ml-2 w-full 2xl:w-full"
               >
                 <option value="-1">Filtrar por notificación</option>
                 <option value="1">Enviado</option>
                 <option value="0">No Enviado</option>
                 <option value="2">No entregado</option>
-              </FormSelect>     
-              </>         
-            )}
+              </FormSelect>
+            </>
           </div>
 
           {/* Input nro de emisión */}
