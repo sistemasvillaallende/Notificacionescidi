@@ -15,7 +15,7 @@ import { useAuthContext } from "../../context/AuthProvider"
 import { capitalizeFirstLetter } from "../../utils/helper"
 import NotFound from "../../pages/NotFound"
 import { getSecureItem } from "../../modules/secureStorage"
-import  Sidebar  from "../../layouts/menu2"
+import Sidebar from "../../layouts/menu2"
 
 
 
@@ -84,16 +84,16 @@ function Main() {
 
 
   const updatedMenu: any = [
-   /* {
-      icon: "Bell",
-      title: "Notificaciones",
-      activeDropdown: false,
-      subMenu: submenuNoti,
-    },*/
+    /* {
+       icon: "Bell",
+       title: "Notificaciones",
+       activeDropdown: false,
+       subMenu: submenuNoti,
+     },*/
     {
       icon: "FileWarning",
       title: "Procuración Administrativa",
-     // activeDropdown: false,
+      // activeDropdown: false,
       subMenu: submenuProcu,
     },
   ]
@@ -217,7 +217,7 @@ function Main() {
         </nav>
         {/* END: Side Menu */}
         {/* BEGIN: Content */}
-        <div style={{ paddingTop: '10px'}}
+        <div style={{ paddingTop: '10px' }}
           className={clsx([
             "max-w-full md:max-w-none md:rounded-none px-4 md:px-[22px] min-w-0 min-h-screen bg-white flex-1 pb-10 mt-5 md:mt-0 relative dark:bg-darkmode-700",
             "before:content-[''] before:w-full before:h-px before:block",

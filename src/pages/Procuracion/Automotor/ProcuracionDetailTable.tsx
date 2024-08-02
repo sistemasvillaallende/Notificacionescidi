@@ -7,6 +7,7 @@ import { FormInput, FormSelect } from "../../../base-components/Form"
 import Lucide from "../../../base-components/Lucide"
 import ModalProcuracion from "./ModalProcuracion"
 import { ResponseProcuracion, PropsDetailTable } from "../../../types/notificaiones"
+import axios from "axios"
 
 const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: PropsDetailTable) => {
   const tableRef = createRef<HTMLDivElement>()
@@ -21,10 +22,26 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   const [statesEmision, setStateEmision] = useState<any>()
   const [notificationsSended, setNotificationsSended] = useState<any>({})
   const [body, setBody] = useState({})
+
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+  const [listado, setListado] = useState<any>([])
+
+  const obtenerListado = async () => {
+    const urlConsulta = `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`;
+    try {
+      const response = await axios.get(urlConsulta);
+      setListado(response.data);
+      setDataLoaded(true); // Indicar que los datos están listos
+      console.log("Listado", response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const initTabulator = () => {
-    if (tableRef.current) {
+    if (tableRef.current && listado) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`,
+        data: listado,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,
@@ -360,6 +377,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   }
 
   useEffect(() => {
+    obtenerListado();
     return () => {
       setNroEmision("")
       setStateEmision([])
@@ -377,6 +395,12 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
       notificado_cidi: -1,
     })
   }, [notificationsSended])
+
+  useEffect(() => {
+    if (dataLoaded) {
+      initTabulator();
+    }
+  }, [dataLoaded, listado]);
 
   useEffect(() => {
     nroEmision && initTabulator()
@@ -445,6 +469,28 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
     ?.map((el: { descripcion_estado: string }) =>
       capitalizeFirstLetter(el.descripcion_estado.trim())
     )
+
+  const filtrarPorEstado = (e: any) => {
+    const value = e.target.value
+    setFilter({ ...filter, estado: e.target.value })
+    if (value != "nofilter") {
+      tabulator.current?.setFilter("estado_Actualizado", "=", value)
+    } else {
+      tabulator.current?.clearFilter(true)
+    }
+  }
+
+  const filtrarPorNotificacion = (e: any) => {
+    const value = e.target.value
+    setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
+    if (value != "-1") {
+      tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
+    } else {
+      tabulator.current?.clearFilter(true)
+    }
+  }
+
+
   return (
     <>
       <section className="flex flex-col">
@@ -462,15 +508,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                 <FormSelect
                   id="tabulator-html-filter-field"
                   value={filter.estado}
-                  onChange={(e) => {
-                    const value = e.target.value
-                    setFilter({ ...filter, estado: e.target.value })
-                    if (value != "nofilter") {
-                      tabulator.current?.setFilter("estado_Actualizado", "=", value)
-                    } else {
-                      tabulator.current?.clearFilter(true)
-                    }
-                  }}
+                  onChange={filtrarPorEstado}
                   className="w-full 2xl:w-full"
                 >
                   <option value="nofilter">Filtrar por estado</option>
@@ -483,15 +521,7 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                 <FormSelect
                   id="tabulator-html-filter-field"
                   value={filter.notificado_cidi}
-                  onChange={(e) => {
-                    const value = e.target.value
-                    setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
-                    if (value != "-1") {
-                      tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
-                    } else {
-                      tabulator.current?.clearFilter(true)
-                    }
-                  }}
+                  onChange={filtrarPorNotificacion}
                   className="ml-2 w-full 2xl:w-full"
                 >
                   <option value="-1">Filtrar por notificación</option>

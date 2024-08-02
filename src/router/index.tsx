@@ -9,6 +9,8 @@ import Procuracion from "../pages/Procuracion"
 import { User } from "../context/AuthProvider"
 import PermissionDenied from "../pages/PermissionDenied"
 import { getSecureItem } from "../modules/secureStorage"
+import Inicio from "../pages/Inicio"
+import { useAuthContext } from "../context/AuthProvider"
 const Router = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") ?? false
   const user: User = isLoggedIn && getSecureItem("isLoggedIn")
@@ -19,6 +21,8 @@ const Router = () => {
     if (user?.administrador) return true
     else return user?.permisos?.some((permiso: any) => requiredRole.includes(permiso.cod_proceso))
   }
+
+  const { inicio, setInicio } = useAuthContext()
 
   return (
     <>
@@ -32,6 +36,7 @@ const Router = () => {
         <>
           <Header />
           <Routes>
+            <Route path="/inicio" element={<Inicio />} />
             <Route path="/" element={<Navigate to="/seleccionar-oficina/" />} />
             <Route
               path="/seleccionar-oficina/"

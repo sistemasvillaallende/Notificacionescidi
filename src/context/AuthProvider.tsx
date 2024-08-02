@@ -28,6 +28,8 @@ interface AuthContextType {
   error: any
   loading: boolean
   handleLoginCIDI: (codigoCIDI: string) => void
+  inicio: boolean
+  setInicio: (inicio: boolean) => void
 }
 
 const AuthContext = createContext({} as AuthContextType)
@@ -45,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const [error, setError] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const [inicio, setInicio] = useState(false)
 
 
   const handleLoginCIDI = async (codigoCIDI: string) => {
@@ -172,7 +175,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       handleLogout,
       error,
       loading,
-      handleLoginCIDI
+      handleLoginCIDI,
+      inicio,
+      setInicio
     }}>
       {children}
     </AuthContext.Provider>
