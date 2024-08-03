@@ -82,14 +82,14 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
                 cell.getRow().toggleSelect()
             },
           },
-          /*{
+          {
             title: "",
             formatter: "responsiveCollapse",
             width: 40,
             minWidth: 40,
             hozAlign: "center",
             headerSort: false,
-          },*/
+          },
           {
             title: "Nro.",
             width: 80,
