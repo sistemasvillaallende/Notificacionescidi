@@ -28,8 +28,6 @@ interface AuthContextType {
   error: any
   loading: boolean
   handleLoginCIDI: (codigoCIDI: string) => void
-  inicio: boolean
-  setInicio: (inicio: boolean) => void
 }
 
 const AuthContext = createContext({} as AuthContextType)
@@ -47,8 +45,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
   const [error, setError] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const [inicio, setInicio] = useState(false)
-
 
   const handleLoginCIDI = async (codigoCIDI: string) => {
     console.log("codigoCIDI", codigoCIDI)
@@ -84,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             hash: codigoCIDI,
             permisos: !userData?.administrador ? responsePermisos?.data : ["admin"],
           })
+          localStorage.setItem("inicio", "true")
         }
       } else {
         setError("Usuario o contraseña incorrectos");
@@ -109,7 +106,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const responsePermisos = await baseWebApi.get(`/Login/GetPermisosCidi?cod_usuario=${response?.data?.cod_usuario}`)
       if (response && officesResponse) {
         setLoading(false)
-
         if (response?.statusText === "OK") {
           const userData = response?.data
           const offices: string[] = []
@@ -124,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             cod_oficina: userData?.cod_oficina,
             cod_usuario: userData?.cod_usuario,
             nombre_oficina: userData?.nombre_oficina,
-            permisos: !userData?.administrador ? responsePermisos?.data : ["admin"],
+            permisos: !userData?.administrador ? responsePermisos?.data : ["admin"]
           })
         } else {
           console.error("Inicio de sesión fallido")
@@ -139,6 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleLogout = async () => {
     localStorage.removeItem("isLoggedIn")
+    localStorage.removeItem("inicio")
     setUser(null)
     navigate("#/login")
     location.reload()
@@ -167,6 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user])
 
 
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -175,9 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       handleLogout,
       error,
       loading,
-      handleLoginCIDI,
-      inicio,
-      setInicio
+      handleLoginCIDI
     }}>
       {children}
     </AuthContext.Provider>

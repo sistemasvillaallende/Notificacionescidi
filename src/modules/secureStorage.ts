@@ -25,4 +25,4 @@ const getSecureItem = (key: string): any => {
   return null
 }
 
-export { setSecureItem, getSecureItem }
+export { setSecureItem, getSecureItem}
