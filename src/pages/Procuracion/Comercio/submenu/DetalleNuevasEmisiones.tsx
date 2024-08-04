@@ -144,7 +144,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             </div>`
             },
           },
-
+          
           {
             title: "CUIT",
             minWidth: 100,
@@ -495,8 +495,8 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
                   className="ml-2 w-full 2xl:w-full"
                 >
                   <option value="-1">Filtrar por notificación</option>
-                  <option value="1">Enviado</option>
                   <option value="0">No Enviado</option>
+                  <option value="1">Enviado</option>
                   <option value="2">No entregado</option>
                 </FormSelect>
               </>
