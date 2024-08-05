@@ -9,6 +9,37 @@ import ModalProcuracion from "./ModalProcuracion"
 import { ResponseProcuracion, PropsDetailTable } from "../../../types/notificaiones"
 import axios from "axios"
 
+export interface Response {
+  nro_Notificacion?: number
+  nro_Emision?: number
+  nro_Procuracion?: number
+  legajo?: string
+  nro_Badec?: number
+  nombre?: string
+  cuit?: string
+  estado_Actual?: string
+  estado_Actualizado?: string
+  notificado_cidi?: number
+  fecha_Inicio_Estado?: string
+  fecha_Fin_Estado?: string
+  vencimiento?: string
+  nro_cedulon?: number
+  debe?: number
+  monto_original?: number
+  interes?: number
+  descuento?: number
+  importe_pagar?: number
+  cuit_valido?: string
+}
+
+interface Props {
+  url: string
+  detail?: boolean
+  nroEmision?: string
+  setNroEmision: Function
+}
+
+
 const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: PropsDetailTable) => {
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
@@ -465,30 +496,34 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
   }
 
   const statesValidated = statesEmision
-    ?.filter((state: any) => 1 == 1)
+    ?.filter((state: any) => state.emite_notif_cidi == 1)
     ?.map((el: { descripcion_estado: string }) =>
       capitalizeFirstLetter(el.descripcion_estado.trim())
     )
 
-  const filtrarPorEstado = (e: any) => {
-    const value = e.target.value
-    setFilter({ ...filter, estado: e.target.value })
-    if (value != "nofilter") {
-      tabulator.current?.setFilter("estado_Actualizado", "=", value)
-    } else {
-      tabulator.current?.clearFilter(true)
-    }
-  }
+    const filtrarPorEstado = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setFilter({ ...filter, estado: value });
+      if (value !== "nofilter") {
+        const filteredList = listado.filter((item: Response) =>
+          item.estado_Actualizado === value
+        );
+        tabulator.current?.setData(filteredList);
+      } else {
+        // Si no hay filtro, mostrar todos los datos
+        tabulator.current?.setData(listado);
+      }
+    };
 
-  const filtrarPorNotificacion = (e: any) => {
-    const value = e.target.value
-    setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
-    if (value != "-1") {
-      tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
-    } else {
-      tabulator.current?.clearFilter(true)
+    const filtrarPorNotificacion = (e: any) => {
+      const value = e.target.value
+      setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
+      if (value != "-1") {
+        tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
+      } else {
+        tabulator.current?.clearFilter(true)
+      }
     }
-  }
 
 
   return (

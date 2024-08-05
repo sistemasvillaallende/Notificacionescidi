@@ -34,6 +34,7 @@ export interface Response {
   notificado_cidi?: number
   codigo_estado_actual?: number
   estado_actual?: string
+  estado_Actualizado?: string
   cuit?: number
   cuit_valido?: string
 }

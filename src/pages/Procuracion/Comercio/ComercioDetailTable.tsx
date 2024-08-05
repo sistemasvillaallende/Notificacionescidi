@@ -40,7 +40,6 @@ interface Props {
 
 const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }: Props) => {
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-
   const tableRef = createRef<HTMLDivElement>()
   const tabulator = useRef<Tabulator>()
   const [filter, setFilter] = useState({
@@ -111,14 +110,14 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
                 cell.getRow().toggleSelect()
             },
           },
-          {
+         /* {
             title: "",
             formatter: "responsiveCollapse",
             width: 40,
             minWidth: 40,
             hozAlign: "center",
             headerSort: false,
-          },
+          },*/
           {
             title: "Procuración",
             minWidth: 90,
@@ -207,8 +206,7 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
               )}</div>
             </div>`
             },
-          },
-          {
+          },/*{
             title: "Estado Inicial",
             minWidth: 150,
             width: 180,
@@ -338,7 +336,7 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
             headerHozAlign: "center",
             vertAlign: "middle",
             headerSort: false,
-          },
+          },*/
         ],
       })
       // Actualizar la tabla después de inicializarla
@@ -381,8 +379,6 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
       initTabulator();
     }
   }, [dataLoaded, listado]);
-
-
   useEffect(() => {
     return () => {
       setNroEmision("")
@@ -469,9 +465,7 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
   const filtrarPorEstado = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setFilter({ ...filter, estado: value });
-
     if (value !== "nofilter") {
-      // Filtrar el listado en función del estado seleccionado
       const filteredList = listado.filter((item: Response) =>
         item.estado_Actualizado === value
       );
