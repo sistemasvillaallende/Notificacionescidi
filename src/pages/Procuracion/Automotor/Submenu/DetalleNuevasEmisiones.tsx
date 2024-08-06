@@ -72,11 +72,7 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
       console.error(error);
     }
   };
-  useEffect(() => {
-    if (dataLoaded) {
-      initTabulator();
-    }
-  }, [dataLoaded, listado]);
+
 
   //FIN OBTENCIÓN DE DATOS
 

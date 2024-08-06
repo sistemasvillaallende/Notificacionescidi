@@ -65,6 +65,7 @@ function ModalProcuracion({
   }
 
   useEffect(() => {
+
     setValidatedData([])
     setValidSelectedStates([])
     setErrorMessage("")
@@ -77,6 +78,7 @@ function ModalProcuracion({
   }, [nroEmision])
 
   useEffect(() => {
+    console.log(dataSelected)
     getStates()
       .then((response) => {
         setValidSelectedStates(response)
