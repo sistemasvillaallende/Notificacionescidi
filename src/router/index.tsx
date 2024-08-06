@@ -28,18 +28,6 @@ const Router = () => {
 
   const navigate = useNavigate()
 
-  const [inicio, setInicio] = useState(false);
-
-  useEffect(() => {
-    const inicioValue = localStorage.getItem("inicio");
-    if (inicioValue === "true") {
-      setInicio(true);
-    } else {
-      setInicio(false);
-      navigate("/")
-    }
-  }, []);
-
   return (
     <>
       {!isLoggedIn ? (
@@ -52,37 +40,33 @@ const Router = () => {
         <>
           <Header />
           <Routes>
-            {inicio ? (
-              <Route path="*" element={<Inicio />} />
-            ) : (
-              <>
-                <Route path="/" element={<Navigate to="/seleccionar-oficina/" />} />
+            <>
+              <Route path="/" element={<Navigate to="/seleccionar-oficina/" />} />
+              <Route
+                path="/seleccionar-oficina/"
+                element={<Navigate to={`/${userOffice}/notificaciones`} />}
+              />
+              <Route path="/:office" element={<SideMenu />}>
                 <Route
-                  path="/seleccionar-oficina/"
-                  element={<Navigate to={`/${userOffice}/notificaciones`} />}
+                  path="/:office/notificaciones"
+                  element={
+                    <Inicio />
+                  }
                 />
-                <Route path="/:office" element={<SideMenu />}>
-                  <Route
-                    path="/:office/notificaciones"
-                    element={
-                      <Notifications />
-                    }
-                  />
-                  <Route
-                    path="/:office/procuracion"
-                    element={
-                      hasPermission([452, 452, 454, 460, 461, 462], user) ? (
-                        <Procuracion />
-                      ) : (
-                        <Navigate to="/permiso-denegado" replace={true} />
-                      )
-                    }
-                  />
-                </Route>
-                <Route path="/permiso-denegado" element={<PermissionDenied />} />
-                <Route path="*" element={<NotFound />} />
-              </>
-            )}
+                <Route
+                  path="/:office/procuracion"
+                  element={
+                    hasPermission([452, 452, 454, 460, 461, 462], user) ? (
+                      <Procuracion />
+                    ) : (
+                      <Navigate to="/permiso-denegado" replace={true} />
+                    )
+                  }
+                />
+              </Route>
+              <Route path="/permiso-denegado" element={<PermissionDenied />} />
+              <Route path="*" element={<NotFound />} />
+            </>
           </Routes>
         </>
       )}

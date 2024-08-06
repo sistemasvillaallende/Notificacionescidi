@@ -145,7 +145,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             </div>`
             },
           },
-          
+
           {
             title: "CUIT",
             minWidth: 100,
@@ -192,7 +192,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
               </div>`
             },
           },/*
-{
+          {
             title: "Badec",
             width: 70,
             minWidth: 50,
@@ -202,7 +202,6 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
             vertAlign: "middle",
             headerSort: false,
           },
-
           {
             title: "Fecha Inicio",
             minWidth: 120,

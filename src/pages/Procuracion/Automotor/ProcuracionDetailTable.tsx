@@ -501,29 +501,29 @@ const ProcuracionDetailTable = ({ url, detail = false, nroEmision, setNroEmision
       capitalizeFirstLetter(el.descripcion_estado.trim())
     )
 
-    const filtrarPorEstado = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const value = e.target.value;
-      setFilter({ ...filter, estado: value });
-      if (value !== "nofilter") {
-        const filteredList = listado.filter((item: Response) =>
-          item.estado_Actualizado === value
-        );
-        tabulator.current?.setData(filteredList);
-      } else {
-        // Si no hay filtro, mostrar todos los datos
-        tabulator.current?.setData(listado);
-      }
-    };
-
-    const filtrarPorNotificacion = (e: any) => {
-      const value = e.target.value
-      setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
-      if (value != "-1") {
-        tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
-      } else {
-        tabulator.current?.clearFilter(true)
-      }
+  const filtrarPorEstado = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setFilter({ ...filter, estado: value });
+    if (value !== "nofilter") {
+      const filteredList = listado.filter((item: Response) =>
+        item.estado_Actualizado === value
+      );
+      tabulator.current?.setData(filteredList);
+    } else {
+      // Si no hay filtro, mostrar todos los datos
+      tabulator.current?.setData(listado);
     }
+  };
+
+  const filtrarPorNotificacion = (e: any) => {
+    const value = e.target.value
+    setFilter({ ...filter, notificado_cidi: parseInt(e.target.value) })
+    if (value != "-1") {
+      tabulator.current?.setFilter("notificado_cidi", "=", parseInt(value))
+    } else {
+      tabulator.current?.clearFilter(true)
+    }
+  }
 
 
   return (
