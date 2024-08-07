@@ -459,12 +459,16 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
     })
 
   const filtrarPorEstado = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
-    setFilter({ ...filter, estado: e.target.value })
-    if (value != "nofilter") {
-      tabulator.current?.setFilter("codigo_estado_actual", "=", value)
+    const value = e.target.value;
+    setFilter({ ...filter, estado: value });
+    if (value !== "nofilter") {
+      const filteredList = listado.filter((item: Response) =>
+        item.codigo_estado_actual?.toString() === value
+      );
+      tabulator.current?.setData(filteredList);
     } else {
-      tabulator.current?.clearFilter(true)
+      // Si no hay filtro, mostrar todos los datos
+      tabulator.current?.setData(listado);
     }
   }
 
@@ -477,6 +481,12 @@ const DetallesNuevasEmisiones = ({ url, detail = false, nroEmision, setNroEmisio
       tabulator.current?.clearFilter(true)
     }
   }
+
+  useEffect(() => {
+    if (dataLoaded) {
+      initTabulator();
+    }
+  }, [dataLoaded, listado]);
 
   return (
     <>

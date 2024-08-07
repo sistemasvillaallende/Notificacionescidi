@@ -379,6 +379,7 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
       initTabulator();
     }
   }, [dataLoaded, listado]);
+
   useEffect(() => {
     return () => {
       setNroEmision("")
