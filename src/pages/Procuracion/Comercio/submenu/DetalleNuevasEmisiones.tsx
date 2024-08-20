@@ -16,6 +16,8 @@ import Lucide from "../../../../base-components/Lucide"
 import { StringChain } from "lodash"
 import ModalProcuracionC from "./ModalProcuracion"
 import { baseWebApi } from "../../../../utils/axiosConfig"
+import axios from "axios"
+
 
 export interface Response {
   nro_emision?: number
@@ -59,10 +61,30 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
   const [statesEmision, setStateEmision] = useState<any>()
   const [notificationsSended, setNotificationsSended] = useState<any>({})
   const [body, setBody] = useState({})
+
+  //INICIO OBTENCIÓN DE DATOS DE LA API
+
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+  const [listado, setListado] = useState<any>([])
+
+  const obtenerListado = async () => {
+    const urlConsulta = `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`;
+    try {
+      const response = await axios.get(urlConsulta);
+      setListado(response.data);
+      setDataLoaded(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  //FIN OBTENCIÓN DE DATOS
+
   const initTabulator = () => {
     if (tableRef.current) {
       tabulator.current = new Tabulator(tableRef.current, {
-        ajaxURL: `${import.meta.env.VITE_URL_WEBAPISHARED}${url}${nroEmision}`,
+        data: listado,
         paginationMode: "local",
         filterMode: "local",
         printStyled: true,
@@ -374,6 +396,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
   }, [notificationsSended])
 
   useEffect(() => {
+    obtenerListado(); // Obtener los datos
     nroEmision && initTabulator()
     reInitOnResizeWindow()
     setBody({})
@@ -445,6 +468,13 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
         codigo_estado: el.codigo_estado,
       }
     })
+
+  useEffect(() => {
+    if (dataLoaded) {
+      initTabulator();
+    }
+  }, [dataLoaded, listado]);
+
   return (
     <>
       <section className="flex flex-col">
@@ -506,7 +536,7 @@ const DetallesNuevasEmisionesC = ({ url, detail = false, nroEmision, setNroEmisi
           {/* Input nro de emisión */}
 
           <div className="flex items-center grow justify-between md:justify-center mt-3 sm:mt-0">
-            <h4 className="mr-2 font-bold">Nro. de emisión</h4>
+            <h4 className="mr-2 font-bold">Ñro. de emisión</h4>
             <button onClick={(e: any) => handleMinus(e)}>
               <Lucide icon="ChevronLeft" className="w-4 h-4 mx-2" />
             </button>

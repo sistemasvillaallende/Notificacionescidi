@@ -159,6 +159,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
       const response = await sendNotifications()
       response && console.log("Notificaciones enviadas exitosamente")
       console.log("Respuestas:", response)
+      window.location.reload()
     } catch (error) {
       console.error("Error al enviar notificaciones", error)
     }
