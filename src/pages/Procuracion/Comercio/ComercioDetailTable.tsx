@@ -491,6 +491,8 @@ const ComercioDetailTable = ({ url, detail = false, nroEmision, setNroEmision }:
   return (
     <>
       <section className="flex flex-col">
+      <div className="mt-5" style={{marginBottom: '25px', textAlign: 'center'}}>
+      <h2 style={{ fontSize: '18px', fontWeight: '600'}}>Industria y Comercio - Cambio de estado masivo</h2></div>
         <div className="flex justify-between flex-wrap">
           <div
             className="flex items-center mr-2 text-secondary font-bold text-base text-right hover:underline cursor-pointer"
