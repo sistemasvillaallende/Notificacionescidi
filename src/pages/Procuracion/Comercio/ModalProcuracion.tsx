@@ -101,7 +101,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
           "hash": user?.hash,
           Accept: "application/json",
         }
-        const bodyObject = {
+        const bodyObject = {  
           cuit: procuracion.cuit,
           subject: body[procuracion.estado_Actualizado]?.title,
           body: body[procuracion.estado_Actualizado]?.body,
