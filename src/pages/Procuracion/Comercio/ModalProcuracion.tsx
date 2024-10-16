@@ -111,6 +111,7 @@ function ModalProcuracion({ table, dataSelected, nroEmision, statesEmision, body
           id_oficina: parseInt(officeId),
           id_usuario: user?.cod_usuario,
           tipo_proc: 3,
+          cod_estado_actual: procuracion.codigo_estado_actual ?? "",
         }
         baseWebApi
           .post("/ComunicacionesCIDI/enviarNotificacionProcuracion", bodyObject, {
