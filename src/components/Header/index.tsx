@@ -1,32 +1,30 @@
-import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import Lucide from "../../base-components/Lucide"
-import { Menu, Popover } from "../../base-components/Headless"
-import _ from "lodash"
-import clsx from "clsx"
-import logo from "../../assets/images/LogoPablo.png"
-import logoNoTexto from "../../assets/icons/logo-notexto.svg"
-import mail from "../../assets/icons/mail.svg"
-import { useAuthContext } from "../../context/AuthProvider"
-import { capitalizeFirstLetter } from "../../utils/helper"
-import placeholderProfile from "../../assets/images/placeholders/Usuario.png"
-import { getSecureItem } from "../../modules/secureStorage"
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Lucide from "../../base-components/Lucide";
+import { Menu } from "../../base-components/Headless";
+import clsx from "clsx";
+import logo from "../../assets/images/LogoPablo.png";
+import logoNoTexto from "../../assets/icons/logo-notexto.svg";
+import { useAuthContext } from "../../context/AuthProvider";
+import { capitalizeFirstLetter } from "../../utils/helper";
+import placeholderProfile from "../../assets/images/placeholders/Usuario.png";
+import Cookies from 'js-cookie';
 
 function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
-  const [searchDropdown, setSearchDropdown] = useState(false)
+  const [searchDropdown, setSearchDropdown] = useState(false);
   const showSearchDropdown = () => {
-    setSearchDropdown(true)
-  }
+    setSearchDropdown(true);
+  };
   const hideSearchDropdown = () => {
-    setSearchDropdown(false)
-  }
-  let path: string = location.hash && (location.hash?.split("/").at(2) as string)
-  if (path?.includes("?")) path = path.split("?")?.[0]
-  if (location?.hash?.includes("id=")) path = location.hash.split("id=")?.[1]
-  if (path === "") path = "inicio"
-  if (path === undefined) path = "pagina-no-encontrada"
-  const { handleLogout, user, setUser } = useAuthContext()
-  const navigate = useNavigate()
+    setSearchDropdown(false);
+  };
+  let path: string = location.hash && (location.hash?.split("/").at(2) as string);
+  if (path?.includes("?")) path = path.split("?")?.[0];
+  if (location?.hash?.includes("id=")) path = location.hash.split("id=")?.[1];
+  if (path === "") path = "inicio";
+  if (path === undefined) path = "pagina-no-encontrada";
+  const { handleLogout, user, setUser } = useAuthContext();
+  const navigate = useNavigate();
 
   const headerTitle: any = {
     inicio: { title: "Inicio", icon: "Home" },
@@ -34,17 +32,19 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
     procuracion: { title: "", icon: "" },
     nuevasemisiones: { title: "", icon: "" },
     "pagina-no-encontrada": { title: "Página no encontrada", icon: "Warning" },
-  }
+  };
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn")
-    if (isLoggedIn) {
-      const parsedUser = getSecureItem("isLoggedIn")
-      if (parsedUser) {
-        setUser(parsedUser)
+    const cookieValue = Cookies.get('VABack.CIDI');
+    if (cookieValue) {
+      try {
+        const parsedUser = JSON.parse(cookieValue);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing cookie value:", error);
       }
     }
-  }, [])
+  }, [setUser]);
 
   return (
     <>
@@ -55,9 +55,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
           props.layout == "top-menu" && "dark:md:from-darkmode-800",
         ])}
       >
-        <div className="flex justify-between items-center h-full" style={{
-          height: '90px'
-        }}>
+        <div className="flex justify-between items-center h-full" style={{ height: '90px' }}>
           {/* BEGIN: Logo */}
           <Link
             style={{ width: "33%" }}
@@ -77,18 +75,15 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
           </Link>
           {/* END: Logo */}
           {/* BEGIN: Title */}
-
           <div style={{ width: "33%", fontSize: "24px", display: 'ruby', textAlign: 'center' }}
             className="flex items-center text-primary font-semibold drop-shadow-[1px_1px_2px_#00000025]">
-
             <span style={{ textDecoration: 'overline', paddingTop: '10px', lineHeight: '20px' }}>Notificaciones CiDi</span>
           </div>
           <div style={{ width: "33%" }} className="flex justify-around items-center md:w-[290px] md:h-[69px] lg:w-[352px] lg:h-[80px] rounded-l-[20px]">
-            <Menu style=
-              {{
-                height: "60px", border: "solid lightgray", borderRadius: "15px", verticalAlign: "middle", alignItems: "center",
-                display: 'inline-grid', textAlign: 'center', position: 'absolute', right: '4%'
-              }}>
+            <Menu style={{
+              height: "60px", border: "solid lightgray", borderRadius: "15px", verticalAlign: "middle", alignItems: "center",
+              display: 'inline-grid', textAlign: 'center', position: 'absolute', right: '4%'
+            }}>
               <Menu.Button className="flex align-center w-100 h-100 intro-x">
                 <img
                   style={{
@@ -102,7 +97,6 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
                   <span>{user ? `${user.nombre}` : `cargando...`}</span>
                 </p>
                 <h3 className="text-primary text-center self-center mr-5 ml-3 text-xl font-bold">
-
                 </h3>
               </Menu.Button>
               <Menu.Items className="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
@@ -127,7 +121,6 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
               </Menu.Items>
             </Menu>
           </div>
-
           {/* END: Account Menu */}
         </div>
         <div className="container-fluid" style={{ left: '0', right: '0', height: '12px', position: 'absolute', background: "linear-gradient(87deg, rgb(148 23 23) 0%, rgba(255,35,0,1) 41%, rgb(255 233 0) 79%)" }}>
@@ -138,7 +131,7 @@ function Main(props: { layout?: "side-menu" | "simple-menu" | "top-menu" }) {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Main
+export default Main;

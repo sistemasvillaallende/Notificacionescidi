@@ -13,11 +13,14 @@ import Inicio from "../pages/Inicio"
 import { useAuthContext } from "../context/AuthProvider"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie'
+
 
 const Router = () => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") ?? false
-  const user: User = isLoggedIn && getSecureItem("isLoggedIn")
-  // const hasSingleOffice = !user?.administrador
+  //const isLoggedIn = localStorage.getItem("isLoggedIn") ?? false
+  const cookieValue = Cookies.get('VABack.CIDI');
+  //const user: User = isLoggedIn && getSecureItem("isLoggedIn")
+  const user: User = cookieValue && cookieValue ? JSON.parse(cookieValue) : null;
   const userOffice = user?.nombre_oficina
 
   const hasPermission = (requiredRole: number[], user: User) => {
@@ -30,7 +33,7 @@ const Router = () => {
 
   return (
     <>
-      {!isLoggedIn ? (
+      {!cookieValue ? (
         <Routes>
           <Route path="/*" element={<Login />} />
           <Route path="/login/" element={<Login />} />

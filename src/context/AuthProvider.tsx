@@ -4,6 +4,7 @@ import { baseWebApi } from "../utils/axiosConfig"
 import { capitalizeFirstLetter } from "../utils/helper"
 import { setSecureItem } from "../modules/secureStorage"
 import axios from "axios"
+import Cookies from 'js-cookie';
 
 export interface User {
   nombre: string
@@ -28,6 +29,7 @@ interface AuthContextType {
   error: any
   loading: boolean
   handleLoginCIDI: (codigoCIDI: string) => void
+  handleLoginCooki: () => void
 }
 
 const AuthContext = createContext({} as AuthContextType)
@@ -87,6 +89,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
     catch (error) {
+      console.error("Error al validar el usuario:", error);
+      setError("Usuario o contraseña incorrectos");
+    }
+  }
+
+  const handleLoginCooki = async () => {
+    console.log("handleLoginCooki");
+    try {
+      const cookieValue = Cookies.get('VABack.CIDI');
+      if (cookieValue) {
+        const userData = JSON.parse(cookieValue);
+        console.log("userData from cookie", userData);
+
+        const responseOffice = await baseWebApi.get(`/Notificacion_digital/GetOficinas?cod_usuario=${userData.cod_usuario}`);
+        const officesResponse = responseOffice?.data;
+
+        const responsePermisos = await baseWebApi.get(`/Login/GetPermisosCidi?cod_usuario=${userData.cod_usuario}`);
+
+        if (userData.empleado === "N" || !userData.empleado) {
+          console.log("NO EMPLEADO: ", userData.empleado);
+        } else {
+          const offices = [];
+          officesResponse?.map((e: any) => offices.push(capitalizeFirstLetter(e.oficina)));
+          setUser({
+            nombre: userData.nombre,
+            apellido: userData.apellido,
+            email: userData.email,
+            userName: userData.nombre_usuario,
+            cuit: userData.cuit,
+            administrador: userData.administrador === "1",
+            cod_oficina: userData.cod_oficina,
+            cod_usuario: userData.cod_usuario,
+            nombre_oficina: officesResponse[0]?.oficina,
+            hash: userData.SesionHash,
+            permisos: userData.administrador === "1" ? ["admin"] : responsePermisos?.data,
+          });
+          localStorage.setItem("inicio", "true");
+        }
+      } else {
+        setError("No se encontró la cookie de usuario");
+      }
+    } catch (error) {
       console.error("Error al validar el usuario:", error);
       setError("Usuario o contraseña incorrectos");
     }
@@ -173,7 +217,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       handleLogout,
       error,
       loading,
-      handleLoginCIDI
+      handleLoginCIDI,
+      handleLoginCooki
     }}>
       {children}
     </AuthContext.Provider>

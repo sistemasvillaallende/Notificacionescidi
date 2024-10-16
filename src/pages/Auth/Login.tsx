@@ -7,10 +7,12 @@ import LoginForm from "./LoginForm"
 import { useParams } from "react-router-dom";
 
 const Login = () => {
-  const { user, error, loading, handleLoginCIDI } = useAuthContext()
+  const { user, error, loading, handleLoginCIDI, handleLoginCooki } = useAuthContext()
 
   useEffect(() => {
     window.document.title = `Notificaciones CIDI`
+    cookieDeEjemplo();
+    handleLoginCooki();
     if (error) {
       console.log("error login:", error)
     }
@@ -18,6 +20,51 @@ const Login = () => {
       location.reload()
     }
   }, [user])
+
+  const cookieDeEjemplo = () => {
+    // Valores fijos que se utilizarán para la cookie
+    const admin = 1; // 1 significa que es administrador
+    const obj = {
+      apellido: "Gómez",
+      cod_oficina: 123,
+      cod_usuario: 456,
+      cuit: "20304050607",
+      cuit_formateado: "20-30405060-7",
+      legajo: 789,
+      nombre: "Juan",
+      nombre_completo: "Juan Gómez",
+      nombre_oficina: "Oficina A",
+      nombre_usuario: "jgomez",
+    };
+    const hash = "tuSesionHash"; // Valor fijo del hash de sesión
+
+    // Definir la fecha de expiración (1000 días a partir de ahora)
+    const expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + 1000);
+
+    // Crear un objeto con los datos que quieres guardar en la cookie
+    const cookieValue = {
+      administrador: admin.toString(),
+      apellido: obj.apellido,
+      cod_oficina: obj.cod_oficina.toString(),
+      cod_usuario: obj.cod_usuario.toString(),
+      cuit: obj.cuit,
+      cuit_formateado: obj.cuit_formateado,
+      legajo: obj.legajo.toString(),
+      nombre: obj.nombre,
+      nombre_completo: obj.nombre_completo,
+      nombre_oficina: obj.nombre_oficina,
+      nombre_usuario: obj.nombre_usuario,
+      SesionHash: hash,
+    };
+
+    // Convertir el objeto a una cadena JSON para guardarlo en la cookie
+    const cookieValueString = JSON.stringify(cookieValue);
+
+    // Agregar la cookie con el nombre "VABack.CIDI"
+    document.cookie = `VABack.CIDI=${cookieValueString}; expires=${expireDate.toUTCString()}; path=/`;
+  }
+
 
   const { codigoCIDI } = useParams();
   useEffect(() => {
